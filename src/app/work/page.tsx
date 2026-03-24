@@ -5,6 +5,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa";
 
+const CLOUDINARY_UPLOAD_SEGMENT = "/image/upload/";
+
+function getOptimizedCloudinaryUrl(src: string, colSpan: number, rowSpan: number): string {
+  if (!src.includes(CLOUDINARY_UPLOAD_SEGMENT)) {
+    return src;
+  }
+
+  // Approximate target size for this mosaic layout (desktop-first).
+  const width = Math.max(900, colSpan * 180);
+  const height = Math.max(700, rowSpan * 180);
+  const transforms = `f_auto,q_95,c_fit,w_${width},h_${height},dpr_2.0`;
+
+  return src.replace(CLOUDINARY_UPLOAD_SEGMENT, `${CLOUDINARY_UPLOAD_SEGMENT}${transforms}/`);
+}
+
+function getResponsiveSizes(colSpan: number): string {
+  const desktopVw = Math.max(12, Math.round((colSpan / 24) * 100));
+  return `(max-width: 768px) 100vw, ${desktopVw}vw`;
+}
+
 export default function WorkPage() {
   const [isGraphicDesignOpen, setIsGraphicDesignOpen] = useState(true);
   const [isPotteryOpen, setIsPotteryOpen] = useState(true);
@@ -44,6 +64,31 @@ export default function WorkPage() {
       window.removeEventListener("resize", handleScroll);
     };
   }, []);
+
+  const graphicDesignImages = [
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345111/Ilustracio%CC%81n_sin_ti%CC%81tulo_2_sh2jzm.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345565/Ilustracio%CC%81n_sin_ti%CC%81tulo_3_u6zqj7.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345564/Ilustracio%CC%81n_sin_ti%CC%81tulo_18_copy_3_mi1cdd.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345563/Ilustracio%CC%81n_sin_ti%CC%81tulo_17_copy_3_oqt6ea.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345562/Ilustracio%CC%81n_sin_ti%CC%81tulo_16_copy_3_x5bfnc.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_15_copy_2_u5dcd4.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_12_copy_xtv28e.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345559/Ilustracio%CC%81n_sin_ti%CC%81tulo_1_copy_2_nyi0aj.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/ilunnamed-1_copy_2_cq1poq.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/Copia_de_unnamed_acidpc.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345557/Casitas_Jpg_copy_3_dvdhri.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345117/unnamed_qrim6m.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Jaguar_patern_cs7kox.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_artclz.jpg",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_9_ellbub.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345114/Ilustracio%CC%81n_sin_ti%CC%81tulo_6_djd8nn.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345113/Ilustracio%CC%81n_sin_ti%CC%81tulo_5_cxh25h.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345566/Ilustracio%CC%81n_sin_ti%CC%81tulo_4_copy_k2atci.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345083/Ilustracio%CC%81n_sin_ti%CC%81tulo_14_uxzdrz.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345082/Ilustracio%CC%81n_sin_ti%CC%81tulo_13_odgybk.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_11_p9tojh.png",
+    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_10_cgoyzs.png",
+  ];
   return (
     <div className="min-h-screen bg-brand-dark-teal w-full">
       {/* Main Work Title */}
@@ -118,11 +163,12 @@ export default function WorkPage() {
               style={{ overflow: 'hidden' }}
             >
               <div 
-                className="grid gap-2"
+                className="grid"
                 style={{
                   gridTemplateColumns: 'repeat(24, 1fr)',
                   gridAutoRows: 'minmax(150px, auto)',
-                  gridAutoFlow: 'row dense'
+                  gridAutoFlow: 'row dense',
+                  gap: '30px'
                 }}
               >
           {[
@@ -179,9 +225,17 @@ export default function WorkPage() {
                 gridRow: `span ${size.rowSpan}`
               }}
             >
-              <div className="w-full h-full bg-gray-400 flex items-center justify-center">
-                <span className="text-gray-600 font-medium text-sm">Placeholder {index + 1}</span>
-              </div>
+              <Image
+                src={getOptimizedCloudinaryUrl(graphicDesignImages[index], size.colSpan, size.rowSpan)}
+                alt={`Graphic design piece ${index + 1}`}
+                width={1200}
+                height={1200}
+                className="w-full h-full object-contain"
+                sizes={getResponsiveSizes(size.colSpan)}
+                quality={95}
+                loading={index < 4 ? "eager" : "lazy"}
+                priority={index < 4}
+              />
             </motion.div>
           ))}
               </div>
