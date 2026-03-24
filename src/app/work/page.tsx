@@ -7,23 +7,31 @@ import { FaArrowDown } from "react-icons/fa";
 
 const CLOUDINARY_UPLOAD_SEGMENT = "/image/upload/";
 
-function getOptimizedCloudinaryUrl(src: string, colSpan: number, rowSpan: number): string {
+/** Masonry / referencja portfolio: naturalne proporcje, bez przycinania — tylko limit szerokości i jakość. */
+function getGraphicMasonryUrl(src: string, maxWidthPx = 1800): string {
   if (!src.includes(CLOUDINARY_UPLOAD_SEGMENT)) {
     return src;
   }
 
-  // Approximate target size for this mosaic layout (desktop-first).
-  const width = Math.max(900, colSpan * 180);
-  const height = Math.max(700, rowSpan * 180);
-  const transforms = `f_auto,q_95,c_fit,w_${width},h_${height},dpr_2.0`;
-
+  const transforms = `f_auto,q_auto:best,c_limit,w_${maxWidthPx},dpr_auto`;
   return src.replace(CLOUDINARY_UPLOAD_SEGMENT, `${CLOUDINARY_UPLOAD_SEGMENT}${transforms}/`);
 }
 
-function getResponsiveSizes(colSpan: number): string {
-  const desktopVw = Math.max(12, Math.round((colSpan / 24) * 100));
-  return `(max-width: 768px) 100vw, ${desktopVw}vw`;
-}
+const GRAPHIC_MASONRY_SIZES =
+  "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
+
+/** Odstęp między kolumnami i wierszami + „paspartu” wokół obrazu */
+const GRAPHIC_GALLERY_GAP_PX = 10;
+
+/**
+ * Po hero: najpierw cała seria „Ilustración sin título” (spójny blok), na końcu inne prace.
+ * Kolejność można dowolnie zmieniać — wpływa tylko na układ w kolumnach.
+ * Indeksy 5 i 4 zamienione: Ilustración sin título 15 wyżej w przepływie (lepiej wypełnia układ).
+ * Casitas (10) między 8 a 9 — ten sam rozmiar kafel co reszta (bez column-span), mniej „dziur” w kolumnach.
+ */
+const GRAPHIC_ORDER_AFTER_HERO: readonly number[] = [
+  1, 2, 3, 5, 4, 6, 7, 13, 14, 15, 16, 17, 18, 19, 20, 21, 8, 10, 9, 11, 12,
+];
 
 export default function WorkPage() {
   const [isGraphicDesignOpen, setIsGraphicDesignOpen] = useState(true);
@@ -162,82 +170,72 @@ export default function WorkPage() {
               transition={{ duration: 0.4 }}
               style={{ overflow: 'hidden' }}
             >
-              <div 
-                className="grid"
-                style={{
-                  gridTemplateColumns: 'repeat(24, 1fr)',
-                  gridAutoRows: 'minmax(150px, auto)',
-                  gridAutoFlow: 'row dense',
-                  gap: '30px'
-                }}
-              >
-          {[
-            // Rząd 1: baner na całą długość, niska wysokość
-            { colSpan: 24, rowSpan: 2 },
-            
-            // Rząd 2: 3 obrazki w ratio 3:2 (wysokie prostokąty)
-            { colSpan: 8, rowSpan: 5 },
-            { colSpan: 8, rowSpan: 5 },
-            { colSpan: 8, rowSpan: 5 },
-            
-            // Rząd 3: 2 "leżące" prostokąty
-            { colSpan: 12, rowSpan: 4 },
-            { colSpan: 12, rowSpan: 4 },
-            
-            // Rząd 4: szeroki prostokąt po lewej, wąski wysoki po prawej
-            { colSpan: 18, rowSpan: 5 },
-            { colSpan: 6, rowSpan: 5 },
-            
-            // Rząd 5: 3 × kwadrat
-            { colSpan: 8, rowSpan: 4 },
-            { colSpan: 8, rowSpan: 4 },
-            { colSpan: 8, rowSpan: 4 },
-            
-            // Rząd 6: kwadrat, prostokąt wysoki, kwadrat
-            // 4.5 kolumny w 12-kolumnowym = 9 kolumn w 24-kolumnowym
-            // 3.5 kolumny w 12-kolumnowym = 7 kolumn w 24-kolumnowym
-            { colSpan: 9, rowSpan: 4 },
-            { colSpan: 6, rowSpan: 4 },
-            { colSpan: 9, rowSpan: 4 },
-            
-            // Rząd 7: kwadrat, szeroki prostokąt
-            { colSpan: 8, rowSpan: 5 },
-            { colSpan: 16, rowSpan: 5 },
-            
-            // Rząd 8: 4 wysokie wąskie prostokąty
-            { colSpan: 6, rowSpan: 6 },
-            { colSpan: 6, rowSpan: 6 },
-            { colSpan: 6, rowSpan: 6 },
-            { colSpan: 6, rowSpan: 6 },
-            
-            // Rząd 9: dwa niskie szerokie prostokąty
-            { colSpan: 12, rowSpan: 2 },
-            { colSpan: 12, rowSpan: 2 },
-          ].map((size, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.05 }}
-              className="bg-gray-300 rounded-lg overflow-hidden"
-              style={{
-                gridColumn: `span ${size.colSpan}`,
-                gridRow: `span ${size.rowSpan}`
-              }}
-            >
-              <Image
-                src={getOptimizedCloudinaryUrl(graphicDesignImages[index], size.colSpan, size.rowSpan)}
-                alt={`Graphic design piece ${index + 1}`}
-                width={1200}
-                height={1200}
-                className="w-full h-full object-contain"
-                sizes={getResponsiveSizes(size.colSpan)}
-                quality={95}
-                loading={index < 4 ? "eager" : "lazy"}
-                priority={index < 4}
-              />
-            </motion.div>
-          ))}
+              <div className="flex flex-col">
+                {/* Pierwsza praca: pełna szerokość */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0 }}
+                  className="box-border block w-full leading-none"
+                  style={{ marginBottom: GRAPHIC_GALLERY_GAP_PX }}
+                >
+                  <div
+                    className="box-border overflow-hidden rounded-lg bg-brand-cream shadow-sm ring-1 ring-black/10"
+                    style={{ padding: GRAPHIC_GALLERY_GAP_PX }}
+                  >
+                    <Image
+                      src={getGraphicMasonryUrl(graphicDesignImages[0], 2560)}
+                      alt="Graphic design piece 1 — Ilustración sin título 2"
+                      width={2400}
+                      height={1200}
+                      className="block h-auto w-full max-w-full align-top"
+                      sizes="100vw"
+                      quality={95}
+                      loading="eager"
+                      priority
+                    />
+                  </div>
+                </motion.div>
+
+                {/* Masonry (kolumny): naturalne wypełnienie bez „dziur” jak w CSS Grid; kolejność = GRAPHIC_ORDER_AFTER_HERO */}
+                <div
+                  className="columns-1 sm:columns-2 lg:columns-3 [&>*]:break-inside-avoid"
+                  style={{ columnGap: GRAPHIC_GALLERY_GAP_PX }}
+                >
+                  {GRAPHIC_ORDER_AFTER_HERO.map((originalIndex, orderPos) => {
+                    const imageSrc = graphicDesignImages[originalIndex];
+                    return (
+                      <motion.div
+                        key={originalIndex}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.6,
+                          delay: (orderPos + 1) * 0.05
+                        }}
+                        className="box-border block w-full leading-none"
+                        style={{ marginBottom: GRAPHIC_GALLERY_GAP_PX }}
+                      >
+                        <div
+                          className="box-border overflow-hidden rounded-lg bg-brand-cream shadow-sm ring-1 ring-black/10"
+                          style={{ padding: GRAPHIC_GALLERY_GAP_PX }}
+                        >
+                          <Image
+                            src={getGraphicMasonryUrl(imageSrc)}
+                            alt={`Graphic design piece ${originalIndex + 1}`}
+                            width={1200}
+                            height={1200}
+                            className="block h-auto w-full max-w-full align-top"
+                            sizes={GRAPHIC_MASONRY_SIZES}
+                            quality={95}
+                            loading={orderPos < 3 ? "eager" : "lazy"}
+                            priority={orderPos < 3}
+                          />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
           )}
