@@ -83,7 +83,7 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 w-full min-w-0">
             <PageTransition>
               {children}
             </PageTransition>

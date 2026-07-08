@@ -66,6 +66,66 @@
   margin: 0;
 }
 
+/* About page — centered content block, stays centered on browser zoom */
+.about-page-content {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (max-width: 767px) {
+  .about-page-content {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+/* Home hero — zoom-friendly, scales like regular page content */
+.home-hero-shell {
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  background-color: #fedcbd;
+}
+
+.home-hero {
+  width: 100%;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 0;
+  background-color: #0f2e1f;
+}
+
+.home-hero img {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+}
+
+@media (max-width: 767px) {
+  .home-hero-shell {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Responsive media should never force horizontal overflow */
+img:not([data-nimg='fill']),
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
 html {
   margin: 0;
   padding: 0;
@@ -85,6 +145,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
+  min-width: 0;
   max-width: 100vw;
   overflow-x: hidden;
   display: flex;

@@ -44,7 +44,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
         exit="out"
         variants={pageVariants}
         transition={pageTransition}
-        className="min-h-screen"
+        className="min-h-screen w-full min-w-0"
       >
         {children}
       </motion.div>
