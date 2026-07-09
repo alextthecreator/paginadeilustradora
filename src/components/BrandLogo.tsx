@@ -38,10 +38,10 @@ export default function BrandLogo({ size = 'md', showText = true }: BrandLogoPro
       {/* Actual Logo Image */}
       <div className="relative">
         <Image
-          src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_100,h_100,c_fill/toska-cr/icons/toska_logo.png"
+          src="https://res.cloudinary.com/dxpdn6xgr/image/upload/v1783614050/ICONO_LOGO_TOSKA_WEBSITE_xblglk.png"
           alt="Toska CR Logo"
-          width={logoSize[size]}
-          height={logoSize[size]}
+          width={72}
+          height={72}
           className="object-contain"
           priority
         />
@@ -62,19 +62,17 @@ export default function BrandLogo({ size = 'md', showText = true }: BrandLogoPro
   );
 }
 
-// Shopping bag icon component for header
-export function ShoppingBagIcon() {
+// Language icon for header dropdown
+export function LanguagesIcon() {
   return (
-    <div className="relative p-2 hover:opacity-80 transition-opacity duration-300">
+    <div className="relative p-1 hover:opacity-80 transition-opacity duration-300">
       <Image
-        src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_100,h_100,c_fill/toska-cr/icons/shop_bag.png"
-        alt="Shopping Bag"
-        width={64}
-        height={64}
+        src="https://res.cloudinary.com/dxpdn6xgr/image/upload/v1783614049/ICONO_LANGUAGE_WEBSITE_zaxiq0.png"
+        alt="Language selector"
+        width={72}
+        height={72}
         className="object-contain"
       />
-      {/* Optional notification dot */}
-      <div className="absolute -top-1 -right-1 w-3 h-3 bg-brand-vibrant-pink rounded-full"></div>
     </div>
   );
 }

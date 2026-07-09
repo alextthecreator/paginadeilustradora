@@ -3,11 +3,20 @@
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { FaBars, FaTimes, FaShoppingBag } from 'react-icons/fa';
-import BrandLogo, { ShoppingBagIcon } from './BrandLogo';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import BrandLogo from './BrandLogo';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '@/i18n/LanguageContext';
+
+type NavItem = {
+  href: string;
+  label: string;
+  external?: boolean;
+};
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -17,11 +26,11 @@ export default function Header() {
     setIsMobileMenuOpen(false);
   };
 
-  const navigationItems = [
-    { href: '/about', label: 'About Me' },
-    { href: '/work', label: 'My Work' },
-    { href: '/shop', label: 'Shop' },
-    { href: '/contact', label: 'Contact' }
+  const navigationItems: NavItem[] = [
+    { href: '/about', label: t.nav.about },
+    { href: '/work', label: t.nav.work },
+    { href: '/shop', label: t.nav.shop },
+    { href: '/contact', label: t.nav.contact },
   ];
 
   return (
@@ -35,33 +44,51 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation & Icons */}
-        <div className="hidden md:flex items-center gap-32">
+        <div className="hidden md:flex items-center gap-2">
           <nav className="flex items-center gap-16">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="font-brand-bold transition-colors uppercase tracking-widest"
-                style={{
-                  color: '#FF8A9D',
-                  fontSize: '25px',
-                  fontWeight: 800,
-                  paddingTop: '1rem',
-                  paddingBottom: '1rem'
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navigationItems.map((item) => {
+              const linkClassName =
+                'font-brand-bold transition-colors uppercase tracking-widest';
+              const linkStyle = {
+                color: '#FF8A9D',
+                fontSize: '25px',
+                fontWeight: 800,
+                paddingTop: '1rem',
+                paddingBottom: '1rem',
+                justifyContent: 'right',
+              };
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClassName}
+                    style={linkStyle}
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={linkClassName}
+                  style={linkStyle}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* Desktop Shopping Bag Icon */}
+          {/* Desktop Language Switcher */}
           <div style={{ paddingLeft: '60px' }}>
-            <Link href="/shop">
-              <div style={{ fontSize: '2.25rem' }}> {/* 36px */}
-                <ShoppingBagIcon />
-              </div>
-            </Link>
+            <LanguageSwitcher />
           </div>
         </div>
 
@@ -96,32 +123,29 @@ export default function Header() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                     >
-                      <Link
-                        href={item.href}
-                        onClick={closeMobileMenu}
-                        className="block px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg mx-2"
-                      >
-                        {item.label}
-                      </Link>
+                      {item.external ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg mx-2"
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          onClick={closeMobileMenu}
+                          className="block px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg mx-2"
+                        >
+                          {item.label}
+                        </Link>
+                      )}
                     </motion.div>
                   ))}
-                  
-                  {/* Mobile Shopping Bag */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: navigationItems.length * 0.1 }}
-                    className="px-4 py-3"
-                  >
-                    <Link
-                      href="/shop"
-                      onClick={closeMobileMenu}
-                      className="flex items-center gap-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg p-3"
-                    >
-                      <FaShoppingBag className="text-xl" />
-                      Shop
-                    </Link>
-                  </motion.div>
+
+                  <LanguageSwitcher variant="list" onSelect={closeMobileMenu} />
                 </nav>
               </div>
             </motion.div>

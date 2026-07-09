@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa";
+import PotteryCollections from "@/components/PotteryCollections";
 
 const CLOUDINARY_UPLOAD_SEGMENT = "/image/upload/";
 
@@ -33,10 +34,18 @@ const GRAPHIC_ORDER_AFTER_HERO: readonly number[] = [
   1, 2, 3, 5, 4, 6, 7, 13, 14, 15, 16, 17, 18, 19, 20, 21, 8, 10, 9, 11, 12,
 ];
 
+type WorkSection = 'graphic' | 'pottery' | 'macrame';
+
 export default function WorkPage() {
-  const [isGraphicDesignOpen, setIsGraphicDesignOpen] = useState(true);
-  const [isPotteryOpen, setIsPotteryOpen] = useState(true);
-  const [isMacrameOpen, setIsMacrameOpen] = useState(true);
+  const [openSection, setOpenSection] = useState<WorkSection | null>('graphic');
+
+  const toggleSection = (section: WorkSection) => {
+    setOpenSection((current) => (current === section ? null : section));
+  };
+
+  const isGraphicDesignOpen = openSection === 'graphic';
+  const isPotteryOpen = openSection === 'pottery';
+  const isMacrameOpen = openSection === 'macrame';
 
   // Czy użytkownik jest jeszcze powyżej naturalnej pozycji danej sekcji?
   const [showFloatingPottery, setShowFloatingPottery] = useState(true);
@@ -143,12 +152,12 @@ export default function WorkPage() {
       {/* Graphic Design & Illustration Section */}
       <section className="bg-brand-dark-teal w-full" style={{ paddingTop: '80px', paddingBottom: '0px', paddingLeft: '60px', paddingRight: '60px' }}>
         <button
-          onClick={() => setIsGraphicDesignOpen(!isGraphicDesignOpen)}
+          onClick={() => toggleSection('graphic')}
           className="w-full flex items-center justify-between mb-8 cursor-pointer hover:opacity-80 transition-opacity"
         >
           <h2 
             className="font-temeraire-display font-bold"
-            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left' }}
+            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', paddingBottom: '20px' }}
           >
             Graphic Design & Illustration
           </h2>
@@ -251,7 +260,7 @@ export default function WorkPage() {
             bottom: showFloatingMacrame ? '70px' : 0,
             left: 0,
             right: 0,
-            zIndex: 20,
+            zIndex: 35,
             backgroundColor: '#1a4d3a',
             paddingLeft: '60px',
             paddingRight: '60px',
@@ -260,13 +269,13 @@ export default function WorkPage() {
           }}
         >
           <button
-            onClick={() => setIsPotteryOpen(!isPotteryOpen)}
+            onClick={() => toggleSection('pottery')}
             className="w-full flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
             style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
           >
             <h2 
               className="font-temeraire-display font-bold"
-              style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', margin: 0, padding: 0 }}
+              style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', margin: 0, padding: 0, paddingBottom: '20px', paddingTop: '20px' }}
             >
               Pottery
             </h2>
@@ -284,7 +293,7 @@ export default function WorkPage() {
       {/* Pottery Section - Normal flow */}
       <section 
         ref={potteryRef}
-        className="bg-brand-dark-teal w-full" 
+        className="relative z-0 bg-brand-dark-teal w-full" 
         style={{ 
           paddingTop: '80px', 
           paddingBottom: '0px', 
@@ -293,12 +302,12 @@ export default function WorkPage() {
         }}
       >
           <button
-            onClick={() => setIsPotteryOpen(!isPotteryOpen)}
+            onClick={() => toggleSection('pottery')}
             className="w-full flex items-center justify-between mb-8 cursor-pointer hover:opacity-80 transition-opacity"
           >
           <h2 
             className="font-temeraire-display font-bold"
-            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left' }}
+            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', paddingBottom: '20px' }}
           >
             Pottery
           </h2>
@@ -320,33 +329,7 @@ export default function WorkPage() {
               transition={{ duration: 0.4 }}
               style={{ overflow: 'hidden' }}
             >
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-24">
-          {[
-            "/images/work/pottery/IMG_2343.jpg",
-            "/images/work/pottery/IMG_2353.jpg", 
-            "/images/work/pottery/IMG_2477.jpg",
-            "/images/work/pottery/IMG_2491.jpg",
-            "/images/work/pottery/IMG_2497.jpg",
-            "/images/work/pottery/IMG_2512.jpg"
-          ].map((imagePath, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="aspect-square rounded-lg overflow-hidden"
-            >
-              <Image
-                src={imagePath}
-                alt={`Pottery piece ${index + 1}`}
-                width={400}
-                height={400}
-                className="w-full h-full object-cover"
-                priority={index < 3}
-              />
-            </motion.div>
-          ))}
-              </div>
+              <PotteryCollections />
             </motion.div>
           )}
         </AnimatePresence>
@@ -360,7 +343,7 @@ export default function WorkPage() {
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 30,
+            zIndex: 40,
             backgroundColor: '#1a4d3a',
             paddingLeft: '60px',
             paddingRight: '60px',
@@ -369,13 +352,13 @@ export default function WorkPage() {
           }}
         >
           <button
-            onClick={() => setIsMacrameOpen(!isMacrameOpen)}
+            onClick={() => toggleSection('macrame')}
             className="w-full flex items-center justify-between cursor-pointer hover:opacity-80 transition-opacity"
             style={{ margin: 0, padding: 0, border: 'none', background: 'transparent' }}
           >
             <h2 
               className="font-temeraire-display font-bold"
-              style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', margin: 0, padding: 0 }}
+              style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', margin: 0, padding: 0, paddingBottom: '20px', paddingTop: '20px' }}
             >
               Macramé
             </h2>
@@ -402,12 +385,12 @@ export default function WorkPage() {
         }}
       >
           <button
-            onClick={() => setIsMacrameOpen(!isMacrameOpen)}
+            onClick={() => toggleSection('macrame')}
             className="w-full flex items-center justify-between mb-8 cursor-pointer hover:opacity-80 transition-opacity"
           >
           <h2 
             className="font-temeraire-display font-bold"
-            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left' }}
+            style={{ fontSize: '60px', color: '#FBEAD5', textAlign: 'left', paddingBottom: '20px' }}
           >
             Macramé
           </h2>

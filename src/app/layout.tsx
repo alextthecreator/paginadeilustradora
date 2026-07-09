@@ -6,6 +6,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransition from "@/components/PageTransition";
 import StructuredData from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import Providers from "@/components/Providers";
 import { seoConfig } from "@/lib/seo-config";
 import { analyticsConfig } from "@/lib/analytics";
 
@@ -82,13 +83,15 @@ export default function RootLayout({
         className={`antialiased min-h-screen flex flex-col`}
       >
         <ErrorBoundary>
-          <Header />
-          <main className="flex-1 w-full min-w-0">
-            <PageTransition>
-              {children}
-            </PageTransition>
-          </main>
-          <Footer />
+          <Providers>
+            <Header />
+            <main className="flex-1 w-full min-w-0">
+              <PageTransition>
+                {children}
+              </PageTransition>
+            </main>
+            <Footer />
+          </Providers>
         </ErrorBoundary>
       </body>
     </html>

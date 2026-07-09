@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { FaFilter, FaEye, FaShoppingBag, FaTimes, FaArrowRight } from "react-icons/fa";
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Artwork } from "@/types/artwork";
+import { siteConfig } from "@/lib/site-config";
 
 interface WorkGalleryProps {
   artwork: Artwork[];
@@ -43,7 +45,7 @@ export default function WorkGallery({ artwork }: WorkGalleryProps) {
             <button
               key={category.key}
               onClick={() => setSelectedCategory(category.key as any)}
-              className={`px-6 py-3 rounded-full font-brand-bold transition-all duration-300 flex items-center gap-2 ${
+              className={`px-6 py-6 rounded-full font-brand-bold transition-all duration-300 flex items-center gap-2 ${
                 selectedCategory === category.key
                   ? 'bg-brand-vibrant-pink text-white shadow-lg transform scale-105'
                   : 'bg-brand-dark-teal/20 text-brand-light-pink hover:bg-brand-vibrant-pink/20 border border-brand-vibrant-pink/30 hover:border-brand-vibrant-pink/60'
@@ -259,15 +261,13 @@ export default function WorkGallery({ artwork }: WorkGalleryProps) {
                 </div>
                 
                 <div className="flex gap-4 mt-8">
-                  <a
-                    href="https://etsy.com/shop/toskacr"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href={siteConfig.shopPath}
                     className="flex-1 bg-brand-vibrant-pink text-white py-3 px-6 rounded-lg hover:bg-brand-vibrant-pink/90 transition-colors font-brand-bold flex items-center justify-center gap-2"
                   >
                     <FaShoppingBag />
-                    Buy on Etsy
-                  </a>
+                    Shop
+                  </Link>
                   <button
                     onClick={() => setSelectedArtwork(null)}
                     className="px-6 py-3 border border-brand-vibrant-pink/30 text-brand-light-pink rounded-lg hover:bg-brand-vibrant-pink/20 transition-colors font-brand-bold"

@@ -2,10 +2,33 @@
 
 import { motion } from "framer-motion";
 import CloudinaryImage from "@/components/CloudinaryImage";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+function MultilineText({ text }: { text: string }) {
+  const paragraphs = text.split('\n\n');
+
+  return (
+    <>
+      {paragraphs.map((paragraph, index) => (
+        <span key={index}>
+          {index > 0 && (
+            <>
+              <br />
+              <br />
+            </>
+          )}
+          {paragraph}
+        </span>
+      ))}
+    </>
+  );
+}
 
 /* eslint-disable react/no-unescaped-entities */
 
 export default function AboutPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="bg-brand-secondary-pink w-full text-brand-light-text py-12 md:py-16 min-h-[70vh]">
       <div className="about-page-content">
@@ -19,7 +42,7 @@ export default function AboutPage() {
           >
             <CloudinaryImage
               publicId="toska-cr/about/about_me.jpg"
-              alt="Gloriana - Graphic Designer and Illustrator"
+              alt={t.about.photoAlt}
               width={600}
               height={600}
               className="object-cover"
@@ -37,54 +60,49 @@ export default function AboutPage() {
               className="font-temeraire-display uppercase font-bold text-[#FF8A9D]"
               style={{ fontSize: '70px', marginBottom: '20px', paddingTop: '50px' }}
             >
-              About Me
+              {t.about.aboutMeTitle}
             </h1>
             <p
               className="font-mencken-bold text-[#FBEAD5] ml-auto"
-              style={{ fontSize: '24px', marginBottom: '20px', maxWidth: '500px' }}
+              style={{ fontSize: '24px', marginBottom: '20px', maxWidth: '500px', justifySelf: 'right' }}
             >
-              Hi! My name is Gloriana, a Costa Rican living in Poland, a graphic designer and illustrator by profession, and someone who is passionate about creating art in many different forms.
+              {t.about.aboutMeIntro}
             </p>
             <p
               className="font-mencken-regular text-[#FBEAD5]"
               style={{ fontSize: '16px', marginBottom: '20px', marginTop: '50px', textAlign: 'justify', lineHeight: '1.3' }}
             >
-              I graduated with a Bachelor&apos;s degree in Advertising Design from Veritas University of Art and Design in Costa Rica in 2012. After completing my studies, I spent four years working at advertising agencies. During that time, I had the opportunity to meet incredible people, work with amazing brands and clients, and gain invaluable professional experience. Those were truly formative years, but I eventually realized that agency life wasn&apos;t the right fit for me.
-              <br /><br />
-              In 2017, I decided to take a sabbatical year and move to Poland to do something completely different with my life. That was nine years ago... What started as a temporary adventure eventually became my new home. During these years, the idea of Toska was born. I found love and also became the proud dog mom of Augusto (who has since crossed the rainbow bridge) and Oliver. They are my greatest source of support and my most loyal companions.
+              <MultilineText text={t.about.aboutMeBody} />
             </p>
           </motion.div>
         </div>
 
         {/* Row 2: About Toska Art Project */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center mt-10 md:mt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center mt-10 md:mt-16" style={{ paddingTop: '20px' }}>
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="w-full max-w-xl mx-auto md:mx-0 order-2 md:order-1"
+            style={{ paddingTop: '20px' }}
           >
             <h2
               className="font-temeraire-display uppercase font-bold text-[#FF8A9D]"
               style={{ fontSize: '70px', marginBottom: '20px' }}
             >
-              About Toska Art Project
+              {t.about.toskaTitle}
             </h2>
             <p
               className="font-mencken-bold text-[#FBEAD5]"
               style={{ fontSize: '24px', marginBottom: '20px', maxWidth: '500px' }}
             >
-              Toska was born in Poland in 2017, just a few months after I moved here. It began as the distant vision of a dream that, years later, has finally taken shape and become a reality.
+              {t.about.toskaIntro}
             </p>
             <p
               className="font-mencken-regular text-[#FBEAD5]"
-              style={{ fontSize: '16px', marginBottom: '20px', marginTop: '50px', textAlign: 'justify', lineHeight: '1.3' }}
+              style={{ fontSize: '16px', marginBottom: '50px', marginTop: '50px', textAlign: 'justify', lineHeight: '1.3' }}
             >
-              My biggest dreams have always been to live in another country and to have my own art and design studio. Although it started very modestly—and was even put on hold for a while—the idea of Toska never left my mind. It has always been a voice in my head, inspiring and motivating me to keep going.
-              <br /><br />
-              The word toska refers to a deep feeling of nostalgia and longing for the place where you were born. It felt like the perfect name for a project that continues to grow and evolve wherever I am in the world, while remaining deeply rooted in Costa Rica, the home where I grew up.
-              <br /><br />
-              So far, Toska Art Project has found its expression through illustration and handcrafted techniques such as macramé and ceramics. I don&apos;t rule out exploring other artistic disciplines in the future. Above all, I love creating new things and feel incredibly grateful for the opportunity to make them with my own hands.
+              <MultilineText text={t.about.toskaBody} />
             </p>
           </motion.div>
 
@@ -96,10 +114,11 @@ export default function AboutPage() {
           >
             <CloudinaryImage
               publicId="toska-cr/work/macrame/Toska-128.jpg"
-              alt="Toska Art Project - handcrafted macramé"
+              alt={t.about.toskaPhotoAlt}
               width={600}
               height={600}
-              className="object-cover"
+              className="object-cover justify-self-end"
+      
             />
           </motion.div>
         </div>

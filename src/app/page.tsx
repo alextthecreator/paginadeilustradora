@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import InteractiveCarousel from '@/components/InteractiveCarousel';
 import artwork from '@/data/artwork.json';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const HOME_HERO_TRANSFORM = 'f_auto,q_auto,dpr_auto';
 const HOME_HERO_PUBLIC_ID = 'v1783344408/Home_Picture_Toska_Website_onnmow.png';
@@ -24,6 +25,7 @@ const HOME_HERO_SRC_SET = [
 /* eslint-disable react/no-unescaped-entities */
 
 export default function Home() {
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-brand-dark-teal w-full min-w-0 text-brand-light-text">
@@ -34,7 +36,7 @@ export default function Home() {
               src={HOME_HERO_IMAGE}
               srcSet={HOME_HERO_SRC_SET}
               sizes="(max-width: 1660px) calc(100vw - 48px), 1600px"
-              alt="Toska CR - handcrafted ceramics and artisan work"
+              alt={t.home.heroAlt}
               loading="eager"
               decoding="async"
             />
@@ -44,7 +46,7 @@ export default function Home() {
 
         {/* My Work Section - Matching reference exactly */}
         <section className="bg-brand-dark-teal py-20 w-full" style={{ paddingTop: '40px', marginBottom: 0 }}>
-          <div className="w-full" style={{ paddingLeft: '60px', paddingRight: '60px' }}>
+          <div className="w-full" >
             <div className="text-center mb-12" style={{ paddingBottom: '40px' }}>
               <h2 
                 className="font-brand-heading uppercase tracking-widest"
@@ -54,7 +56,7 @@ export default function Home() {
                   fontWeight: 800
                 }}
               >
-                My Work
+                {t.home.myWork}
               </h2>
             </div>
             
@@ -73,7 +75,7 @@ export default function Home() {
                   fontWeight: '900'
                 }}
               >
-                See All
+                {t.home.seeAll}
               </Link>
             </div>
           </div>
@@ -83,9 +85,7 @@ export default function Home() {
         <section className="w-full" style={{ backgroundColor: '#FF8A9D', paddingTop: '40px', paddingBottom: '40px', paddingLeft: '30px', paddingRight: '30px', margin: 0 }}>
           <div className="w-full">
             <div className="flex justify-center items-center gap-x-12">
-              {[
-                "graphic design", "illustration", "pottery", "macramé"
-              ].map((tag, index, arr) => (
+              {t.home.skills.map((tag, index, arr) => (
                 <React.Fragment key={tag}>
                   <span 
                     className="skills-text lowercase" 

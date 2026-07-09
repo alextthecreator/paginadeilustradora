@@ -110,7 +110,7 @@ export default function ContactPage() {
           >
             <h1 
               className="font-temeraire-display font-bold mb-2"
-              style={{ fontSize: '60px', color: '#FF8A9D', textAlign: 'left' }}
+              style={{ fontSize: '60px', color: '#FF8A9D', textAlign: 'left', paddingBottom: '20px' }}
             >
               GET IN TOUCH
             </h1>

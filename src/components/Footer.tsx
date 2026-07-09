@@ -4,8 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { FaInstagram, FaBehance, FaLinkedinIn } from 'react-icons/fa';
 import { trackEvent, analyticsConfig } from '@/lib/analytics';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   const socialLinks = [
     { href: "https://www.instagram.com/toska_cr/?hl=en", icon: FaInstagram },
     { href: "https://www.behance.net/GlorianaSanabria", icon: FaBehance },
@@ -13,10 +16,10 @@ export default function Footer() {
   ];
 
   const navLinks = [
-    { href: "/work", label: "My Work" },
-    { href: "/about", label: "About Me" },
-    { href: "/shop", label: "Shop" },
-    { href: "/contact", label: "Contact" },
+    { href: "/work", label: t.nav.work },
+    { href: "/about", label: t.nav.about },
+    { href: "/shop", label: t.nav.shop },
+    { href: "/contact", label: t.nav.contact },
   ];
 
   return (
@@ -29,7 +32,7 @@ export default function Footer() {
               className="font-mencken-bold uppercase tracking-widest text-2xl pb-5"
               style={{ color: '#FF8A9D', fontSize: '25px', marginBottom: '20px' }}
             >
-              Socials
+              {t.footer.socials}
             </h3>
             <div className="flex justify-center md:justify-start gap-12">
               {socialLinks.map(({ href, icon: Icon }) => {
@@ -65,11 +68,11 @@ export default function Footer() {
           {/* Navigation */}
           <div className="text-right">
             {navLinks.map(({ href, label }) => (
-              <Link 
-                key={href} 
-                href={href} 
+              <Link
+                key={href}
+                href={href}
                 className="font-mencken-bold block mb-1 transition-colors uppercase tracking-widest"
-                style={{ color: '#FF8A9D', fontSize: '25px' }}
+                style={{ color: '#FF8A9D', fontSize: '25px', paddingBottom: '10px' }}
               >
                 {label}
               </Link>
@@ -82,7 +85,7 @@ export default function Footer() {
           className="font-mencken-regular text-center pt-8 pb-8 mt-12"
           style={{ color: '#FF8A9D', marginLeft: '80px', marginRight: '80px', fontSize: '25px' }}
         >
-          ALL RIGHTS RESERVED  &nbsp; © &nbsp; 2025 TOSKA ART PROJECT
+          {t.footer.copyright}
         </div>
       </div>
     </footer>

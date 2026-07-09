@@ -274,6 +274,60 @@ html {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+.ecwid-store-shell {
+  min-height: 60vh;
+  width: 100%;
+}
+
+.language-switcher-panel {
+  box-sizing: border-box;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.language-switcher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.language-switcher-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 28px;
+  gap: 20px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.language-switcher-option--list {
+  padding: 14px 24px;
+}
+
+.language-switcher-flag {
+  display: inline-flex;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.language-switcher-flag img {
+  display: block;
+  width: 36px !important;
+  height: 27px !important;
+  max-width: 36px !important;
+  max-height: 27px !important;
+  object-fit: contain !important;
+}
+
 /* Smooth transitions for all interactive elements */
 button, a, input, textarea, select {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
