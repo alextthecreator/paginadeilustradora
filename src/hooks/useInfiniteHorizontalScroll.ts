@@ -2,18 +2,39 @@
 
 import { useCallback, useLayoutEffect, useRef } from 'react';
 
-const DEFAULT_SCROLL_STEP_PX = 336; // 320px item + 16px gap
+const DEFAULT_SCROLL_STEP_PX = 336;
+
+function getScrollStep(container: HTMLDivElement): number {
+  const firstItem = container.children[0] as HTMLElement | undefined;
+  if (!firstItem) return DEFAULT_SCROLL_STEP_PX;
+
+  const styles = getComputedStyle(container);
+  const gapValue = styles.columnGap || styles.gap || '16';
+  const gap = parseFloat(gapValue) || 16;
+
+  return firstItem.getBoundingClientRect().width + gap;
+}
 
 interface UseInfiniteHorizontalScrollOptions {
   itemCount: number;
   resetKey: string;
-  stepPx?: number;
+}
+
+/** Small collections need more tiles so one segment overflows the viewport. */
+export function ensureMinCarouselItems<T>(items: T[], minItems = 6): T[] {
+  if (items.length <= 1) return items;
+  if (items.length >= minItems) return items;
+
+  const expanded: T[] = [];
+  while (expanded.length < minItems) {
+    expanded.push(...items);
+  }
+  return expanded.slice(0, minItems);
 }
 
 export function useInfiniteHorizontalScroll({
   itemCount,
   resetKey,
-  stepPx = DEFAULT_SCROLL_STEP_PX,
 }: UseInfiniteHorizontalScrollOptions) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const segmentWidthRef = useRef(0);
@@ -106,21 +127,20 @@ export function useInfiniteHorizontalScroll({
     };
   }, [canInfiniteScroll, resetKey, measureSegmentWidth]);
 
-  const scroll = useCallback(
-    (direction: 'left' | 'right') => {
-      const container = scrollRef.current;
-      if (!container) return;
+  const scroll = useCallback((direction: 'left' | 'right') => {
+    const container = scrollRef.current;
+    if (!container) return;
 
-      container.scrollBy({
-        left: direction === 'left' ? -stepPx : stepPx,
-        behavior: 'auto',
-      });
-    },
-    [stepPx]
-  );
+    const stepPx = getScrollStep(container);
+
+    container.scrollBy({
+      left: direction === 'left' ? -stepPx : stepPx,
+      behavior: 'auto',
+    });
+  }, []);
 
   const scrollContainerClassName =
-    'scrollbar-hide flex gap-4 overflow-x-auto overflow-y-hidden py-4';
+    'scrollbar-hide carousel-track overflow-x-auto overflow-y-hidden py-4';
 
   const scrollContainerStyle = {
     scrollbarWidth: 'none' as const,

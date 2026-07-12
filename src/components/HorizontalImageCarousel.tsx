@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import {
   buildLoopedItems,
+  ensureMinCarouselItems,
   useInfiniteHorizontalScroll,
 } from '@/hooks/useInfiniteHorizontalScroll';
 
@@ -24,18 +25,23 @@ export default function HorizontalImageCarousel({
   collectionName,
   emptyMessage = 'Zdjęcia tej kolekcji wkrótce.',
 }: HorizontalImageCarouselProps) {
-  const imagesKey = useMemo(
-    () => images.map((image) => image.src).join('|'),
+  const displayImages = useMemo(
+    () => ensureMinCarouselItems(images),
     [images]
+  );
+
+  const imagesKey = useMemo(
+    () => displayImages.map((image) => image.src).join('|'),
+    [displayImages]
   );
 
   const { scroll, scrollRef, handleScroll, scrollContainerClassName, scrollContainerStyle } =
     useInfiniteHorizontalScroll({
-      itemCount: images.length,
+      itemCount: displayImages.length,
       resetKey: imagesKey,
     });
 
-  const loopedImages = buildLoopedItems(images);
+  const loopedImages = buildLoopedItems(displayImages);
 
   if (images.length === 0) {
     return (
@@ -66,16 +72,19 @@ export default function HorizontalImageCarousel({
         {loopedImages.map((image, index) => (
           <div
             key={`${image.src}-${index}`}
-            className="flex h-80 w-80 flex-shrink-0 items-center justify-center"
+            className="carousel-item-size flex items-center justify-center"
           >
             <div className="relative h-full w-full overflow-hidden rounded-lg shadow-lg">
               <Image
                 src={image.src}
-                alt={image.alt || `${collectionName} — ${(index % images.length) + 1}`}
+                alt={image.alt || `${collectionName} — ${(index % displayImages.length) + 1}`}
                 fill
                 className="object-cover"
-                sizes="320px"
-                priority={index < 3}
+                sizes="(max-width: 768px) 50vw, 20rem"
+                loading={index < displayImages.length ? 'eager' : 'lazy'}
+                priority={index < 2}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
+                unoptimized={image.src.includes('res.cloudinary.com')}
                 draggable={false}
               />
             </div>

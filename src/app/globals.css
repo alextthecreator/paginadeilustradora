@@ -1,8 +1,6 @@
 /* Tailwind CSS directives */
 @import "tailwindcss";
-
-/* Force Typekit font loading */
-@import url("https://use.typekit.net/jnj4pru.css?v=2");
+@config "../../tailwind.config.mjs";
 
 /* Ensure fonts are loaded with all weights */
 @font-face {
@@ -57,7 +55,110 @@
   --brand-light-pink: #f8d7da; /* Light pink for backgrounds and subtle elements */
   --brand-cream: #f5efe1; /* Cream for buttons and highlights */
   --brand-light-text: #fdfbf7; /* A slightly off-white for text on dark backgrounds */
+
+  /* Layout rhythm — proportional spacing across pages */
+  --layout-page-x: clamp(2.5rem, 5vw, 5rem);
+  --layout-page-y: clamp(2.5rem, 5vw, 5rem);
+  --layout-section-y: clamp(2.5rem, 5vw, 4rem);
+  --layout-footer-x: clamp(2.5rem, 5vw, 5rem);
+  --layout-footer-y: clamp(3rem, 6vw, 5rem);
+  --layout-content-max: 72rem;
+  --layout-wide-max: 100rem;
+  --layout-text-gap: clamp(1rem, 2vw, 1.5rem);
+  --header-sticky-offset: 9rem;
+  --header-sticky-offset-px: 144px;
+  --site-header-height-px: 148px;
+  --work-sticky-nav-bar-height: 3rem;
+  --layout-gap-sm: clamp(0.75rem, 1.5vw, 1rem);
+  --layout-gap-md: clamp(1rem, 2vw, 1.5rem);
+  --layout-gap-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --layout-gap-xl: clamp(2rem, 5vw, 4rem);
+
+  /* Typography scale — harmonious relative sizes */
+  --type-display: clamp(2.5rem, 4vw + 1rem, 3.75rem);
+  --type-nav: clamp(1.125rem, 1vw + 0.75rem, 1.5625rem);
+  --type-lead: clamp(1.125rem, 0.75vw + 0.875rem, 1.5rem);
+  --type-body: clamp(0.9375rem, 0.35vw + 0.875rem, 1rem);
+  --type-skills: clamp(1.5rem, 2.5vw + 0.75rem, 2.5rem);
+  --type-label: clamp(1rem, 0.75vw + 0.75rem, 1.375rem);
+  --type-btn: clamp(1rem, 0.5vw + 0.875rem, 1.25rem);
+
+  /* Carousel — scales with viewport */
+  --carousel-item-size: clamp(14rem, 28vw, 20rem);
+  --carousel-gap: 1rem;
+
+  /* Language switcher dropdown offset from globe icon */
+  --language-switcher-menu-gap: 1rem;
+
+  /* Header: gap between nav links and globe icon */
+  --header-nav-globe-gap: 60px;
 }
+
+/* Brand utilities — always available regardless of Tailwind scan */
+.bg-brand-vibrant-pink {
+  background-color: var(--brand-vibrant-pink);
+}
+
+.bg-brand-cream {
+  background-color: var(--brand-cream);
+}
+
+.bg-brand-primary-pink {
+  background-color: var(--brand-primary-pink);
+}
+
+.bg-brand-light-pink {
+  background-color: var(--brand-light-pink);
+}
+
+.text-brand-vibrant-pink {
+  color: var(--brand-vibrant-pink);
+}
+
+.text-brand-cream {
+  color: var(--brand-cream);
+}
+
+.text-brand-light-text {
+  color: var(--brand-light-text);
+}
+
+.text-brand-light-pink {
+  color: var(--brand-light-pink);
+}
+
+.text-brand-primary-pink {
+  color: var(--brand-primary-pink);
+}
+
+.font-brand-heading {
+  font-family: 'Temeraire Display Bk', serif;
+}
+
+.font-brand-bold {
+  font-family: 'mencken-std', serif;
+  font-weight: 700;
+}
+
+.font-brand-regular {
+  font-family: 'mencken-std', serif;
+  font-weight: 400;
+}
+
+.font-brand-elegant {
+  font-family: 'temeraire', serif;
+}
+
+.header-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--header-nav-globe-gap);
+}
+
+.skills-section {
+  background-color: var(--brand-vibrant-pink);
+}
+
 
 
 * {
@@ -69,17 +170,390 @@
 /* About page — centered content block, stays centered on browser zoom */
 .about-page-content {
   width: 100%;
-  max-width: 72rem;
+  max-width: var(--layout-wide-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: var(--layout-page-x);
+  padding-right: var(--layout-page-x);
+}
+
+.about-layout {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.about-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.about-copy {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.about-lead {
+  width: min(100%, 33rem);
+}
+
+.about-body {
+  width: 100%;
+  max-width: 60rem;
+}
+
+.about-copy-right {
+  justify-self: end;
+  text-align: right;
+}
+
+.about-copy-left {
+  justify-self: start;
+  text-align: left;
+}
+
+.about-copy-right .about-lead,
+.about-copy-right .about-body {
+  margin-left: auto;
+}
+
+.about-media-card {
+  width: 100%;
+  max-width: 44rem;
+  min-height: clamp(18rem, 45vw, 34rem);
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.about-media-card-secondary {
+  max-width: 26rem;
+  justify-self: end;
+}
+
+@media (min-width: 1024px) {
+  .about-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .about-row-bottom {
+    align-items: center;
+  }
+}
+
+/* Shared layout utilities */
+.page-x {
+  padding-left: var(--layout-page-x);
+  padding-right: var(--layout-page-x);
+}
+
+.page-y {
+  padding-top: var(--layout-page-y);
+  padding-bottom: var(--layout-page-y);
+}
+
+.section-y {
+  padding-top: var(--layout-section-y);
+  padding-bottom: var(--layout-section-y);
+}
+
+.page-shell {
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: var(--layout-page-x);
+  padding-right: var(--layout-page-x);
+  padding-top: var(--layout-section-y);
+  padding-bottom: var(--layout-section-y);
+}
+
+/* Czytelne bloki tekstu — marginesy wokół copy */
+.readable-text {
+  line-height: 1.55;
+  /* max-width: 42rem; */
+  padding-block: clamp(0.25rem, 1vw, 0.75rem);
+}
+
+.section-title,
+.section-title-pink {
+  padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.readable-text p + p,
+.readable-text p + .readable-text {
+  margin-top: var(--layout-text-gap);
+}
+
+.work-section-header {
+  scroll-margin-top: calc(
+    var(--site-header-height-px, var(--header-sticky-offset)) +
+      var(--work-sticky-nav-stack-height-px, 0px) +
+      18px
+  );
+  scroll-margin-bottom: calc(var(--work-bottom-nav-height-px, 0px) + 6px);
+  box-sizing: border-box;
+  width: 100%;
+  padding-inline: clamp(1rem, 3vw, 2rem);
+  padding-block: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.work-section-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transform-origin: top center;
+  overflow-anchor: none;
+  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-section-panel[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.work-section-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.work-section-panel-content {
+  transform-origin: top center;
+  overflow-anchor: none;
+  padding-bottom: calc(var(--work-bottom-nav-height-px, 0px) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-section-panel {
+    transition: none;
+  }
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+main {
+  padding-top: var(--site-header-height-px, var(--header-sticky-offset));
+}
+
+.work-sticky-nav-top {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--site-header-height-px, var(--header-sticky-offset));
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.work-sticky-nav-top .work-floating-nav-item {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.work-sticky-nav-bar {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  min-height: var(--work-sticky-nav-bar-height);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.5rem clamp(1rem, 3vw, 2rem);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 0.2s ease;
+}
+
+.work-sticky-nav-bar:hover {
+  opacity: 0.85;
+}
+
+.work-sticky-nav-title {
+  margin: 0;
+  font-size: clamp(1rem, 0.75vw + 0.875rem, 1.375rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fbead5;
+}
+
+.work-floating-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-floating-nav-item {
+  background-color: #1a4d3a;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-shell {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--layout-footer-y) var(--layout-footer-x);
+}
+
+.footer-nav-link {
+  display: block;
+  padding: 0.25rem 0.75rem 0.625rem;
+}
+
+.content-max {
+  width: 100%;
+  max-width: var(--layout-content-max);
+  margin-inline: auto;
+}
+
+.contact-layout {
+  display: grid;
+  width: 100%;
+  max-width: var(--layout-wide-max);
+  margin-inline: auto;
+  gap: var(--layout-gap-xl);
+  align-items: stretch;
+}
+
+.contact-layout > * {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .contact-layout {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+.contact-form-card {
+  box-sizing: border-box;
+  width: 100%;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.contact-image-panel {
+  position: relative;
+  width: 100%;
+  min-height: clamp(18rem, 45vw, 34rem);
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .contact-image-panel {
+    min-height: 100%;
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.type-display {
+  font-size: var(--type-display);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.type-nav {
+  font-size: var(--type-nav);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.type-lead {
+  font-size: var(--type-lead);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.type-body {
+  font-size: var(--type-body);
+  line-height: 1.45;
+}
+
+.type-skills {
+  font-size: var(--type-skills);
+  line-height: 1;
+}
+
+.type-label {
+  font-size: var(--type-label);
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 0.25rem 0.75rem 0.625rem;
+}
+
+.type-btn {
+  font-size: var(--type-btn);
+  font-weight: 800;
+}
+
+.carousel-item-size {
+  width: var(--carousel-item-size);
+  height: var(--carousel-item-size);
+  flex-shrink: 0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--layout-gap-lg);
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--layout-gap-xl);
+  }
+}
+
+.carousel-track {
+  display: flex;
+  gap: var(--carousel-gap);
+}
+
+.section-title {
+  font-size: var(--type-display);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fbead5;
+  text-align: left;
+  padding-bottom: var(--layout-gap-sm);
+}
+
+.section-title-pink {
+  font-size: var(--type-display);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #ff8a9d;
+}
+
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--layout-gap-md) var(--layout-gap-lg);
 }
 
 @media (max-width: 767px) {
   .about-page-content {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: var(--layout-page-x);
+    padding-right: var(--layout-page-x);
   }
 }
 
@@ -93,7 +567,7 @@
 
 .home-hero {
   width: 100%;
-  max-width: 1600px;
+  max-width: var(--layout-wide-max);
   margin-left: auto;
   margin-right: auto;
   min-width: 0;
@@ -283,6 +757,24 @@ html {
   box-sizing: border-box;
   padding: 24px;
   overflow: hidden;
+}
+
+/* Dropdown shell */
+.language-switcher-dropdown {
+  position: absolute;
+  right: 0;
+  z-index: 50;
+}
+
+/* Niewidoczny mostek hover — mysz może przejechać przez lukę do menu */
+.language-switcher-root::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 320px;
+  height: var(--language-switcher-menu-gap);
+  pointer-events: auto;
 }
 
 .language-switcher-list {
@@ -498,18 +990,9 @@ footer a:hover {
   opacity: 0.8;
 }
 
-/* Ensure footer has proper margins */
-footer > div {
-  padding-left: 80px !important;
-  padding-right: 80px !important;
-  padding-bottom: 30px !important;
-}
-
-@media (max-width: 767px) {
-  footer > div {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-  }
+/* Ensure footer has proper padding on all sides */
+footer .footer-shell {
+  padding: var(--layout-footer-y) var(--layout-footer-x) !important;
 }
 
 /* Remove any gaps between sections */
@@ -523,10 +1006,9 @@ section {
   margin-top: 0 !important;
 }
 
-/* Ensure About Me page has no gaps with footer */
-main > div {
+/* PageTransition wrapper — keep sections edge-to-edge, padding lives on sections */
+main > .min-h-screen {
   margin: 0 !important;
-  padding: 0 !important;
 }
 
 /* Ensure seamless connection between About Me and footer */
@@ -543,13 +1025,11 @@ main {
 /* Ensure no white lines between sections */
 .bg-brand-secondary-pink {
   margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 /* Target the specific About Me page container */
 .min-h-screen.bg-brand-secondary-pink {
   margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 /* Ensure footer has no top margin when following About Me */
@@ -573,4 +1053,3 @@ section {
   border-bottom: none !important;
   border-top: none !important;
 }
-

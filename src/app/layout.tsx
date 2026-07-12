@@ -76,7 +76,9 @@ export default function RootLayout({
       <head>
         <StructuredData type="website" />
         <GoogleAnalytics measurementId={analyticsConfig.measurementId} />
-        <link rel="stylesheet" href="https://use.typekit.net/jnj4pru.css?v=2" />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://db.onlinewebfonts.com" crossOrigin="anonymous" />
         <link href="https://db.onlinewebfonts.com/c/ea90e636f79e82b61513ca71197744db?family=Temeraire+Display+Bk" rel="stylesheet" />
       </head>
       <body

@@ -5,8 +5,10 @@ import { FaSpinner, FaCheck } from "react-icons/fa";
 import { useState } from "react";
 import Image from "next/image";
 import { trackEvent, trackConversion, analyticsConfig } from "@/lib/analytics";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     firstName: '',
     surname: '',
@@ -98,50 +100,33 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-dark-teal">
-      <div className="w-full" style={{ paddingLeft: '200px', paddingRight: '105px', paddingTop: '80px', paddingBottom: '80px' }}>
-        <div className="grid md:grid-cols-5 gap-8 items-center">
-          {/* Left Column - Contact Form */}
+    <main className="min-h-screen bg-brand-dark-teal">
+      <div className="page-shell w-full">
+        <div className="contact-layout">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="md:col-span-3"
+            className="w-full min-w-0"
           >
-            <h1 
+            <h1
               className="font-temeraire-display font-bold mb-2"
               style={{ fontSize: '60px', color: '#FF8A9D', textAlign: 'left', paddingBottom: '20px' }}
             >
-              GET IN TOUCH
+              {t.contact.title}
             </h1>
-            
-            <p 
-              className="font-mencken-regular mb-4"
-              style={{ fontSize: '13px', color: '#FBEAD5', lineHeight: '1.3', textAlign: 'left', paddingRight: '100px' }}
-            >
+
+            <p className="readable-text type-body font-mencken-regular mb-6 max-w-2xl text-[#FBEAD5]">
               Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
             </p>
-            
-            <p 
-              className="font-mencken-regular"
-              style={{ fontSize: '11px', color: '#FBEAD5', lineHeight: '1.3', textAlign: 'left', marginBottom: '20px' }}
-            >            </p>
 
-                    {/* Pink Form Container */}
-                    <div
-                      className="rounded-2xl"
-                      style={{ backgroundColor: '#FF8A9D', padding: '16px', maxWidth: '85%', aspectRatio: '4/2.2' }}
-                    >
-              <form onSubmit={handleSubmit} className="space-y-3">
-                {/* Name Fields */}
+            <div className="contact-form-card rounded-2xl bg-brand-vibrant-pink">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label 
-                    className="block font-mencken-bold mb-2"
-                    style={{ color: '#1a4d3a', fontSize: '12px', padding: '5px' }}
-                  >
-                    Name*
+                  <label className="type-label font-mencken-bold mb-2 block p-1 text-[#1a4d3a]">
+                    {t.contact.nameLabel}
                   </label>
-                          <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <input
                       type="text"
                       name="firstName"
@@ -150,7 +135,7 @@ export default function ContactPage() {
                       required
                       className="w-full rounded-lg border-0"
                       style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
-                      placeholder="First Name"
+                      placeholder={t.contact.firstNamePlaceholder}
                     />
                     <input
                       type="text"
@@ -160,18 +145,14 @@ export default function ContactPage() {
                       required
                       className="w-full rounded-lg border-0"
                       style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
-                      placeholder="Surname"
+                      placeholder={t.contact.surnamePlaceholder}
                     />
                   </div>
                 </div>
 
-                {/* Email Field */}
                 <div>
-                  <label 
-                    className="block font-mencken-bold mb-2"
-                    style={{ color: '#1a4d3a', fontSize: '12px', padding: '5px' }}
-                  >
-                    E-mail*
+                  <label className="type-label font-mencken-bold mb-2 block p-1 text-[#1a4d3a]">
+                    {t.contact.emailLabel}
                   </label>
                   <input
                     type="email"
@@ -181,17 +162,13 @@ export default function ContactPage() {
                     required
                     className="w-full rounded-lg border-0"
                     style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
-                    placeholder="your@email.com"
+                    placeholder={t.contact.emailPlaceholder}
                   />
                 </div>
 
-                {/* Subject Field */}
                 <div>
-                  <label 
-                    className="block font-mencken-bold mb-2"
-                    style={{ color: '#1a4d3a', fontSize: '12px', padding: '5px' }}
-                  >
-                    Subject*
+                  <label className="type-label font-mencken-bold mb-2 block p-1 text-[#1a4d3a]">
+                    {t.contact.subjectLabel}
                   </label>
                   <input
                     type="text"
@@ -201,36 +178,31 @@ export default function ContactPage() {
                     required
                     className="w-full rounded-lg border-0"
                     style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
-                    placeholder="What's this about?"
+                    placeholder={t.contact.subjectPlaceholder}
                   />
                 </div>
 
-                {/* Message Field */}
                 <div>
-                  <label 
-                    className="block font-mencken-bold mb-2"
-                    style={{ color: '#1a4d3a', fontSize: '12px', padding: '5px' }}
-                  >
-                    Message*
+                  <label className="type-label font-mencken-bold mb-2 block p-1 text-[#1a4d3a]">
+                    {t.contact.messageLabel}
                   </label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     required
-                        rows={2}
+                    rows={4}
                     className="w-full rounded-lg border-0 resize-none"
                     style={{ backgroundColor: '#FBEAD5', padding: '12px' }}
-                    placeholder="Tell me about your project..."
+                    placeholder={t.contact.messagePlaceholder}
                   />
                 </div>
 
-                {/* Send Button */}
-                <div className="flex justify-end" style={{ marginTop: '16px' }}>
+                <div className="mt-4 flex justify-end">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-8 py-3 rounded-2xl font-mencken-bold text-sm transition-all duration-300 flex items-center gap-2"
+                    className="type-btn flex items-center gap-2 rounded-2xl px-8 py-3 font-mencken-bold transition-all duration-300"
                     style={{ paddingLeft: '30px', paddingRight: '30px', 
                       backgroundColor: isSubmitting ? '#1a4d3a80' : '#1a4d3a',
                       color: 'white'
@@ -239,10 +211,10 @@ export default function ContactPage() {
                     {isSubmitting ? (
                       <>
                         <FaSpinner className="animate-spin" />
-                        Sending...
+                        {t.contact.sending}
                       </>
                     ) : (
-                      'SEND'
+                      t.contact.send
                     )}
                   </button>
                 </div>
@@ -256,7 +228,7 @@ export default function ContactPage() {
                     style={{ backgroundColor: '#1a4d3a20', color: '#1a4d3a' }}
                   >
                     <FaCheck />
-                    Thank you! Your message has been sent successfully.
+                    {t.contact.success}
                   </motion.div>
                 )}
 
@@ -267,7 +239,7 @@ export default function ContactPage() {
                     className="mt-4 p-4 rounded-lg"
                     style={{ backgroundColor: '#ff000020', color: '#ff0000' }}
                   >
-                    Sorry, there was an error sending your message. Please try again.
+                    {t.contact.error}
                   </motion.div>
                 )}
               </form>
@@ -279,18 +251,19 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative rounded-2xl overflow-hidden md:col-span-2 aspect-square"
+            className="contact-image-panel"
           >
             <Image
-              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_600,h_600,c_fit,dpr_auto,fl_progressive/toska-cr/contact/get_in_touch.jpg"
-              alt="Get in Touch - Contact Toska CR"
+              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_900,h_1125,c_fill,dpr_auto,fl_progressive/toska-cr/contact/get_in_touch.jpg"
+              alt={t.contact.imageAlt}
               fill
               className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 45vw"
               priority
             />
           </motion.div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

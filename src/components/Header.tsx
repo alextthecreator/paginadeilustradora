@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import BrandLogo from './BrandLogo';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -16,7 +16,31 @@ type NavItem = {
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const element = headerRef.current;
+    if (!element) return;
+
+    const syncHeaderHeight = () => {
+      document.documentElement.style.setProperty(
+        '--site-header-height-px',
+        `${Math.round(element.getBoundingClientRect().height)}px`
+      );
+    };
+
+    syncHeaderHeight();
+
+    const resizeObserver = new ResizeObserver(syncHeaderHeight);
+    resizeObserver.observe(element);
+    window.addEventListener('resize', syncHeaderHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', syncHeaderHeight);
+    };
+  }, [isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -34,8 +58,8 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-brand-dark-teal w-full sticky top-0 z-50">
-      <div className="w-full flex items-center justify-between h-32" style={{ paddingLeft: '100px', paddingRight: '100px', paddingTop: '20px' }}>
+    <header ref={headerRef} className="site-header bg-brand-dark-teal w-full">
+      <div className="page-x flex h-32 w-full items-center justify-between pt-5">
         {/* Brand Logo */}
         <div className="flex-shrink-0">
           <Link href="/" onClick={closeMobileMenu}>
@@ -44,19 +68,12 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation & Icons */}
-        <div className="hidden md:flex items-center gap-2">
-          <nav className="flex items-center gap-16">
+        <div className="header-nav-actions hidden md:flex">
+          <nav className="flex items-center gap-8 lg:gap-16">
             {navigationItems.map((item) => {
               const linkClassName =
-                'font-brand-bold transition-colors uppercase tracking-widest';
-              const linkStyle = {
-                color: '#FF8A9D',
-                fontSize: '25px',
-                fontWeight: 800,
-                paddingTop: '1rem',
-                paddingBottom: '1rem',
-                justifyContent: 'right',
-              };
+                'type-nav font-brand-bold transition-colors uppercase tracking-widest py-4';
+              const linkStyle = { color: '#FF8A9D' };
 
               if (item.external) {
                 return (
@@ -74,22 +91,14 @@ export default function Header() {
               }
 
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={linkClassName}
-                  style={linkStyle}
-                >
+                <Link key={item.href} href={item.href} className={linkClassName} style={linkStyle}>
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Desktop Language Switcher */}
-          <div style={{ paddingLeft: '60px' }}>
-            <LanguageSwitcher />
-          </div>
+          <LanguageSwitcher />
         </div>
 
         {/* Mobile Menu Button */}

@@ -1,6 +1,5 @@
 'use client';
 
-import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { getEcwidScriptUrl, siteConfig } from '@/lib/site-config';
@@ -36,11 +35,31 @@ export default function EcwidStore() {
       container.innerHTML = '';
     }
 
-    if (window.xProductBrowser) {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      `script[data-ecwid-script="${locale}"]`
+    );
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement('script');
+    script.src = scriptUrl;
+    script.async = true;
+    script.dataset.ecwidScript = locale;
+    script.onload = () => {
       initEcwidStore();
       setIsLoading(false);
-    }
-  }, [locale]);
+    };
+    script.onerror = () => {
+      setIsLoading(false);
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, [locale, scriptUrl]);
 
   return (
     <div className="ecwid-store-shell" key={locale}>
@@ -52,15 +71,6 @@ export default function EcwidStore() {
         />
       )}
       <div id={siteConfig.ecwidStoreElementId} />
-      <Script
-        id={`ecwid-script-${locale}`}
-        src={scriptUrl}
-        strategy="afterInteractive"
-        onLoad={() => {
-          initEcwidStore();
-          setIsLoading(false);
-        }}
-      />
     </div>
   );
 }

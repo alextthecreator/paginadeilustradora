@@ -12,6 +12,8 @@ interface LanguageSwitcherProps {
 }
 
 const HOVER_CLOSE_DELAY = 180;
+/** Odstęp między ikoną globusa a panelem języków (px) — zmień tutaj */
+const MENU_GAP_PX = 16;
 
 function FlagImage({ locale }: { locale: Locale }) {
   const [imageError, setImageError] = useState(false);
@@ -129,7 +131,8 @@ export default function LanguageSwitcher({
 
   return (
     <div
-      className="relative"
+      className="language-switcher-root relative"
+      style={{ ['--language-switcher-menu-gap' as string]: `${MENU_GAP_PX}px` }}
       onMouseEnter={openMenu}
       onMouseLeave={closeMenu}
       onFocus={openMenu}
@@ -153,15 +156,19 @@ export default function LanguageSwitcher({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
-            className="language-switcher-panel absolute right-0 top-full z-50 mt-3 min-w-[320px] rounded-2xl border-2 border-[#FF8A9D]/40 bg-[#0f2e1f] shadow-2xl"
-            role="listbox"
-            aria-label="Language selector"
+            className="language-switcher-dropdown"
+            style={{ top: `calc(100% + ${MENU_GAP_PX}px)` }}
           >
-            <div className="language-switcher-list">
+            <div
+              className="language-switcher-panel min-w-[320px] rounded-2xl border-2 border-[#FF8A9D]/40 bg-[#0f2e1f] shadow-2xl"
+              role="listbox"
+              aria-label="Language selector"
+            >
+              <div className="language-switcher-list">
               {locales.map((code, index) => (
                 <LanguageOption
                   key={code}
@@ -173,6 +180,7 @@ export default function LanguageSwitcher({
                   index={index}
                 />
               ))}
+              </div>
             </div>
           </motion.div>
         )}

@@ -57,7 +57,7 @@ Key components have very specific styling rules that must be maintained.
 
 -   **Header**:
     -   The `BrandLogo` component must be used in its icon-only form (`showText={false}`).
-    -   The `ShoppingBagIcon` must be visually larger to balance the layout.
+    -   The `LanguagesIcon` must be visually larger to balance the layout.
     -   Navigation links must be right-aligned with `60px` of space separating them from the shopping icon.
 -   **Footer**:
     -   Must have a dark green background (`#0f2e1f`) and pink text for links and social icons.

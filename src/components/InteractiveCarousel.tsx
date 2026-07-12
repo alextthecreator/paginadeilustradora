@@ -61,7 +61,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
         {loopedArtwork.map((item, index) => (
           <div
             key={`${item.id}-${index}`}
-            className="flex h-80 w-80 flex-shrink-0 items-center justify-center"
+            className="carousel-item-size flex items-center justify-center"
           >
             <Link href={`/work/${item.id}`} className="group block h-full w-full">
               <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">

@@ -45,7 +45,7 @@ export default function WorkGallery({ artwork }: WorkGalleryProps) {
             <button
               key={category.key}
               onClick={() => setSelectedCategory(category.key as any)}
-              className={`px-6 py-6 rounded-full font-brand-bold transition-all duration-300 flex items-center gap-2 ${
+              className={`px-6 py-3 rounded-full font-brand-bold transition-all duration-300 flex items-center gap-2 ${
                 selectedCategory === category.key
                   ? 'bg-brand-vibrant-pink text-white shadow-lg transform scale-105'
                   : 'bg-brand-dark-teal/20 text-brand-light-pink hover:bg-brand-vibrant-pink/20 border border-brand-vibrant-pink/30 hover:border-brand-vibrant-pink/60'

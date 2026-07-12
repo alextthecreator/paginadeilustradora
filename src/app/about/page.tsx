@@ -30,12 +30,11 @@ export default function AboutPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="bg-brand-secondary-pink w-full text-brand-light-text py-12 md:py-16 min-h-[70vh]">
-      <div className="about-page-content">
-        {/* Row 1: About Me */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
+    <div className="bg-brand-dark-teal w-full text-brand-light-text min-h-[70vh]">
+      <div className="about-page-content about-layout page-y">
+        <section className="about-row about-row-top">
           <motion.div
-            className="w-full max-w-md mx-auto aspect-square relative overflow-hidden rounded-lg shadow-lg"
+            className="about-media-card"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
@@ -54,60 +53,40 @@ export default function AboutPage() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-right w-full max-w-xl mx-auto md:mx-0 md:ml-auto"
+            className="about-copy about-copy-right"
           >
-            <h1
-              className="font-temeraire-display uppercase font-bold text-[#FF8A9D]"
-              style={{ fontSize: '70px', marginBottom: '20px', paddingTop: '50px' }}
-            >
+            <h1 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5 pt-2 md:pt-4">
               {t.about.aboutMeTitle}
             </h1>
-            <p
-              className="font-mencken-bold text-[#FBEAD5] ml-auto"
-              style={{ fontSize: '24px', marginBottom: '20px', maxWidth: '500px', justifySelf: 'right' }}
-            >
+            <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
               {t.about.aboutMeIntro}
             </p>
-            <p
-              className="font-mencken-regular text-[#FBEAD5]"
-              style={{ fontSize: '16px', marginBottom: '20px', marginTop: '50px', textAlign: 'justify', lineHeight: '1.3' }}
-            >
+            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 m-12 text-justify">
               <MultilineText text={t.about.aboutMeBody} />
             </p>
           </motion.div>
-        </div>
+        </section>
 
-        {/* Row 2: About Toska Art Project */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center mt-10 md:mt-16" style={{ paddingTop: '20px' }}>
+        <section className="about-row about-row-bottom">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="w-full max-w-xl mx-auto md:mx-0 order-2 md:order-1"
-            style={{ paddingTop: '20px' }}
+            className="about-copy about-copy-left order-2 md:order-1"
           >
-            <h2
-              className="font-temeraire-display uppercase font-bold text-[#FF8A9D]"
-              style={{ fontSize: '70px', marginBottom: '20px' }}
-            >
+            <h2 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5">
               {t.about.toskaTitle}
             </h2>
-            <p
-              className="font-mencken-bold text-[#FBEAD5]"
-              style={{ fontSize: '24px', marginBottom: '20px', maxWidth: '500px' }}
-            >
+            <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
               {t.about.toskaIntro}
             </p>
-            <p
-              className="font-mencken-regular text-[#FBEAD5]"
-              style={{ fontSize: '16px', marginBottom: '50px', marginTop: '50px', textAlign: 'justify', lineHeight: '1.3' }}
-            >
+            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 mb-12 text-justify">
               <MultilineText text={t.about.toskaBody} />
             </p>
           </motion.div>
 
           <motion.div
-            className="w-full max-w-md mx-auto aspect-square relative overflow-hidden rounded-lg shadow-lg order-1 md:order-2"
+            className="about-media-card about-media-card-secondary order-1 md:order-2"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -118,10 +97,9 @@ export default function AboutPage() {
               width={600}
               height={600}
               className="object-cover justify-self-end"
-      
             />
           </motion.div>
-        </div>
+        </section>
       </div>
     </div>
   );

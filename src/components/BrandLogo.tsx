@@ -69,8 +69,8 @@ export function LanguagesIcon() {
       <Image
         src="https://res.cloudinary.com/dxpdn6xgr/image/upload/v1783614049/ICONO_LANGUAGE_WEBSITE_zaxiq0.png"
         alt="Language selector"
-        width={72}
-        height={72}
+        width={30}
+        height={30}
         className="object-contain"
       />
     </div>

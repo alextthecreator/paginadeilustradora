@@ -11,6 +11,36 @@ const en = {
     skills: ['graphic design', 'illustration', 'pottery', 'macramé'],
     heroAlt: 'Toska CR - handcrafted ceramics and artisan work',
   },
+  work: {
+    title: 'My Work',
+    skills: ['graphic design', 'illustration', 'pottery', 'macramé'],
+    sections: {
+      graphic: 'Graphic Design & Illustration',
+      pottery: 'Pottery',
+      macrame: 'Macramé',
+    },
+    pottery: {
+      showAll: 'All',
+      collectionsNavLabel: 'Pottery collections',
+    },
+  },
+  contact: {
+    title: 'Get in Touch',
+    nameLabel: 'Name*',
+    firstNamePlaceholder: 'First Name',
+    surnamePlaceholder: 'Surname',
+    emailLabel: 'E-mail*',
+    emailPlaceholder: 'your@email.com',
+    subjectLabel: 'Subject*',
+    subjectPlaceholder: "What's this about?",
+    messageLabel: 'Message*',
+    messagePlaceholder: 'Tell me about your project...',
+    sending: 'Sending...',
+    send: 'Send',
+    success: 'Thank you! Your message has been sent successfully.',
+    error: 'Sorry, there was an error sending your message. Please try again.',
+    imageAlt: 'Get in Touch - Contact Toska CR',
+  },
   about: {
     aboutMeTitle: 'About Me',
     aboutMeIntro:
