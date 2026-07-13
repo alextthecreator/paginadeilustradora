@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local image sources (served from Cloudinary in production)
+/public/images/work/macrame/
+/public/images/work/pottery/
