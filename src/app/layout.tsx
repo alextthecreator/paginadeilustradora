@@ -59,9 +59,12 @@ export const metadata: Metadata = {
     google: "your-google-verification-code", // Will be updated when Google Search Console is set up
   },
   icons: {
-    icon: seoConfig.site.icon,
-    shortcut: seoConfig.site.icon,
-    apple: seoConfig.site.icon,
+    icon: [
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+      { url: '/icon.png', type: 'image/png', sizes: '192x192' },
+    ],
+    shortcut: '/icon.png',
+    apple: '/apple-icon.png',
   },
 };
 
@@ -81,6 +84,9 @@ export default function RootLayout({
       <head>
         <StructuredData type="website" />
         <GoogleAnalytics measurementId={analyticsConfig.measurementId} />
+        <link rel="icon" href="/icon.png" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/icon.png" type="image/png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://db.onlinewebfonts.com" crossOrigin="anonymous" />

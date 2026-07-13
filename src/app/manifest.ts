@@ -1,5 +1,4 @@
 import { MetadataRoute } from 'next'
-import { seoConfig } from '@/lib/seo-config'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -12,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#ec4899',
     icons: [
       {
-        src: seoConfig.site.icon,
+        src: '/icon.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
