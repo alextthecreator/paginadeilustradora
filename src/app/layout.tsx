@@ -58,6 +58,11 @@ export const metadata: Metadata = {
   verification: {
     google: "your-google-verification-code", // Will be updated when Google Search Console is set up
   },
+  icons: {
+    icon: seoConfig.site.icon,
+    shortcut: seoConfig.site.icon,
+    apple: seoConfig.site.icon,
+  },
 };
 
 export const viewport = {

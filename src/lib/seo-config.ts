@@ -20,7 +20,8 @@ export const seoConfig = {
       "Toska CR"
     ],
     author: "Toska CR",
-    image: "https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_1200,h_630,c_fit/toska-cr/gallery/IMG_2338.jpg"
+    image: "https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_1200,h_630,c_fit/toska-cr/gallery/IMG_2338.jpg",
+    icon: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1783614050/ICONO_LOGO_TOSKA_WEBSITE_xblglk.png",
   },
 
   // Page-specific SEO
