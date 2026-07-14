@@ -42,7 +42,7 @@ export default function BrandLogo({ size = 'md', showText = true }: BrandLogoPro
           alt="Toska CR Logo"
           width={72}
           height={72}
-          className="object-contain"
+          className="h-10 w-10 object-contain xl:h-[72px] xl:w-[72px]"
           priority
         />
       </div>

@@ -71,12 +71,12 @@ function LanguageOption({
           ? 'bg-[#FBEAD5] text-[#1a4d3a] shadow-md'
           : 'bg-transparent text-[#FBEAD5] hover:bg-[#FF8A9D]/20 hover:text-[#FF8A9D]'
       }`}
-      style={{ fontSize: '25px', fontWeight: 800 }}
+      style={{ fontWeight: 800 }}
     >
       <span className="language-switcher-flag">
         <FlagImage locale={code} />
       </span>
-      <span>{label}</span>
+      <span className="text-base sm:text-lg md:text-2xl">{label}</span>
     </motion.button>
   );
 }
@@ -109,6 +109,15 @@ export default function LanguageSwitcher({
     onSelect?.();
   };
 
+  const toggleMenu = () => {
+    if (isOpen) {
+      setIsOpen(false);
+      return;
+    }
+
+    openMenu();
+  };
+
   if (variant === 'list') {
     return (
       <div className="language-switcher-panel mx-3 mt-3 rounded-2xl border border-[#FF8A9D]/30 bg-[#0f2e1f]/80">
@@ -133,8 +142,16 @@ export default function LanguageSwitcher({
     <div
       className="language-switcher-root relative"
       style={{ ['--language-switcher-menu-gap' as string]: `${MENU_GAP_PX}px` }}
-      onMouseEnter={openMenu}
-      onMouseLeave={closeMenu}
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') {
+          openMenu();
+        }
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === 'mouse') {
+          closeMenu();
+        }
+      }}
       onFocus={openMenu}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node)) {
@@ -149,6 +166,17 @@ export default function LanguageSwitcher({
         aria-haspopup="listbox"
         role="button"
         tabIndex={0}
+        onClick={toggleMenu}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleMenu();
+          }
+
+          if (event.key === 'Escape') {
+            setIsOpen(false);
+          }
+        }}
       >
         <LanguagesIcon />
       </div>

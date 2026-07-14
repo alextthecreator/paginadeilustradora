@@ -580,18 +580,17 @@ export default function WorkPage() {
         </h1>
       </section>
 
-      <section className="skills-section page-shell w-full">
-        <div className="skills-row">
+      <section className="skills-section skills-section--compact page-shell">
+        <div className="skills-row work-skills-row">
           {t.work.skills.map((tag, index, arr) => (
             <React.Fragment key={tag}>
               <span
-                className="skills-text lowercase"
-                style={{ fontSize: '40px', lineHeight: '1', color: '#FBEAD5' }}
+                className="skills-text type-skills lowercase text-[#FBEAD5]"
               >
                 {tag}
               </span>
               {index < arr.length - 1 && (
-                <span style={{ color: '#FBEAD5', fontSize: '20px' }}>•</span>
+                <span className="work-skills-separator text-[#FBEAD5]">•</span>
               )}
             </React.Fragment>
           ))}

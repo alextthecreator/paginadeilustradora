@@ -61,7 +61,7 @@ export default function AboutPage() {
             <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
               {t.about.aboutMeIntro}
             </p>
-            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 m-12 text-justify">
+            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 text-justify md:m-12">
               <MultilineText text={t.about.aboutMeBody} />
             </p>
           </motion.div>

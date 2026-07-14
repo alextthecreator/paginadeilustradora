@@ -45,7 +45,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
           e.stopPropagation();
           scroll('left');
         }}
-        className="absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
+        className="carousel-control absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
         style={{ color: '#FF8A9D' }}
         aria-label="Scroll left"
       >
@@ -88,7 +88,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
           e.stopPropagation();
           scroll('right');
         }}
-        className="absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
+        className="carousel-control absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
         style={{ color: '#FF8A9D' }}
         aria-label="Scroll right"
       >

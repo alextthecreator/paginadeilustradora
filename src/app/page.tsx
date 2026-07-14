@@ -43,31 +43,21 @@ export default function Home() {
 
         <section className="page-shell bg-brand-dark-teal w-full">
           <div className="text-center mb-[var(--layout-gap-xl)]">
-            <h2
-              className="font-brand-heading uppercase tracking-widest"
-              style={{
-                fontSize: '60px',
-                color: '#FF8A9D',
-                fontWeight: 800,
-              }}
-            >
+            <h2 className="type-display font-brand-heading uppercase tracking-widest text-[#FF8A9D]">
               {t.home.myWork}
             </h2>
           </div>
 
           <InteractiveCarousel artwork={artwork} />
 
-          <div className="text-center" style={{ marginTop: '60px' }}>
+          <div className="home-see-all-container text-center">
               <Link
                 href="/work"
-                className="inline-block rounded-full font-brand-bold uppercase tracking-widest transition-colors hover:bg-white"
+                className="home-see-all inline-block rounded-full text-base font-brand-bold uppercase tracking-widest transition-colors hover:bg-white sm:text-xl"
                 style={{
                   borderRadius: '50px',
-                  fontSize: '20px',
                   backgroundColor: '#FBEAD5',
                   color: '#1a4d3a',
-                  padding: '20px 40px',
-                  paddingTop: '20px',
                   fontWeight: 900,
                 }}
               >
@@ -76,28 +66,18 @@ export default function Home() {
             </div>
         </section>
 
-        <section className="skills-section page-shell w-full">
-          <div className="skills-row">
+        <section className="skills-section skills-section--compact page-shell">
+          <div className="skills-row work-skills-row">
             {t.home.skills.map((tag, index, arr) => (
               <React.Fragment key={tag}>
                 <span
-                  className="skills-text lowercase"
-                  style={{
-                    fontSize: '40px',
-                    lineHeight: '1',
-                    color: '#FBEAD5',
-                  }}
+                  className="skills-text type-skills lowercase text-[#FBEAD5]"
                 >
                   {tag}
                 </span>
                 {index < arr.length - 1 && (
                   <span
-                    className="skills-text"
-                    style={{
-                      fontSize: '40px',
-                      lineHeight: '1',
-                      color: 'rgba(251, 234, 213, 0.5)',
-                    }}
+                  className="work-skills-separator text-[#FBEAD5]/50"
                   >
                     •
                   </span>

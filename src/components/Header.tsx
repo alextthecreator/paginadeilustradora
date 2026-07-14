@@ -59,7 +59,7 @@ export default function Header() {
 
   return (
     <header ref={headerRef} className="site-header bg-brand-dark-teal w-full">
-      <div className="page-x flex h-32 w-full items-center justify-between pt-5">
+      <div className="page-x flex h-20 w-full items-center justify-between pt-2 xl:h-32 xl:pt-5">
         {/* Brand Logo */}
         <div className="flex-shrink-0">
           <Link href="/" onClick={closeMobileMenu}>
@@ -68,11 +68,11 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation & Icons */}
-        <div className="header-nav-actions hidden md:flex">
-          <nav className="flex items-center gap-8 lg:gap-16">
+        <div className="header-nav-actions desktop-navigation">
+          <nav className="flex min-w-0 items-center gap-8 2xl:gap-16">
             {navigationItems.map((item) => {
               const linkClassName =
-                'type-nav font-brand-bold transition-colors uppercase tracking-widest py-4';
+                'type-nav whitespace-nowrap font-brand-bold transition-colors uppercase tracking-widest py-4';
               const linkStyle = { color: '#FF8A9D' };
 
               if (item.external) {
@@ -97,16 +97,16 @@ export default function Header() {
               );
             })}
           </nav>
-
-          <LanguageSwitcher />
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="header-utility-actions">
+          <LanguageSwitcher />
           <button
             onClick={toggleMobileMenu}
-            className="p-2 text-white hover:text-brand-vibrant-pink transition-colors duration-300"
+            className="mobile-menu-toggle min-h-11 min-w-11 items-center justify-center rounded-full p-2 text-white hover:bg-white/10 hover:text-brand-vibrant-pink transition-colors duration-300"
             aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {isMobileMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
           </button>
@@ -117,14 +117,14 @@ export default function Header() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
+              className="mobile-menu-panel fixed inset-x-0 bottom-0 top-[var(--site-header-height-px)] overflow-y-auto"
             >
-              <div className="bg-brand-dark-teal/95 backdrop-blur-sm border-t border-brand-vibrant-pink/30 py-6">
-                <nav className="flex flex-col space-y-4">
+              <div id="mobile-navigation" className="mobile-navigation-panel bg-brand-dark-teal/95 backdrop-blur-sm border-t border-brand-vibrant-pink/30 py-3">
+                <nav className="flex flex-col space-y-2 pb-[env(safe-area-inset-bottom,0px)]">
                   {navigationItems.map((item, index) => (
                     <motion.div
                       key={item.href}
@@ -138,7 +138,7 @@ export default function Header() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={closeMobileMenu}
-                          className="block px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg mx-2"
+                          className="block min-h-11 px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-base uppercase tracking-widest font-brand-bold rounded-lg mx-2 sm:text-lg"
                         >
                           {item.label}
                         </a>
@@ -146,15 +146,13 @@ export default function Header() {
                         <Link
                           href={item.href}
                           onClick={closeMobileMenu}
-                          className="block px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-lg uppercase tracking-widest font-brand-bold rounded-lg mx-2"
+                          className="block min-h-11 px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-base uppercase tracking-widest font-brand-bold rounded-lg mx-2 sm:text-lg"
                         >
                           {item.label}
                         </Link>
                       )}
                     </motion.div>
                   ))}
-
-                  <LanguageSwitcher variant="list" onSelect={closeMobileMenu} />
                 </nav>
               </div>
             </motion.div>

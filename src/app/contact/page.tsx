@@ -109,19 +109,13 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
             className="w-full min-w-0"
           >
-            <h1
-              className="font-temeraire-display font-bold mb-2"
-              style={{ fontSize: '60px', color: '#FF8A9D', textAlign: 'left', paddingBottom: '20px' }}
-            >
+            <h1 className="type-display font-temeraire-display mb-2 pb-5 text-left text-[#FF8A9D]">
               {t.contact.title}
             </h1>
 
-            <p className="readable-text type-body font-mencken-regular mb-6 max-w-2xl text-[#FBEAD5]">
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-            </p>
 
             <div className="contact-form-card rounded-2xl bg-brand-vibrant-pink">
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
                   <label className="type-label font-mencken-bold mb-2 block p-1 text-[#1a4d3a]">
                     {t.contact.nameLabel}
@@ -133,8 +127,7 @@ export default function ContactPage() {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className="w-full rounded-lg border-0"
-                      style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
+                      className="min-h-11 w-full rounded-lg border-0 bg-[#FBEAD5] p-3 text-[#1a4d3a]"
                       placeholder={t.contact.firstNamePlaceholder}
                     />
                     <input
@@ -143,8 +136,7 @@ export default function ContactPage() {
                       value={formData.surname}
                       onChange={handleInputChange}
                       required
-                      className="w-full rounded-lg border-0"
-                      style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
+                      className="min-h-11 w-full rounded-lg border-0 bg-[#FBEAD5] p-3 text-[#1a4d3a]"
                       placeholder={t.contact.surnamePlaceholder}
                     />
                   </div>
@@ -160,8 +152,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full rounded-lg border-0"
-                    style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
+                    className="min-h-11 w-full rounded-lg border-0 bg-[#FBEAD5] p-3 text-[#1a4d3a]"
                     placeholder={t.contact.emailPlaceholder}
                   />
                 </div>
@@ -176,8 +167,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleInputChange}
                     required
-                    className="w-full rounded-lg border-0"
-                    style={{ backgroundColor: '#FBEAD5', padding: '6px' }}
+                    className="min-h-11 w-full rounded-lg border-0 bg-[#FBEAD5] p-3 text-[#1a4d3a]"
                     placeholder={t.contact.subjectPlaceholder}
                   />
                 </div>
@@ -192,17 +182,16 @@ export default function ContactPage() {
                     onChange={handleInputChange}
                     required
                     rows={4}
-                    className="w-full rounded-lg border-0 resize-none"
-                    style={{ backgroundColor: '#FBEAD5', padding: '12px' }}
+                    className="w-full rounded-lg border-0 bg-[#FBEAD5] p-3 text-[#1a4d3a] resize-none"
                     placeholder={t.contact.messagePlaceholder}
                   />
                 </div>
 
-                <div className="mt-4 flex justify-end">
+                <div className="mt-4 flex justify-stretch sm:justify-end">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="type-btn flex items-center gap-2 rounded-2xl px-8 py-3 font-mencken-bold transition-all duration-300"
+                    className="type-btn flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl px-8 py-3 font-mencken-bold transition-all duration-300 sm:w-auto"
                     style={{ paddingLeft: '30px', paddingRight: '30px', 
                       backgroundColor: isSubmitting ? '#1a4d3a80' : '#1a4d3a',
                       color: 'white'

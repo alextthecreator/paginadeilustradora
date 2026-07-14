@@ -8,6 +8,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const [rightsText, brandText] = t.footer.copyright.split(' © ');
 
   const socialLinks = [
     { href: "https://www.instagram.com/toska_cr/?hl=en", icon: FaInstagram },
@@ -16,24 +17,24 @@ export default function Footer() {
   ];
 
   const navLinks = [
-    { href: "/work", label: t.nav.work },
-    { href: "/about", label: t.nav.about },
-    { href: "/shop", label: t.nav.shop },
-    { href: "/contact", label: t.nav.contact },
+    { href: '/work', label: t.nav.work },
+    { href: '/about', label: t.nav.about },
+    { href: '/shop', label: t.nav.shop },
+    { href: '/contact', label: t.nav.contact },
   ];
 
   return (
     <footer className="bg-[#0f2e1f] w-full">
       <div className="footer-shell w-full">
-        <div className="flex flex-col md:flex-row justify-between items-center min-h-[160px]">
-          <div className="text-left mb-8 md:mb-0">
+        <div className="flex min-h-[132px] items-center justify-center lg:items-start lg:justify-between">
+          <div className="text-center lg:text-left">
             <h3
-              className="font-mencken-bold uppercase tracking-widest text-2xl pb-5"
-              style={{ color: '#FF8A9D', fontSize: '25px', marginBottom: '20px' }}
+              className="type-label font-mencken-bold mb-5 uppercase tracking-widest"
+              style={{ color: '#FF8A9D' }}
             >
               {t.footer.socials}
             </h3>
-            <div className="flex justify-center md:justify-start gap-12">
+            <div className="flex justify-center gap-5 sm:gap-6">
               {socialLinks.map(({ href, icon: Icon }) => {
                 const platform = href.includes('instagram') ? 'Instagram' : href.includes('behance') ? 'Behance' : 'LinkedIn';
                 const eventName = href.includes('instagram') ? analyticsConfig.events.INSTAGRAM_CLICK :
@@ -57,14 +58,14 @@ export default function Footer() {
                       });
                     }}
                   >
-                    <Icon size={36} />
+                    <Icon className="h-6 w-6 md:h-8 md:w-8" />
                   </a>
                 );
               })}
             </div>
           </div>
 
-          <div className="text-right">
+          <nav className="hidden text-right lg:block" aria-label="Footer navigation">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
@@ -74,14 +75,13 @@ export default function Footer() {
                 {label}
               </Link>
             ))}
-          </div>
+          </nav>
+
         </div>
 
-        <div
-          className="font-mencken-regular text-center pt-8 pb-8 mt-12"
-          style={{ color: '#FF8A9D', fontSize: '25px' }}
-        >
-          {t.footer.copyright}
+        <div className="footer-copyright type-label font-mencken-regular mt-10 py-4 text-center" style={{ color: '#FF8A9D' }}>
+          <p>{rightsText}</p>
+          {brandText && <p className="mt-1">© {brandText}</p>}
         </div>
       </div>
     </footer>
