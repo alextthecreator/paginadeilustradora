@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LanguagesIcon } from './BrandLogo';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -87,6 +88,11 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { locale, setLocale, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const openMenu = () => {
@@ -160,7 +166,7 @@ export default function LanguageSwitcher({
       }}
     >
       <div
-        className="cursor-pointer rounded-full p-1 transition-all duration-300 ease-out hover:opacity-90"
+        className="language-switcher-trigger cursor-pointer rounded-full transition-opacity duration-300 ease-out hover:opacity-90"
         aria-label="Language selector"
         aria-expanded={isOpen}
         aria-haspopup="listbox"

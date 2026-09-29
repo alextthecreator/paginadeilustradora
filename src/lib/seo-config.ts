@@ -50,6 +50,11 @@ export const seoConfig = {
       title: "Shop - Toska CR's Handcrafted Ceramics & Artisan Bags",
       description: "Shop unique handcrafted ceramics and artisan bags by Toska CR. Each piece is one-of-a-kind and made with love.",
       keywords: ["shop ceramics", "buy pottery", "artisan bags", "handmade crafts", "Toska CR shop"]
+    },
+    calendar: {
+      title: "Calendar - Workshops & Events | Toska CR",
+      description: "See upcoming Toska CR workshops, markets, and studio events.",
+      keywords: ["Toska CR calendar", "pottery workshops", "ceramic events", "markets", "studio dates"]
     }
   },
 

@@ -6,6 +6,7 @@ const pl: typeof en = {
     about: 'O mnie',
     work: 'Moje prace',
     shop: 'Sklep',
+    calendar: 'Kalendarz',
     contact: 'Kontakt',
   },
   home: {
@@ -29,6 +30,7 @@ const pl: typeof en = {
   },
   contact: {
     title: 'Skontaktuj się',
+    subtitle: 'Masz pytanie lub pomysł?\n\nChętnie Cię wysłuchamy! Niezależnie od tego, czy masz pytanie, zapytanie o nasze prace, czy myślisz o zamówieniu indywidualnym — napisz do nas. Z przyjemnością pomożemy wcielić Twoje pomysły w życie!',
     nameLabel: 'Imię i nazwisko*',
     firstNamePlaceholder: 'Imię',
     surnamePlaceholder: 'Nazwisko',
@@ -53,6 +55,28 @@ const pl: typeof en = {
     toskaBody: 'Moimi największymi marzeniami zawsze było życie w innym kraju oraz posiadanie własnej pracowni artystycznej i projektowej. Choć wszystko zaczęło się bardzo nieśmiało, a sam projekt na pewien czas został nawet zawieszony, pomysł na Toskę nigdy nie opuścił moich myśli. Przez cały ten czas był głosem w mojej głowie, który nieustannie mnie inspirował i motywował do działania.\n\nSłowo toska oznacza głębokie uczucie nostalgii i tęsknoty za miejscem, w którym się urodziliśmy. Wydało mi się idealną nazwą dla projektu, który rozwija się i dojrzewa bez względu na to, gdzie akurat jestem na świecie, a jednocześnie pozostaje głęboko zakorzeniony w Kostaryce – kraju, który jest moim domem i w którym dorastałam.\n\nDo tej pory Toska Art Project wyraża się przede wszystkim poprzez ilustrację oraz rękodzieło, takie jak makrama i ceramika. Nie wykluczam jednak odkrywania kolejnych dziedzin sztuki w przyszłości. Przede wszystkim uwielbiam tworzyć nowe rzeczy i jestem ogromnie wdzięczna, że mogę robić to własnymi rękami.',
     photoAlt: 'Gloriana - projektantka graficzna i ilustratorka',
     toskaPhotoAlt: 'Toska Art Project - ręcznie robiona makrama',
+  },
+  shop: {
+    languageNotice:
+      'Sklep jest na razie dostępny tylko po polsku. Jeśli chcesz zobaczyć treści w innym języku, skorzystaj z automatycznego tłumaczenia w przeglądarce.',
+  },
+  calendar: {
+    title: 'Kalendarz',
+    subtitle: 'Warsztaty, targi i terminy w pracowni.',
+    prevMonth: 'Poprzedni miesiąc',
+    nextMonth: 'Następny miesiąc',
+    today: 'Dziś',
+    noEvents: 'Brak wydarzeń w tym miesiącu.',
+    noEventsDay: 'Brak wydarzeń tego dnia.',
+    allDay: 'Cały dzień',
+    loading: 'Ładowanie kalendarza...',
+    error: 'Nie udało się wczytać kalendarza. Spróbuj ponownie później.',
+    notPublic:
+      'Ten kalendarz nie jest jeszcze publiczny. W ustawieniach Google Calendar włącz „Udostępnij publicznie” albo wklej tajny adres iCal do GOOGLE_CALENDAR_ICS_URL.',
+    notConfigured:
+      'Kalendarz nie jest jeszcze podpięty. Dodaj link ICS z Google Calendar w GOOGLE_CALENDAR_ICS_URL.',
+    upcoming: 'Wydarzenia',
+    location: 'Miejsce',
   },
   footer: {
     socials: 'Social media',

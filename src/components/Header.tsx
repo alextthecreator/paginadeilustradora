@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import BrandLogo from './BrandLogo';
 import LanguageSwitcher from './LanguageSwitcher';
+import EcwidCartWidget from './EcwidCartWidget';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 type NavItem = {
@@ -54,6 +55,7 @@ export default function Header() {
     { href: '/about', label: t.nav.about },
     { href: '/work', label: t.nav.work },
     { href: '/shop', label: t.nav.shop },
+    { href: '/calendar', label: t.nav.calendar },
     { href: '/contact', label: t.nav.contact },
   ];
 
@@ -100,6 +102,7 @@ export default function Header() {
         </div>
 
         <div className="header-utility-actions">
+          <EcwidCartWidget />
           <LanguageSwitcher />
           <button
             onClick={toggleMobileMenu}

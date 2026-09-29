@@ -65,14 +65,15 @@ export default function BrandLogo({ size = 'md', showText = true }: BrandLogoPro
 // Language icon for header dropdown
 export function LanguagesIcon() {
   return (
-    <div className="relative p-1 hover:opacity-80 transition-opacity duration-300">
+    <span className="language-globe-icon" aria-hidden="true">
       <Image
         src="https://res.cloudinary.com/dxpdn6xgr/image/upload/v1783614049/ICONO_LANGUAGE_WEBSITE_zaxiq0.png"
-        alt="Language selector"
-        width={30}
-        height={30}
-        className="object-contain"
+        alt=""
+        width={40}
+        height={40}
+        className="language-globe-icon__img"
+        priority
       />
-    </div>
+    </span>
   );
 }

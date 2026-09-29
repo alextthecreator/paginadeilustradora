@@ -6,6 +6,7 @@ const es: typeof en = {
     about: 'Sobre mí',
     work: 'Mi trabajo',
     shop: 'Tienda',
+    calendar: 'Calendario',
     contact: 'Contacto',
   },
   home: {
@@ -29,6 +30,7 @@ const es: typeof en = {
   },
   contact: {
     title: 'Ponte en contacto',
+    subtitle: '¿Tienes una pregunta o una idea en mente?\n\n¡Nos encantaría saber de ti! Ya sea una consulta, una pregunta sobre nuestras piezas o un pedido personalizado, escríbenos. Estaremos encantadas de ayudarte a dar vida a tus ideas.',
     nameLabel: 'Nombre y apellido*',
     firstNamePlaceholder: 'Nombre',
     surnamePlaceholder: 'Apellido',
@@ -53,6 +55,28 @@ const es: typeof en = {
     toskaBody: 'Mis sueños más grandes siempre fueron vivir en otro país y tener mi propio estudio de arte y diseño. Y aunque empezó forma muy tímida, e incluso estuvo en pausa un tiempo, la idea de Toska nunca abandonó mi mente y siempre ha sido una voz dentro de mi cabeza que me inspira y me motiva.\n\nLa palabra Toska significa “sentir nostalgia y anhelo por el lugar en el que naciste” y me pareció una buena palabra para resumir un proyecto que se hace grande y se inspira desde dónde sea que yo esté, pero que tiene sus raíces en Costa Rica, el hogar que me vio crecer.\n\nHasta el momento Toska Art Project se expresa por medio de la ilustración y técnicas artesanales como el macramé y la cerámica, aunque no descarto explorar otras áreas en el futuro, en general, me encanta poder crear cosas nuevas y tener el privilegio de poder hacerlo con mis manos.',
     photoAlt: 'Gloriana - diseñadora gráfica e ilustradora',
     toskaPhotoAlt: 'Toska Art Project - macramé artesanal',
+  },
+  shop: {
+    languageNotice:
+      'La tienda está disponible por ahora solo en polaco. Si quieres ver el contenido en otro idioma, usa la traducción automática del navegador.',
+  },
+  calendar: {
+    title: 'Calendario',
+    subtitle: 'Talleres, ferias y fechas del estudio.',
+    prevMonth: 'Mes anterior',
+    nextMonth: 'Mes siguiente',
+    today: 'Hoy',
+    noEvents: 'No hay eventos este mes.',
+    noEventsDay: 'No hay eventos este día.',
+    allDay: 'Todo el día',
+    loading: 'Cargando calendario...',
+    error: 'No se pudo cargar el calendario. Inténtalo de nuevo más tarde.',
+    notPublic:
+      'Este calendario aún no es público. En la configuración de Google Calendar activa “Hacer público” o pega la dirección iCal secreta en GOOGLE_CALENDAR_ICS_URL.',
+    notConfigured:
+      'El calendario aún no está conectado. Añade el enlace ICS de Google Calendar en GOOGLE_CALENDAR_ICS_URL.',
+    upcoming: 'Eventos',
+    location: 'Lugar',
   },
   footer: {
     socials: 'Redes',

@@ -109,10 +109,12 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
             className="w-full min-w-0"
           >
-            <h1 className="type-display font-temeraire-display mb-2 pb-5 text-left text-[#FF8A9D]">
+            <h1 className="type-display font-temeraire-display mb-2 text-left text-[#FF8A9D]">
               {t.contact.title}
             </h1>
-
+            <p className="contact-subtitle type-lead font-mencken-regular whitespace-pre-line text-[#FBEAD5]">
+              {t.contact.subtitle}
+            </p>
 
             <div className="contact-form-card rounded-2xl bg-brand-vibrant-pink">
               <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
@@ -240,7 +242,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="contact-image-panel"
+            className="contact-image-panel relative"
           >
             <Image
               src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_900,h_1125,c_fill,dpr_auto,fl_progressive/toska-cr/contact/get_in_touch.jpg"

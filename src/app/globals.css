@@ -166,6 +166,86 @@
   gap: 0.25rem;
 }
 
+/* Extra 1px between cart icon and language globe */
+.header-utility-actions .ecwid-header-cart {
+  margin-inline-end: 1px;
+}
+
+.ecwid-header-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  color: var(--brand-vibrant-pink);
+}
+
+/* Ecwid liczy pozycję od viewportu, gdy brak position:relative na rodzicu */
+.ecwid-header-cart .ec-minicart {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  color: var(--brand-vibrant-pink) !important;
+}
+
+.ecwid-header-cart .ec-minicart__body {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecwid-header-cart .ec-minicart__icon {
+  color: var(--brand-vibrant-pink) !important;
+  line-height: 0;
+}
+
+.ecwid-header-cart .ec-minicart__icon svg {
+  display: block;
+  color: var(--brand-vibrant-pink) !important;
+}
+
+.ecwid-header-cart .ec-minicart__icon svg path {
+  stroke: var(--brand-vibrant-pink) !important;
+}
+
+.ecwid-header-cart .ec-minicart__icon svg circle.cart-not-empty {
+  fill: var(--brand-vibrant-pink) !important;
+}
+
+.ecwid-header-cart .ec-minicart__wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.ecwid-header-cart .ec-minicart__counter {
+  position: absolute !important;
+  top: -4px !important;
+  right: -8px !important;
+  left: auto !important;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--brand-dark-teal) !important;
+  background-color: #fff !important;
+  box-sizing: border-box;
+}
+
 .mobile-menu-toggle {
   display: inline-flex;
 }
@@ -187,6 +267,53 @@
 
 .site-header .language-switcher-root {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+}
+
+.language-switcher-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  line-height: 0;
+}
+
+.language-globe-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  line-height: 0;
+  /* optical align with cart outline icon */
+  transform: translateY(-1px);
+}
+
+.language-globe-icon__img {
+  display: block !important;
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  object-fit: contain !important;
+  /* slightly thicker / denser vs thin PNG strokes */
+  filter: contrast(1.15) saturate(1.05);
+}
+
+@media (max-width: 767px) {
+  .site-header .language-switcher-root,
+  .language-switcher-trigger {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .language-globe-icon,
+  .language-globe-icon__img {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -541,6 +668,13 @@ main {
   }
 }
 
+.contact-subtitle {
+  margin: 0 0 clamp(2rem, 5vw, 3.25rem);
+  max-width: 40rem;
+  line-height: 1.5;
+  font-size: clamp(1rem, 2.4vw, 1.25rem);
+}
+
 .contact-form-card {
   box-sizing: border-box;
   width: 100%;
@@ -577,6 +711,11 @@ main {
 @media (max-width: 767px) {
   .contact-layout {
     gap: 1.5rem;
+  }
+
+  .contact-subtitle {
+    margin-bottom: 2.25rem;
+    font-size: 1rem;
   }
 
   .contact-form-card {
@@ -960,6 +1099,40 @@ html {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+.shop-language-notice {
+  margin: 0 auto 1.5rem;
+  max-width: 48rem;
+  padding: 0.875rem 1.25rem;
+  text-align: center;
+  color: var(--brand-vibrant-pink);
+  font-family: 'mencken-std', serif;
+  font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
+  line-height: 1.45;
+}
+
+.shop-language-notice p {
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .shop-language-notice {
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 0.25rem;
+    font-size: 0.9375rem;
+    text-align: left;
+  }
+
+  .ecwid-header-cart {
+    width: 2.5rem;
+    min-height: 2.5rem;
+  }
+
+  .ecwid-header-cart .ec-minicart__icon svg {
+    width: 28px;
+    height: 24px;
+  }
+}
+
 .ecwid-store-shell {
   min-height: 60vh;
   width: 100%;
@@ -1321,4 +1494,271 @@ main > div {
 section {
   border-bottom: none !important;
   border-top: none !important;
+}
+
+/* Events calendar (ICS-powered) */
+.events-calendar {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.events-calendar-intro {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.events-calendar-intro h1 {
+  margin-bottom: 0.5rem;
+}
+
+.events-calendar-status,
+.events-calendar-empty {
+  color: #fbead5;
+  opacity: 0.9;
+  font-family: 'mencken-std', serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.events-calendar-layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+@media (min-width: 900px) {
+  .events-calendar-layout {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.events-calendar-panel,
+.events-calendar-aside {
+  border-top: 1px solid color-mix(in srgb, var(--brand-vibrant-pink) 45%, transparent);
+  padding-top: 1.25rem;
+}
+
+.events-calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.events-calendar-month-label {
+  margin: 0;
+  color: var(--brand-vibrant-pink);
+  font-family: 'temeraire', serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.events-calendar-nav-btn,
+.events-calendar-today-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  color: var(--brand-vibrant-pink);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--brand-vibrant-pink) 55%, transparent);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.events-calendar-nav-btn:hover,
+.events-calendar-today-btn:hover {
+  background: color-mix(in srgb, var(--brand-vibrant-pink) 18%, transparent);
+}
+
+.events-calendar-today-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  font-family: 'mencken-std', serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.events-calendar-weekdays,
+.events-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.events-calendar-weekday {
+  text-align: center;
+  color: color-mix(in srgb, #fbead5 75%, transparent);
+  font-family: 'mencken-std', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-bottom: 0.5rem;
+}
+
+.events-calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: #fbead5;
+  background: transparent;
+  border: 1px solid transparent;
+  font-family: 'mencken-std', serif;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.events-calendar-cell.is-empty {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.events-calendar-cell:hover {
+  border-color: color-mix(in srgb, var(--brand-vibrant-pink) 50%, transparent);
+}
+
+.events-calendar-cell.is-today {
+  color: var(--brand-vibrant-pink);
+}
+
+.events-calendar-cell.is-selected {
+  border-color: var(--brand-vibrant-pink);
+  background: color-mix(in srgb, var(--brand-vibrant-pink) 16%, transparent);
+  color: #fff;
+}
+
+.events-calendar-day-number {
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  line-height: 1;
+}
+
+.events-calendar-dots {
+  display: flex;
+  gap: 0.15rem;
+  min-height: 0.35rem;
+}
+
+.events-calendar-dot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--brand-vibrant-pink);
+}
+
+.events-calendar-aside-title {
+  margin: 0 0 0.35rem;
+  color: var(--brand-vibrant-pink);
+  font-family: 'temeraire', serif;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  text-transform: uppercase;
+}
+
+.events-calendar-aside-date {
+  margin: 0 0 1.25rem;
+  color: #fbead5;
+  font-family: 'mencken-std', serif;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.events-calendar-event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.events-calendar-event {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, #fbead5 18%, transparent);
+}
+
+.events-calendar-event:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.events-calendar-event-time {
+  margin: 0 0 0.35rem;
+  color: var(--brand-vibrant-pink);
+  font-family: 'mencken-std', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.events-calendar-event-title {
+  margin: 0 0 0.4rem;
+  color: #fbead5;
+  font-family: 'mencken-std', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.events-calendar-event-meta,
+.events-calendar-event-description {
+  margin: 0.25rem 0 0;
+  color: color-mix(in srgb, #fbead5 82%, transparent);
+  font-family: 'mencken-std', serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.events-calendar-empty-month {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 639px) {
+  .events-calendar-toolbar {
+    gap: 0.5rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .events-calendar-month-label {
+    font-size: 1.125rem;
+  }
+
+  .events-calendar-weekdays,
+  .events-calendar-grid {
+    gap: 0.2rem;
+  }
+
+  .events-calendar-weekday {
+    font-size: 0.65rem;
+    letter-spacing: 0.02em;
+    padding-bottom: 0.35rem;
+  }
+
+  .events-calendar-cell {
+    min-height: 2.5rem;
+    aspect-ratio: auto;
+    padding: 0.35rem 0;
+  }
+
+  .events-calendar-day-number {
+    font-size: 0.875rem;
+  }
+
+  .events-calendar-nav-btn,
+  .events-calendar-today-btn {
+    min-height: 2.75rem;
+  }
+
+  .events-calendar-aside {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .events-calendar-event-title {
+    font-size: 1.05rem;
+  }
 }
