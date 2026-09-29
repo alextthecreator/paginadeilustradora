@@ -61,7 +61,7 @@ export default function Header() {
 
   return (
     <header ref={headerRef} className="site-header bg-brand-dark-teal w-full">
-      <div className="page-x flex h-20 w-full items-center justify-between pt-2 xl:h-32 xl:pt-5">
+      <div className="page-x header-main-row flex h-20 w-full items-center justify-between pt-2 xl:h-32 xl:pt-5">
         {/* Brand Logo */}
         <div className="flex-shrink-0">
           <Link href="/" onClick={closeMobileMenu}>
@@ -69,7 +69,7 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Desktop Navigation & Icons */}
+        {/* Desktop Navigation */}
         <div className="header-nav-actions desktop-navigation">
           <nav className="flex min-w-0 items-center gap-8 2xl:gap-16">
             {navigationItems.map((item) => {

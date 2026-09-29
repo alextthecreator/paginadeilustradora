@@ -20,6 +20,7 @@ export default function Footer() {
     { href: '/work', label: t.nav.work },
     { href: '/about', label: t.nav.about },
     { href: '/shop', label: t.nav.shop },
+    { href: '/calendar', label: t.nav.calendar },
     { href: '/contact', label: t.nav.contact },
   ];
 

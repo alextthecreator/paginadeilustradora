@@ -44,6 +44,9 @@ const es: typeof en = {
     send: 'Enviar',
     success: '¡Gracias! Tu mensaje se ha enviado correctamente.',
     error: 'Lo sentimos, ocurrió un error al enviar tu mensaje. Inténtalo de nuevo.',
+    addressHeading: 'Dirección',
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    mapTitle: 'Dirección — Lelewela 4, Wrocław',
     imageAlt: 'Ponte en contacto - contacto Toska CR',
   },
   about: {
@@ -77,6 +80,8 @@ const es: typeof en = {
       'El calendario aún no está conectado. Añade el enlace ICS de Google Calendar en GOOGLE_CALENDAR_ICS_URL.',
     upcoming: 'Eventos',
     location: 'Lugar',
+    moreEvents: '+{count} más',
+    otherMonth: 'Fuera de este mes',
   },
   footer: {
     socials: 'Redes',

@@ -44,6 +44,9 @@ const pl: typeof en = {
     send: 'Wyślij',
     success: 'Dziękuję! Twoja wiadomość została pomyślnie wysłana.',
     error: 'Przepraszam, wystąpił błąd podczas wysyłania wiadomości. Spróbuj ponownie.',
+    addressHeading: 'Adres',
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    mapTitle: 'Adres — Lelewela 4, Wrocław',
     imageAlt: 'Skontaktuj się - kontakt Toska CR',
   },
   about: {
@@ -77,6 +80,8 @@ const pl: typeof en = {
       'Kalendarz nie jest jeszcze podpięty. Dodaj link ICS z Google Calendar w GOOGLE_CALENDAR_ICS_URL.',
     upcoming: 'Wydarzenia',
     location: 'Miejsce',
+    moreEvents: '+{count} więcej',
+    otherMonth: 'Poza tym miesiącem',
   },
   footer: {
     socials: 'Social media',

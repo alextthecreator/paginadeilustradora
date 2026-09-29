@@ -41,6 +41,9 @@ const en = {
     send: 'Send',
     success: 'Thank you! Your message has been sent successfully.',
     error: 'Sorry, there was an error sending your message. Please try again.',
+    addressHeading: 'Address',
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    mapTitle: 'Address — Lelewela 4, Wrocław',
     imageAlt: 'Get in Touch - Contact Toska CR',
   },
   about: {
@@ -78,6 +81,8 @@ const en = {
       'Calendar feed is not connected yet. Add your Google Calendar ICS link in GOOGLE_CALENDAR_ICS_URL.',
     upcoming: 'Events',
     location: 'Location',
+    moreEvents: '+{count} more',
+    otherMonth: 'Outside this month',
   },
   footer: {
     socials: 'Socials',

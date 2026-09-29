@@ -1,8 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { ensureEcwidScript } from '@/lib/ecwid-loader';
+import {
+  destroyEcwidSafely,
+  ensureEcwidScript,
+  initEcwidCartWidget,
+  reinitEcwidCartSoon,
+} from '@/lib/ecwid-loader';
 import { siteConfig } from '@/lib/site-config';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -22,19 +27,17 @@ export default function EcwidStore() {
   const { locale } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  // useLayoutEffect so Ecwid.destroy runs BEFORE React removes DOM nodes.
+  useLayoutEffect(() => {
     let cancelled = false;
     setIsLoading(true);
-
-    const container = document.getElementById(siteConfig.ecwidStoreElementId);
-    if (container) {
-      container.innerHTML = '';
-    }
 
     ensureEcwidScript(locale)
       .then(() => {
         if (cancelled) return;
+        destroyEcwidSafely();
         initEcwidStore();
+        initEcwidCartWidget();
         setIsLoading(false);
       })
       .catch(() => {
@@ -45,6 +48,8 @@ export default function EcwidStore() {
 
     return () => {
       cancelled = true;
+      destroyEcwidSafely();
+      reinitEcwidCartSoon();
     };
   }, [locale]);
 

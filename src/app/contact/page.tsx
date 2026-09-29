@@ -99,6 +99,11 @@ export default function ContactPage() {
     }
   };
 
+  const mapEmbedSrc =
+    'https://maps.google.com/maps?q=Lelewela%204%2C%2053-505%20Wroc%C5%82aw%2C%20Poland&z=16&output=embed';
+  const mapLinkHref =
+    'https://maps.google.com/?q=Lelewela+4,+53-505+Wroc%C5%82aw,+Poland';
+
   return (
     <main className="min-h-screen bg-brand-dark-teal">
       <div className="page-shell w-full">
@@ -107,7 +112,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full min-w-0"
+            className="contact-copy w-full min-w-0"
           >
             <h1 className="type-display font-temeraire-display mb-2 text-left text-[#FF8A9D]">
               {t.contact.title}
@@ -237,7 +242,6 @@ export default function ContactPage() {
             </div>
           </motion.div>
 
-          {/* Right Column - Contact Image */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -253,6 +257,46 @@ export default function ContactPage() {
               priority
             />
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+            className="contact-map"
+          >
+            <iframe
+              title={t.contact.mapTitle}
+              src={mapEmbedSrc}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="contact-map-frame"
+            />
+          </motion.div>
+
+          <motion.aside
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="contact-address"
+          >
+            <h2 className="contact-address-heading">{t.contact.addressHeading}</h2>
+            <address className="contact-address-body">
+              {t.contact.addressLines.map((line) => (
+                <span key={line} className="contact-address-line">
+                  {line}
+                </span>
+              ))}
+              <a
+                href={mapLinkHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-address-link"
+              >
+                Google Maps
+              </a>
+            </address>
+          </motion.aside>
         </div>
       </div>
     </main>

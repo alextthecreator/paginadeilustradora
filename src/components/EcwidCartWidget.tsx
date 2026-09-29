@@ -10,10 +10,7 @@ export default function EcwidCartWidget() {
 
   useEffect(() => {
     let cancelled = false;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    // Defer slightly so page transitions can finish DOM swaps first.
-    timer = setTimeout(() => {
+    const timer = window.setTimeout(() => {
       ensureEcwidScript(locale)
         .then(() => {
           if (!cancelled && hostRef.current) {
@@ -21,13 +18,13 @@ export default function EcwidCartWidget() {
           }
         })
         .catch(() => {
-          /* cart widget is non-blocking */
+          /* non-blocking */
         });
-    }, 50);
+    }, 80);
 
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      window.clearTimeout(timer);
     };
   }, [locale]);
 
