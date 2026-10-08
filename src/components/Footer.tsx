@@ -25,7 +25,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#0f2e1f] w-full">
+    <footer className="site-footer bg-[#0f2e1f] w-full">
       <div className="footer-shell w-full">
         <div className="flex min-h-[132px] items-center justify-center lg:items-start lg:justify-between">
           <div className="text-center lg:text-left">

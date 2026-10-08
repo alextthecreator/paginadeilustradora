@@ -92,12 +92,12 @@ export default function RootLayout({
         <link href="https://db.onlinewebfonts.com/c/ea90e636f79e82b61513ca71197744db?family=Temeraire+Display+Bk" rel="stylesheet" />
       </head>
       <body
-        className={`antialiased min-h-screen flex flex-col`}
+        className={`antialiased site-body`}
       >
         <ErrorBoundary>
           <Providers>
             <Header />
-            <main className="flex-1 w-full min-w-0">
+            <main className="site-main w-full min-w-0">
               <PageTransition>
                 {children}
               </PageTransition>

@@ -105,9 +105,10 @@ export default function ContactPage() {
     'https://maps.google.com/?q=Lelewela+4,+53-505+Wroc%C5%82aw,+Poland';
 
   return (
-    <main className="min-h-screen bg-brand-dark-teal">
+    <main className="contact-page bg-brand-dark-teal">
       <div className="page-shell w-full">
         <div className="contact-layout">
+          <div className="contact-hero">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -249,15 +250,17 @@ export default function ContactPage() {
             className="contact-image-panel relative"
           >
             <Image
-              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_jpg,pg_1,q_auto,w_875,h_1313,c_fill,dpr_auto,fl_progressive/get_in_touch"
+              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_jpg,pg_1,q_auto,w_1200,c_limit,dpr_auto,fl_progressive/get_in_touch"
               alt={t.contact.imageAlt}
               fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="object-cover object-center"
+              sizes="(max-width: 767px) 100vw, (max-width: 1024px) 80vw, min(36rem, 42vw)"
               priority
             />
           </motion.div>
+          </div>
 
+          <div className="contact-directions">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -297,6 +300,7 @@ export default function ContactPage() {
               </a>
             </address>
           </motion.aside>
+          </div>
         </div>
       </div>
     </main>
