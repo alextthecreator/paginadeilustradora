@@ -461,8 +461,9 @@
 
 .about-media-card {
   width: 100%;
-  max-width: 44rem;
-  min-height: clamp(18rem, 45vw, 34rem);
+  max-width: 28rem;
+  aspect-ratio: 875 / 1313;
+  min-height: 0;
   position: relative;
   overflow: hidden;
   border-radius: 0.75rem;
@@ -470,8 +471,50 @@
 }
 
 .about-media-card-secondary {
-  max-width: 26rem;
+  max-width: 24rem;
   justify-self: end;
+}
+
+.about-media-img {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+.about-media-card-secondary {
+  position: relative;
+}
+
+.about-media-stack {
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.about-media-stack-bg,
+.about-media-stack-fg {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* Background plate — leaves room in the upper-left for the overlap */
+.about-media-stack-bg {
+  inset: 0 0 12% 18%;
+  z-index: 1;
+}
+
+/* Foreground portrait — lower, overlapping the background */
+.about-media-stack-fg {
+  left: 0;
+  right: 22%;
+  top: 18%;
+  bottom: 0;
+  z-index: 2;
 }
 
 @media (min-width: 1024px) {
@@ -839,7 +882,8 @@ main {
 .contact-image-panel {
   position: relative;
   width: 100%;
-  min-height: clamp(18rem, 45vw, 34rem);
+  min-height: 0;
+  aspect-ratio: 875 / 1313;
   overflow: hidden;
   border-radius: 1rem;
 }
@@ -859,7 +903,8 @@ main {
   }
 
   .contact-image-panel {
-    min-height: 12rem;
+    min-height: 0;
+    aspect-ratio: 875 / 1313;
   }
 
   .contact-map-frame {
@@ -873,8 +918,9 @@ main {
 
 @media (min-width: 1024px) {
   .contact-image-panel {
-    min-height: 100%;
-    aspect-ratio: 5 / 4;
+    min-height: 0;
+    aspect-ratio: 875 / 1313;
+    max-height: 42rem;
   }
 }
 
@@ -1021,6 +1067,16 @@ main {
 
   .about-media-card-secondary {
     justify-self: start;
+    max-width: 22rem;
+  }
+
+  .about-media-stack-bg {
+    inset: 0 0 10% 14%;
+  }
+
+  .about-media-stack-fg {
+    right: 16%;
+    top: 16%;
   }
 }
 

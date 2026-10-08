@@ -249,7 +249,7 @@ export default function ContactPage() {
             className="contact-image-panel relative"
           >
             <Image
-              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_auto,q_auto,w_900,h_1125,c_fill,dpr_auto,fl_progressive/toska-cr/contact/get_in_touch.jpg"
+              src="https://res.cloudinary.com/dxpdn6xgr/image/upload/f_jpg,pg_1,q_auto,w_875,h_1313,c_fill,dpr_auto,fl_progressive/get_in_touch"
               alt={t.contact.imageAlt}
               fill
               className="object-cover"

@@ -23,7 +23,8 @@ export function getCloudinaryImageUrl(
         'fetch_format': 'f',
         'width': 'w',
         'height': 'h',
-        'crop': 'c'
+        'crop': 'c',
+        'pg': 'pg',
       };
       const shortKey = keyMap[key] || key;
       return `${shortKey}_${value}`;

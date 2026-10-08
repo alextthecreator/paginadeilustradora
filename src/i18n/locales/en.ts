@@ -58,7 +58,8 @@ const en = {
     toskaBody:
       "My biggest dreams have always been to live in another country and to have my own art and design studio. Although it started very modestly—and was even put on hold for a while—the idea of Toska never left my mind. It has always been a voice in my head, inspiring and motivating me to keep going.\n\nThe word toska refers to a deep feeling of nostalgia and longing for the place where you were born. It felt like the perfect name for a project that continues to grow and evolve wherever I am in the world, while remaining deeply rooted in Costa Rica, the home where I grew up.\n\nSo far, Toska Art Project has found its expression through illustration and handcrafted techniques such as macramé and ceramics. I don't rule out exploring other artistic disciplines in the future. Above all, I love creating new things and feel incredibly grateful for the opportunity to make them with my own hands.",
     photoAlt: 'Gloriana - Graphic Designer and Illustrator',
-    toskaPhotoAlt: 'Toska Art Project - handcrafted macramé',
+    photoAltSecondary: 'Gloriana in the studio',
+    toskaPhotoAlt: 'Gloriana - Toska Art Project portrait',
   },
   shop: {
     languageNotice:

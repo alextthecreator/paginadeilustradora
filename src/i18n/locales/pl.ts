@@ -57,7 +57,8 @@ const pl: typeof en = {
     toskaIntro: 'Toska narodziła się w Polsce w 2017 roku, zaledwie kilka miesięcy po mojej przeprowadzce. Początkowo była jedynie odległą wizją marzenia, które po latach wreszcie nabrało kształtu i stało się rzeczywistością.',
     toskaBody: 'Moimi największymi marzeniami zawsze było życie w innym kraju oraz posiadanie własnej pracowni artystycznej i projektowej. Choć wszystko zaczęło się bardzo nieśmiało, a sam projekt na pewien czas został nawet zawieszony, pomysł na Toskę nigdy nie opuścił moich myśli. Przez cały ten czas był głosem w mojej głowie, który nieustannie mnie inspirował i motywował do działania.\n\nSłowo toska oznacza głębokie uczucie nostalgii i tęsknoty za miejscem, w którym się urodziliśmy. Wydało mi się idealną nazwą dla projektu, który rozwija się i dojrzewa bez względu na to, gdzie akurat jestem na świecie, a jednocześnie pozostaje głęboko zakorzeniony w Kostaryce – kraju, który jest moim domem i w którym dorastałam.\n\nDo tej pory Toska Art Project wyraża się przede wszystkim poprzez ilustrację oraz rękodzieło, takie jak makrama i ceramika. Nie wykluczam jednak odkrywania kolejnych dziedzin sztuki w przyszłości. Przede wszystkim uwielbiam tworzyć nowe rzeczy i jestem ogromnie wdzięczna, że mogę robić to własnymi rękami.',
     photoAlt: 'Gloriana - projektantka graficzna i ilustratorka',
-    toskaPhotoAlt: 'Toska Art Project - ręcznie robiona makrama',
+    photoAltSecondary: 'Gloriana w pracowni',
+    toskaPhotoAlt: 'Gloriana - portret Toska Art Project',
   },
   shop: {
     languageNotice:
