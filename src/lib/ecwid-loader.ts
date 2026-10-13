@@ -4,13 +4,22 @@ import { getEcwidScriptUrl, siteConfig } from '@/lib/site-config';
 declare global {
   interface Window {
     Ecwid?: { init: () => void; destroy?: () => void };
-    xProductBrowser?: (...args: string[]) => void;
     ecwid_ProductBrowserURL?: string;
+    ecwid_script_defer?: boolean;
+    ecwid_dynamic_widgets?: boolean;
+    _xnext_initialization_scripts?: {
+      widgetType: string;
+      id: string;
+      arg: string[];
+    }[];
   }
 }
 
 let loadPromise: Promise<void> | null = null;
 let loadedLocale: Locale | null = null;
+let loadingLocale: Locale | null = null;
+let requestedLocale: Locale | null = null;
+let activeStoreHost: HTMLElement | null = null;
 
 function setProductBrowserUrl() {
   window.ecwid_ProductBrowserURL = `${window.location.origin}${siteConfig.shopPath}`;
@@ -18,11 +27,22 @@ function setProductBrowserUrl() {
 
 /** Tear down Ecwid widgets before React removes their host nodes. */
 export function destroyEcwidSafely() {
+  // Ecwid.init() also reads this queue. Never retain a removed ProductBrowser.
+  window._xnext_initialization_scripts = [];
+  activeStoreHost = null;
   try {
     window.Ecwid?.destroy?.();
   } catch {
     /* already torn down */
   }
+  // Ecwid's cart renderer retains references to its previous mount. After
+  // destroy, give it a fresh element rather than reusing that detached DOM.
+  document.querySelectorAll<HTMLElement>('.ecwid-header-cart').forEach((container) => {
+    const host = document.createElement('div');
+    host.className = 'ec-cart-widget';
+    host.dataset.layout = 'SIMPLE_ICON_COUNTER';
+    container.replaceChildren(host);
+  });
 }
 
 export function ensureEcwidScript(locale: Locale): Promise<void> {
@@ -31,13 +51,27 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
   }
 
   setProductBrowserUrl();
+  requestedLocale = locale;
+  // Ecwid's documented lifecycle for storefronts mounted by an SPA.
+  window.ecwid_script_defer = true;
+  window.ecwid_dynamic_widgets = true;
 
   const existingScript = document.querySelector<HTMLScriptElement>(
     'script[data-ecwid-script]'
   );
 
-  if (existingScript && loadedLocale === locale && loadPromise) {
+  if (existingScript && loadingLocale === locale && loadPromise) {
     return loadPromise;
+  }
+
+  if (existingScript && loadingLocale !== loadedLocale && loadPromise) {
+    // Do not remove a script while the browser is still executing/loading it.
+    return loadPromise.catch(() => {}).then(() => {
+      // Superseded requests belong to cancelled React effects. Only the latest
+      // language selection may replace the shared script after it finishes.
+      if (requestedLocale !== locale) return;
+      return ensureEcwidScript(locale);
+    });
   }
 
   if (existingScript) {
@@ -45,10 +79,12 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
     existingScript.remove();
     loadPromise = null;
     loadedLocale = null;
+    loadingLocale = null;
   }
 
   const scriptUrl = getEcwidScriptUrl(locale);
 
+  loadingLocale = locale;
   loadPromise = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
     script.src = scriptUrl;
@@ -60,8 +96,10 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
       resolve();
     };
     script.onerror = () => {
+      script.remove();
       loadPromise = null;
       loadedLocale = null;
+      loadingLocale = null;
       reject(new Error('Failed to load Ecwid script'));
     };
     document.body.appendChild(script);
@@ -72,11 +110,38 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
 
 export function initEcwidCartWidget() {
   try {
+    // The store bootstrap already initialises widgets on the shop page.
+    if (activeStoreHost?.isConnected) return;
     // Host node must exist; Ecwid injects into .ec-cart-widget
     if (!document.querySelector('.ec-cart-widget')) return;
+    window._xnext_initialization_scripts = [];
     window.Ecwid?.init?.();
   } catch (error) {
     console.warn('Ecwid cart init failed:', error);
+  }
+}
+
+export function initEcwidStore(host: HTMLElement, options: string[]) {
+  if (!host.isConnected || document.getElementById(host.id) !== host) return;
+  if (!window.Ecwid?.init) {
+    throw new Error('Ecwid storefront bootstrap is unavailable');
+  }
+
+  destroyEcwidSafely();
+  activeStoreHost = host;
+  window._xnext_initialization_scripts = [{
+    widgetType: 'ProductBrowser',
+    id: host.id,
+    arg: options,
+  }];
+  window.Ecwid.init();
+}
+
+export function releaseEcwidStore(host: HTMLElement) {
+  // A cancelled/older mount must not tear down a newer storefront.
+  if (activeStoreHost === host) {
+    destroyEcwidSafely();
+    reinitEcwidCartSoon();
   }
 }
 

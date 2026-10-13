@@ -1,12 +1,11 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
-  destroyEcwidSafely,
   ensureEcwidScript,
-  initEcwidCartWidget,
-  reinitEcwidCartSoon,
+  initEcwidStore,
+  releaseEcwidStore,
 } from '@/lib/ecwid-loader';
 import { siteConfig } from '@/lib/site-config';
 import LoadingSpinner from './LoadingSpinner';
@@ -19,42 +18,47 @@ const ECWID_OPTIONS = [
   `id=${siteConfig.ecwidStoreElementId}`,
 ];
 
-function initEcwidStore() {
-  window.xProductBrowser?.(...ECWID_OPTIONS);
-}
-
 export default function EcwidStore() {
   const { locale } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // useLayoutEffect so Ecwid.destroy runs BEFORE React removes DOM nodes.
+  // React owns the outer container. Ecwid alone owns the imperatively created
+  // host and its descendants, including when it replaces/removes those nodes.
   useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const host = document.createElement('div');
+    host.id = siteConfig.ecwidStoreElementId;
+    container.appendChild(host);
     let cancelled = false;
     setIsLoading(true);
+    setHasError(false);
 
     ensureEcwidScript(locale)
       .then(() => {
-        if (cancelled) return;
-        destroyEcwidSafely();
-        initEcwidStore();
-        initEcwidCartWidget();
+        if (cancelled || !host.isConnected) return;
+        initEcwidStore(host, ECWID_OPTIONS);
         setIsLoading(false);
       })
       .catch(() => {
         if (!cancelled) {
+          setHasError(true);
           setIsLoading(false);
         }
       });
 
     return () => {
       cancelled = true;
-      destroyEcwidSafely();
-      reinitEcwidCartSoon();
+      releaseEcwidStore(host);
+      // Removing an already detached host is safe; React never reconciles it.
+      host.remove();
     };
   }, [locale]);
 
   return (
-    <div className="ecwid-store-shell" key={locale}>
+    <div className="ecwid-store-shell" aria-busy={isLoading}>
       {isLoading && (
         <LoadingSpinner
           size="lg"
@@ -62,7 +66,15 @@ export default function EcwidStore() {
           className="ecwid-store-loading py-16"
         />
       )}
-      <div id={siteConfig.ecwidStoreElementId} />
+      {hasError && (
+        <div role="alert" className="py-8 text-[#FBEAD5]">
+          <p>{locale === 'pl' ? 'Nie udało się załadować sklepu.' : locale === 'es' ? 'No se pudo cargar la tienda.' : 'The shop could not be loaded.'}</p>
+          <button type="button" className="mt-4 rounded-lg border px-4 py-3" onClick={() => window.location.reload()}>
+            {locale === 'pl' ? 'Załaduj ponownie' : locale === 'es' ? 'Volver a cargar' : 'Reload page'}
+          </button>
+        </div>
+      )}
+      <div ref={containerRef} />
     </div>
   );
 }

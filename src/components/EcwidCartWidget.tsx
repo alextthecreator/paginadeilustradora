@@ -9,11 +9,17 @@ export default function EcwidCartWidget() {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const container = hostRef.current;
+    if (!container) return;
+    const host = document.createElement('div');
+    host.className = 'ec-cart-widget';
+    host.dataset.layout = 'SIMPLE_ICON_COUNTER';
+    container.appendChild(host);
     let cancelled = false;
     const timer = window.setTimeout(() => {
       ensureEcwidScript(locale)
         .then(() => {
-          if (!cancelled && hostRef.current) {
+          if (!cancelled && container.isConnected) {
             initEcwidCartWidget();
           }
         })
@@ -25,14 +31,14 @@ export default function EcwidCartWidget() {
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
+      container.replaceChildren();
     };
   }, [locale]);
 
   return (
     <div
       ref={hostRef}
-      className="ec-cart-widget ecwid-header-cart"
-      data-layout="SIMPLE_ICON_COUNTER"
+      className="ecwid-header-cart"
       aria-label="Shopping cart"
     />
   );
