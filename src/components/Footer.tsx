@@ -83,11 +83,13 @@ export default function Footer() {
         </div>
 
         <div className="footer-copyright type-label font-mencken-regular mt-10 py-4 text-center" style={{ color: '#FF8A9D' }}>
-          <button type="button" onClick={showCookiePreferences} className="mb-4 min-h-[44px] underline underline-offset-4 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
-            {cookieCopy[locale].settings}
-          </button>
           <p>{rightsText}</p>
           {brandText && <p className="mt-1">© {brandText}</p>}
+        </div>
+        <div className="mt-4 flex justify-center pb-4 text-center" style={{ color: '#FF8A9D' }}>
+          <button type="button" onClick={showCookiePreferences} className="min-h-[44px] px-3 text-sm lowercase underline underline-offset-4 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
+            {cookieCopy[locale].settings.toLocaleLowerCase(locale)}
+          </button>
         </div>
       </div>
     </footer>
