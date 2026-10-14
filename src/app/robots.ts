@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { seoConfig } from '@/lib/seo-config'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: 'https://toskacr.com/sitemap.xml',
+    sitemap: `${seoConfig.site.url}/sitemap.xml`,
   }
 }
