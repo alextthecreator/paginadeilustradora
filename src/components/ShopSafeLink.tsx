@@ -6,6 +6,7 @@ import { useRef, useState, type AnchorHTMLAttributes } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { prepareCartForNavigation } from '@/lib/ecwid-cart-navigation';
 import { isShopPath } from '@/lib/shop-path';
+import { localizeHref } from '@/i18n/paths';
 
 export function needsDocumentNavigation(pathname: string, href: string) {
   return isShopPath(pathname) || isShopPath(href);
@@ -23,6 +24,7 @@ const copy = {
 export default function ShopSafeLink({ href, onClick, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
   const pathname = usePathname();
   const { locale } = useLanguage();
+  href = localizeHref(href, locale);
   const inFlight = useRef(false);
   const [status, setStatus] = useState<'idle' | 'saving' | 'error'>('idle');
   if (!needsDocumentNavigation(pathname, href)) return <Link href={href} onClick={onClick} {...props}>{children}</Link>;

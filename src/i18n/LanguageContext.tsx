@@ -1,13 +1,13 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import {
   defaultLocale,
   Locale,
-  locales,
   translations,
   TranslationKey,
 } from './index';
+import { localizeHref } from './paths';
 
 interface LanguageContextValue {
   locale: Locale;
@@ -17,31 +17,12 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-const STORAGE_KEY = 'toska-locale';
-
-function isLocale(value: string): value is Locale {
-  return locales.includes(value as Locale);
-}
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(defaultLocale);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && isLocale(stored)) {
-      setLocaleState(stored);
-    }
-  }, []);
-
+export function LanguageProvider({ children, initialLocale = defaultLocale }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const locale = initialLocale;
   const setLocale = useCallback((nextLocale: Locale) => {
-    setLocaleState(nextLocale);
-    localStorage.setItem(STORAGE_KEY, nextLocale);
-    document.documentElement.lang = nextLocale;
+    // Document navigation protects Next metadata from Ecwid mutations too.
+    window.location.assign(localizeHref(`${window.location.pathname}${window.location.search}${window.location.hash}`, nextLocale));
   }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = locale;
-  }, [locale]);
 
   const value = useMemo(
     () => ({

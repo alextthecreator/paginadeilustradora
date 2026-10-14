@@ -4,6 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
+const load = require('./ts-fixture.cjs');
+const localePaths = load('src/i18n/paths.ts');
+const shopPaths = load('src/lib/shop-path.ts', { '@/i18n/paths': localePaths });
 
 // Exercise the actual TypeScript loader without downloading Ecwid or requiring
 // a browser. The double rejects initialisation of a missing storefront host.
@@ -61,6 +64,7 @@ function fixture() {
     exports, window, document,
     console: { warn: (...args) => warnings.push(args) },
     require(name) {
+      if (name === '@/i18n/paths') return localePaths;
       assert.equal(name, '@/lib/site-config');
       return { siteConfig: { shopPath: '/shop' }, getEcwidScriptUrl: (locale) => `https://example.test/ecwid?lang=${locale}` };
     },
@@ -118,6 +122,15 @@ test('a failed download is removed and a subsequent request can retry', async ()
   const retry = f.api.ensureEcwidScript('en');
   f.scripts[0].onload();
   await retry;
+});
+
+test('localized storefront and cart share their language-specific base URL', async () => {
+  const f = fixture();
+  const loaded = f.api.ensureEcwidScript('pl');
+  assert.equal(f.window.ecwid_ProductBrowserURL, 'https://example.test/pl/shop');
+  assert.equal(f.window.ec.config.baseUrl, '/pl/shop/');
+  f.scripts[0].onload();
+  await loaded;
 });
 
 test('EN → PL → EN during download does not reload the obsolete PL script', async () => {
@@ -216,12 +229,10 @@ function titleFixture(pathname, ecwidLoaded = true) {
       if (name === 'react/jsx-runtime') return { jsx: () => ({}) };
       if (name === 'framer-motion') return { motion: { div: 'div' } };
       if (name === 'next/navigation') return { usePathname: () => pathname };
-      if (name === '@/lib/seo-config') return {
-        seoConfig: { site: { title: 'Home title', name: 'Toska CR' }, pages: {
-          about: { title: 'About title' }, work: { title: 'Work title' }, calendar: { title: 'Calendar title' },
-        } },
-      };
-      if (name === '@/lib/shop-path') return { isShopPath: (path) => path === '/shop' || path.startsWith('/shop/'), pageTransitionKey: (path) => path.startsWith('/shop/') ? '/shop' : path };
+      if (name === '@/lib/seo-config') return { getPageSeo: (page) => ({ title: page === 'about' ? 'About title' : 'Home title' }) };
+      if (name === '@/i18n/paths') return localePaths;
+      if (name === '@/i18n/LanguageContext') return { useLanguage: () => ({ locale: localePaths.localeFromPath(pathname) }) };
+      if (name === '@/lib/shop-path') return shopPaths;
       throw new Error(`Unexpected import: ${name}`);
     },
   });
@@ -231,10 +242,10 @@ function titleFixture(pathname, ecwidLoaded = true) {
 
 test('leaving the shop restores the route title and rejects late Ecwid writes', () => {
   const f = titleFixture('/about');
-  assert.equal(f.document.title, 'About title | Toska CR');
+  assert.equal(f.document.title, 'About title');
   f.document.title = 'Late shop title';
   f.observer.callback();
-  assert.equal(f.document.title, 'About title | Toska CR');
+  assert.equal(f.document.title, 'About title');
   f.cleanup();
   assert.equal(f.observer.disconnected, true);
 });
@@ -243,11 +254,11 @@ test('title protection starts before a delayed Ecwid script has loaded', () => {
   const f = titleFixture('/about', false);
   f.document.title = 'Late shop title';
   f.observer.callback();
-  assert.equal(f.document.title, 'About title | Toska CR');
+  assert.equal(f.document.title, 'About title');
 });
 
 test('product titles on /shop and artwork detail titles stay under their own metadata handling', () => {
-  for (const pathname of ['/shop', '/shop/Cup-p123', '/shop/cart', '/work/1']) {
+  for (const pathname of ['/shop', '/shop/Cup-p123', '/shop/cart', '/pl/shop/Cup-p123', '/es/shop/cart', '/work/1']) {
     const f = titleFixture(pathname);
     assert.equal(f.document.title, 'Shop product title');
     assert.equal(f.observer, undefined);

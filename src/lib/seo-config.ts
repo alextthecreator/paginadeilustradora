@@ -1,3 +1,6 @@
+import type { Locale } from '@/i18n';
+import { languageAlternates, localizeHref } from '@/i18n/paths';
+
 // SEO Configuration for Toska CR Portfolio
 // This file contains all SEO-related content that can be easily updated by the brand owner
 
@@ -95,18 +98,44 @@ export const seoConfig = {
 };
 
 // Helper function to generate page-specific meta tags
-export function generatePageMetadata(page: keyof typeof seoConfig.pages) {
-  const pageData = seoConfig.pages[page];
+const localizedSeo = {
+  pl: {
+    home: { title: 'Toska CR — ręcznie tworzona ceramika i torby', description: 'Poznaj Toskę CR: autorską ceramikę, makramę, ilustrację i projektowanie graficzne. Rękodzieło tworzone z pasją we Wrocławiu.' },
+    about: { title: 'O Toska CR — artystka i rękodzieło', description: 'Poznaj Glorianę i historię Toska Art Project: od Kostaryki do Wrocławia, przez ilustrację, makramę i ręcznie tworzoną ceramikę.' },
+    work: { title: 'Portfolio Toska CR — ceramika, ilustracja i makrama', description: 'Zobacz portfolio Toska CR: ceramikę, makramę, ilustracje i projekty graficzne. Odkryj autorskie prace tworzone ręcznie.' },
+    shop: { title: 'Sklep Toska CR — ceramika i rękodzieło', description: 'Odkryj ręcznie tworzoną ceramikę i autorskie rękodzieło Toska CR. Wyjątkowe przedmioty do codziennych rytuałów.' },
+    calendar: { title: 'Kalendarz Toska CR — warsztaty i wydarzenia', description: 'Sprawdź warsztaty, targi i wydarzenia Toska CR. Zobacz nadchodzące spotkania i terminy w pracowni.' },
+    contact: { title: 'Kontakt z Toska CR — rękodzieło i zamówienia indywidualne', description: 'Skontaktuj się z Toską CR w sprawie ceramiki, rękodzieła lub projektowania graficznego. Odwiedź pracownię przy Lelewela 4 we Wrocławiu.' },
+  },
+  es: {
+    home: { title: 'Toska CR — cerámica y bolsos artesanales', description: 'Descubre Toska CR: cerámica artesanal, macramé, ilustración y diseño gráfico. Creaciones hechas con pasión en Wrocław.' },
+    about: { title: 'Sobre Toska CR — artista y artesanía', description: 'Conoce a Gloriana y la historia de Toska Art Project: de Costa Rica a Wrocław, a través de la ilustración, el macramé y la cerámica artesanal.' },
+    work: { title: 'Portafolio Toska CR — cerámica, ilustración y macramé', description: 'Explora el portafolio de Toska CR: cerámica, macramé, ilustraciones y diseño gráfico. Descubre piezas originales hechas a mano.' },
+    shop: { title: 'Tienda Toska CR — cerámica y artesanía', description: 'Descubre la cerámica hecha a mano y las creaciones artesanales de Toska CR. Piezas únicas para tus rituales cotidianos.' },
+    calendar: { title: 'Calendario Toska CR — talleres y eventos', description: 'Consulta los talleres, mercados y eventos de Toska CR. Descubre los próximos encuentros y fechas del estudio.' },
+    contact: { title: 'Contacto Toska CR — artesanía y pedidos personalizados', description: 'Contacta con Toska CR para consultas sobre cerámica, artesanía o diseño gráfico. Visita el estudio en Lelewela 4, Wrocław.' },
+  },
+};
+
+export function getPageSeo(page: keyof typeof seoConfig.pages, locale: Locale = 'en') {
+  return { ...seoConfig.pages[page], ...(locale === 'pl' || locale === 'es' ? localizedSeo[locale][page] : {}) };
+}
+
+export function generatePageMetadata(page: keyof typeof seoConfig.pages, locale: Locale = 'en') {
+  const pageData = getPageSeo(page, locale);
   const siteData = seoConfig.site;
+  const path = page === 'home' ? '/' : `/${page}`;
+  const url = `${siteData.url}${localizeHref(path, locale)}`;
   
   return {
-    title: pageData.title,
+    title: { absolute: pageData.title },
     description: pageData.description,
     keywords: pageData.keywords.join(", "),
+    alternates: { canonical: url, languages: languageAlternates(path, siteData.url) },
     openGraph: {
       title: pageData.title,
       description: pageData.description,
-      url: `${siteData.url}/${page === 'home' ? '' : page}`,
+      url,
       siteName: siteData.name,
       images: [
         {
@@ -116,7 +145,7 @@ export function generatePageMetadata(page: keyof typeof seoConfig.pages) {
           alt: pageData.title,
         },
       ],
-      locale: 'en_US',
+      locale: locale === 'pl' ? 'pl_PL' : locale === 'es' ? 'es_ES' : 'en_US',
       type: 'website',
     },
     twitter: {

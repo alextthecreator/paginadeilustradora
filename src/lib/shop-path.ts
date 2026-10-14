@@ -1,6 +1,8 @@
+import { stripLocale } from '@/i18n/paths';
+
 /** Includes product/cart paths, but excludes unrelated paths such as /shopping. */
 export function isShopPath(path: string) {
-  const pathname = path.split(/[?#]/)[0].replace(/\/$/, '');
+  const pathname = stripLocale(path).split(/[?#]/)[0].replace(/\/$/, '');
   return pathname === '/shop' || pathname.startsWith('/shop/');
 }
 

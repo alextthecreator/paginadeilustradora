@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { FaFilter, FaEye, FaShoppingBag, FaTimes, FaArrowRight } from "react-icons/fa";
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ShopSafeLink";
 import Image from "next/image";
 import { Artwork } from "@/types/artwork";
 import { siteConfig } from "@/lib/site-config";

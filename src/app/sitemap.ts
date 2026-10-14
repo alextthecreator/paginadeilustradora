@@ -1,45 +1,17 @@
-import { MetadataRoute } from 'next'
-import { seoConfig } from '@/lib/seo-config'
+import type { MetadataRoute } from 'next';
+import { seoConfig } from '@/lib/seo-config';
+import { languageAlternates, localizeHref } from '@/i18n/paths';
+import { locales } from '@/i18n';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = seoConfig.site.url
-  
-  return [
-    {
-      url: baseUrl,
+  const origin = seoConfig.site.url;
+  return ['/', '/about', '/work', '/shop', '/calendar', '/contact'].flatMap(path =>
+    locales.map(locale => ({
+      url: `${origin}${localizeHref(path, locale)}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/work`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/shop`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/calendar`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ]
+      changeFrequency: path === '/shop' || path === '/work' || path === '/calendar' ? 'weekly' as const : 'monthly' as const,
+      priority: path === '/' ? 1 : 0.8,
+      alternates: { languages: languageAlternates(path, origin) },
+    }))
+  );
 }

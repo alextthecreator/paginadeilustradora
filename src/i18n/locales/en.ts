@@ -42,7 +42,7 @@ const en = {
     success: 'Thank you! Your message has been sent successfully.',
     error: 'Sorry, there was an error sending your message. Please try again.',
     addressHeading: 'Address',
-    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Unit 322'],
     mapTitle: 'Address — Lelewela 4, Wrocław',
     imageAlt: 'Get in Touch - Contact Toska CR',
   },

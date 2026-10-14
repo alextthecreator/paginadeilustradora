@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '@/components/ShopSafeLink';
 import { motion } from 'framer-motion';
 
 export default function NotFound() {

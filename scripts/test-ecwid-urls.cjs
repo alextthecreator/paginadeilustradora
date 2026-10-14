@@ -3,6 +3,8 @@ const { test } = require('node:test');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const ts = require('typescript');
+const load = require('./ts-fixture.cjs');
+const localePaths = load('src/i18n/paths.ts');
 
 function fixture(reply, status = 200) {
   const calls = [];
@@ -18,6 +20,7 @@ function fixture(reply, status = 200) {
       return { ok: status === 200, json: async () => reply };
     },
     require(name) {
+      if (name === '@/i18n/paths') return localePaths;
       if (name === '@/lib/site-config') return { siteConfig: { shopPath: '/shop', ecwidStoreId: '138778502' } };
       if (name === '@/lib/seo-config') return {
         seoConfig: { site: { url: 'https://toska-artproject.com' } },
@@ -79,4 +82,13 @@ test('canonical cannot point outside this store or to another product', async ()
     const metadata = await fixture({ ...product, canonicalUrl }).get(['Cup-p123']);
     assert.equal(metadata.alternates.canonical, product.canonicalUrl);
   }
+});
+
+test('localized product metadata preserves the prefixed canonical and requests its language', async () => {
+  const f = fixture({ ...product, canonicalUrl: 'https://toska-artproject.com/pl/shop/Cup-p123' });
+  const metadata = await f.get(['Cup-p123'], 'pl');
+  assert.equal(metadata.alternates.canonical, 'https://toska-artproject.com/pl/shop/Cup-p123');
+  assert.equal(metadata.alternates.languages.es, 'https://toska-artproject.com/es/shop/Cup-p123');
+  assert.equal(f.calls[0].url.searchParams.get('lang'), 'pl');
+  assert.equal(f.calls[0].url.searchParams.get('base_url'), 'https://toska-artproject.com/pl/shop');
 });

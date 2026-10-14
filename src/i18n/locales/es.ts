@@ -45,7 +45,7 @@ const es: typeof en = {
     success: '¡Gracias! Tu mensaje se ha enviado correctamente.',
     error: 'Lo sentimos, ocurrió un error al enviar tu mensaje. Inténtalo de nuevo.',
     addressHeading: 'Dirección',
-    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Polonia', 'Local 322'],
     mapTitle: 'Dirección — Lelewela 4, Wrocław',
     imageAlt: 'Ponte en contacto - contacto Toska CR',
   },

@@ -45,7 +45,7 @@ const pl: typeof en = {
     success: 'Dziękuję! Twoja wiadomość została pomyślnie wysłana.',
     error: 'Przepraszam, wystąpił błąd podczas wysyłania wiadomości. Spróbuj ponownie.',
     addressHeading: 'Adres',
-    addressLines: ['Lelewela 4, Wrocław', '53-505, Poland', 'Local 322'],
+    addressLines: ['Lelewela 4, Wrocław', '53-505, Polska', 'Lokal 322'],
     mapTitle: 'Adres — Lelewela 4, Wrocław',
     imageAlt: 'Skontaktuj się - kontakt Toska CR',
   },

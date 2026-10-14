@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import Link from 'next/link';
+import Link from '@/components/ShopSafeLink';
 import Image from 'next/image';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import {

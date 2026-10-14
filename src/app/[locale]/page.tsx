@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import Link from '@/components/ShopSafeLink';
 import Image, { type ImageLoaderProps } from 'next/image';
 import InteractiveCarousel from '@/components/InteractiveCarousel';
 import artwork from '@/data/artwork.json';

@@ -1,5 +1,6 @@
 import type { Locale } from '@/i18n';
 import { getEcwidScriptUrl, siteConfig } from '@/lib/site-config';
+import { localizeHref } from '@/i18n/paths';
 
 declare global {
   interface Window {
@@ -26,8 +27,8 @@ let loadingLocale: Locale | null = null;
 let requestedLocale: Locale | null = null;
 let activeStoreHost: HTMLElement | null = null;
 
-function setProductBrowserUrl() {
-  window.ecwid_ProductBrowserURL = `${window.location.origin}${siteConfig.shopPath}`;
+function setProductBrowserUrl(locale: Locale) {
+  window.ecwid_ProductBrowserURL = `${window.location.origin}${localizeHref(siteConfig.shopPath, locale)}`;
 }
 
 /** Tear down Ecwid widgets before React removes their host nodes. */
@@ -55,7 +56,7 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
     return Promise.resolve();
   }
 
-  setProductBrowserUrl();
+  setProductBrowserUrl(locale);
   // One site-wide consent UI. Ecwid keeps only essential shop cookies, even
   // when the visitor enables optional GA/maps services elsewhere on the site.
   // Set this before script loading so the shop's own banner is never mounted.
@@ -64,7 +65,7 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
   window.ec.config.store_main_page_url = window.ecwid_ProductBrowserURL;
   // Configure before script loading. Keep IDs for stable server-side lookup
   // of the public product metadata used by search engines and link previews.
-  window.ec.config.baseUrl = `${siteConfig.shopPath}/`;
+  window.ec.config.baseUrl = `${localizeHref(siteConfig.shopPath, locale)}/`;
   window.ec.config.storefrontUrls = { cleanUrls: true, slugsWithoutIds: false };
   window.ec.config.tracking = window.ec.config.tracking || {};
   window.ec.config.tracking.ask_consent = true;

@@ -115,7 +115,8 @@ test('GA component renders only with consent and a real configured ID', () => {
 });
 
 test('shop boundaries use document navigation; ordinary pages retain Next links', () => {
-  const paths = moduleFixture('src/lib/shop-path.ts', {});
+  const localePaths = moduleFixture('src/i18n/paths.ts', {});
+  const paths = moduleFixture('src/lib/shop-path.ts', { '@/i18n/paths': localePaths });
   for (const pathname of ['/shop', '/shop/', '/shop/Cup-p123', '/shop/cart', '/shopping', '/about', '/contact']) {
     const api = moduleFixture('src/components/ShopSafeLink.tsx', {
       'react/jsx-runtime': { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
@@ -123,6 +124,7 @@ test('shop boundaries use document navigation; ordinary pages retain Next links'
       '@/i18n/LanguageContext': { useLanguage: () => ({locale:'en'}) },
       '@/lib/ecwid-cart-navigation': { prepareCartForNavigation: () => Promise.resolve() },
       '@/lib/shop-path': paths,
+      '@/i18n/paths': localePaths,
       'next/link': { default: 'NextLink' },
       'next/navigation': { usePathname: () => pathname },
     });
@@ -136,7 +138,7 @@ test('shop boundaries use document navigation; ordinary pages retain Next links'
 });
 
 test('Ecwid history changes keep one storefront transition key', () => {
-  const paths = moduleFixture('src/lib/shop-path.ts', {});
+  const paths = moduleFixture('src/lib/shop-path.ts', { '@/i18n/paths': moduleFixture('src/i18n/paths.ts', {}) });
   for (const path of ['/shop', '/shop/Cup-p123', '/shop/cart', '/shop/checkout/shipping']) {
     assert.equal(paths.pageTransitionKey(path), '/shop');
   }

@@ -2,11 +2,19 @@
 
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '@/components/ShopSafeLink';
 import artwork from '@/data/artwork.json';
 import { FaArrowLeft } from 'react-icons/fa';
+import { useLanguage } from '@/i18n/LanguageContext';
+
+const labels = {
+  en: { missing: 'Artwork not found', back: 'Back to Work', all: 'Back to All Work' },
+  pl: { missing: 'Nie znaleziono pracy', back: 'Wróć do prac', all: 'Wróć do wszystkich prac' },
+  es: { missing: 'Obra no encontrada', back: 'Volver a mis trabajos', all: 'Volver a todos los trabajos' },
+};
 
 export default function ArtworkDetailPage() {
+  const { locale } = useLanguage();
   const params = useParams();
   const { id } = params;
 
@@ -15,9 +23,9 @@ export default function ArtworkDetailPage() {
   if (!item) {
     return (
       <div className="min-h-screen bg-brand-dark-teal text-center py-20">
-        <h1 className="text-3xl text-brand-primary-pink mb-4">Artwork not found</h1>
+        <h1 className="text-3xl text-brand-primary-pink mb-4">{labels[locale].missing}</h1>
         <Link href="/work" className="text-brand-cream hover:underline">
-          Back to Work
+          {labels[locale].back}
         </Link>
       </div>
     );
@@ -29,7 +37,7 @@ export default function ArtworkDetailPage() {
         <div className="mb-8">
           <Link href="/work" className="inline-flex items-center gap-2 text-brand-primary-pink hover:text-white transition-colors">
             <FaArrowLeft />
-            <span>Back to All Work</span>
+            <span>{labels[locale].all}</span>
           </Link>
         </div>
         

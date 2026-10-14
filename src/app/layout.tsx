@@ -11,6 +11,8 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Providers from "@/components/Providers";
 import { seoConfig } from "@/lib/seo-config";
 import { analyticsConfig } from "@/lib/analytics";
+import { getLocale } from 'next-intl/server';
+import type { Locale } from '@/i18n';
 
 export const metadata: Metadata = {
   metadataBase: new URL(seoConfig.site.url),
@@ -75,13 +77,13 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang={await getLocale()} className="scroll-smooth">
       <head>
         <StructuredData type="website" />
         <GoogleAnalytics measurementId={analyticsConfig.measurementId} />
@@ -97,7 +99,7 @@ export default function RootLayout({
         className={`antialiased site-body`}
       >
         <ErrorBoundary>
-          <Providers>
+          <Providers locale={await getLocale() as Locale}>
             <Header />
             <main className="site-main w-full min-w-0">
               <PageTransition>
