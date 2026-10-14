@@ -41,5 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 # Local image sources (served from Cloudinary in production)
-/public/images/work/macrame/
-/public/images/work/pottery/
+/public/images/
+
+# Unused Next.js starter assets retained only in the local checkout
+/public/file.svg
+/public/globe.svg
+/public/next.svg
+/public/vercel.svg
+/public/window.svg
