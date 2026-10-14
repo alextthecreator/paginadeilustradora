@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import ShopSafeLink from './ShopSafeLink';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
@@ -64,9 +64,9 @@ export default function Header() {
       <div className="page-x header-main-row flex h-20 w-full items-center justify-between pt-2 xl:h-32 xl:pt-5">
         {/* Brand Logo */}
         <div className="flex-shrink-0">
-          <Link href="/" onClick={closeMobileMenu}>
+          <ShopSafeLink href="/" onClick={closeMobileMenu}>
             <BrandLogo size="2xl" showText={false} />
-          </Link>
+          </ShopSafeLink>
         </div>
 
         {/* Desktop Navigation */}
@@ -93,9 +93,9 @@ export default function Header() {
               }
 
               return (
-                <Link key={item.href} href={item.href} className={linkClassName} style={linkStyle}>
+                <ShopSafeLink key={item.href} href={item.href} className={linkClassName} style={linkStyle}>
                   {item.label}
-                </Link>
+                </ShopSafeLink>
               );
             })}
           </nav>
@@ -146,13 +146,13 @@ export default function Header() {
                           {item.label}
                         </a>
                       ) : (
-                        <Link
+                        <ShopSafeLink
                           href={item.href}
                           onClick={closeMobileMenu}
                           className="block min-h-11 px-4 py-3 text-white hover:text-brand-vibrant-pink hover:bg-brand-vibrant-pink/20 transition-colors duration-300 text-base uppercase tracking-widest font-brand-bold rounded-lg mx-2 sm:text-lg"
                         >
                           {item.label}
-                        </Link>
+                        </ShopSafeLink>
                       )}
                     </motion.div>
                   ))}

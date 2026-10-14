@@ -3,10 +3,15 @@ import { getEcwidScriptUrl, siteConfig } from '@/lib/site-config';
 
 declare global {
   interface Window {
-    Ecwid?: { init: () => void; destroy?: () => void };
+    Ecwid?: {
+      init: () => void;
+      destroy?: () => void;
+      Cart?: { calculateTotal?: (callback: (order: unknown) => void) => void | Promise<unknown> };
+    };
     ecwid_ProductBrowserURL?: string;
     ecwid_script_defer?: boolean;
     ecwid_dynamic_widgets?: boolean;
+    ec?: { config?: { tracking?: { ask_consent?: boolean; user_response?: string }; [key: string]: unknown }; [key: string]: unknown };
     _xnext_initialization_scripts?: {
       widgetType: string;
       id: string;
@@ -51,6 +56,15 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
   }
 
   setProductBrowserUrl();
+  // One site-wide consent UI. Ecwid keeps only essential shop cookies, even
+  // when the visitor enables optional GA/maps services elsewhere on the site.
+  // Set this before script loading so the shop's own banner is never mounted.
+  window.ec = window.ec || {};
+  window.ec.config = window.ec.config || {};
+  window.ec.config.store_main_page_url = window.ecwid_ProductBrowserURL;
+  window.ec.config.tracking = window.ec.config.tracking || {};
+  window.ec.config.tracking.ask_consent = true;
+  window.ec.config.tracking.user_response = 'DECLINED';
   requestedLocale = locale;
   // Ecwid's documented lifecycle for storefronts mounted by an SPA.
   window.ecwid_script_defer = true;

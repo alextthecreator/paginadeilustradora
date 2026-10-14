@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CloudinaryImage from "@/components/CloudinaryImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -40,7 +40,7 @@ const ABOUT_SLIDES = [
   },
 ];
 
-const SLIDE_MS = 4500;
+const SLIDE_MS = 5000;
 
 function AboutPhotoSlideshow({
   altPrimary,
@@ -50,17 +50,37 @@ function AboutPhotoSlideshow({
   altSecondary: string;
 }) {
   const [index, setIndex] = useState(0);
+  const timerRef = useRef<number | null>(null);
+  const reducedMotionRef = useRef(false);
   const alts = { photoAlt: altPrimary, photoAltSecondary: altSecondary };
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
+  const clearTimer = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
     }
-    const id = window.setInterval(() => {
+  }, []);
+
+  const startTimer = useCallback(() => {
+    clearTimer();
+    if (reducedMotionRef.current) return;
+    timerRef.current = window.setInterval(() => {
       setIndex((current) => (current + 1) % ABOUT_SLIDES.length);
     }, SLIDE_MS);
-    return () => window.clearInterval(id);
-  }, []);
+  }, [clearTimer]);
+
+  useEffect(() => {
+    reducedMotionRef.current =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    startTimer();
+    return clearTimer;
+  }, [startTimer, clearTimer]);
+
+  const goTo = (next: number) => {
+    setIndex(next);
+    startTimer();
+  };
 
   return (
     <div
@@ -69,14 +89,10 @@ function AboutPhotoSlideshow({
       aria-roledescription="carousel"
       aria-label={altPrimary}
     >
-      {/* Both photos stay mounted and layered — crossfade by opacity */}
       {ABOUT_SLIDES.map((slide, i) => (
-        <motion.div
+        <div
           key={slide.publicId}
           className={`about-media-slide${i === index ? " is-active" : ""}`}
-          initial={false}
-          animate={{ opacity: i === index ? 1 : 0 }}
-          transition={{ duration: 0.9, ease: "easeInOut" }}
           aria-hidden={i !== index}
         >
           <CloudinaryImage
@@ -88,7 +104,7 @@ function AboutPhotoSlideshow({
             priority
             transformations={{ crop: "fill", fetch_format: "jpg", pg: 1 }}
           />
-        </motion.div>
+        </div>
       ))}
 
       <div className="about-media-dots">
@@ -99,7 +115,7 @@ function AboutPhotoSlideshow({
             className={`about-media-dot${i === index ? " is-active" : ""}`}
             aria-label={`${i + 1} / ${ABOUT_SLIDES.length}`}
             aria-current={i === index ? "true" : undefined}
-            onClick={() => setIndex(i)}
+            onClick={() => goTo(i)}
           />
         ))}
       </div>
@@ -132,7 +148,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="about-copy about-copy-right"
+            className="about-copy about-copy-left"
           >
             <h1 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5 pt-2 md:pt-4">
               {t.about.aboutMeTitle}
@@ -140,7 +156,7 @@ export default function AboutPage() {
             <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
               {t.about.aboutMeIntro}
             </p>
-            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 text-justify md:m-12">
+            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8">
               <MultilineText text={t.about.aboutMeBody} />
             </p>
           </motion.div>
@@ -151,7 +167,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="about-copy about-copy-left order-2 md:order-1"
+            className="about-copy about-copy-right order-2 md:order-1"
           >
             <h2 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5">
               {t.about.toskaTitle}
@@ -159,7 +175,7 @@ export default function AboutPage() {
             <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
               {t.about.toskaIntro}
             </p>
-            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 mb-12 text-justify">
+            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 mb-12">
               <MultilineText text={t.about.toskaBody} />
             </p>
           </motion.div>

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "vanilla-cookieconsent/dist/cookieconsent.css";
+import "./cookie-consent.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";

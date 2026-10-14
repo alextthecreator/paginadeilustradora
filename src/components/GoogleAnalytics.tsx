@@ -1,12 +1,17 @@
 'use client';
 
 import Script from 'next/script';
+import { useCookieConsent } from '@/hooks/useCookieConsent';
+import { hasMeasurementId } from '@/lib/analytics-config';
 
 interface GoogleAnalyticsProps {
   measurementId: string;
 }
 
 export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
+  const { analytics } = useCookieConsent();
+  if (!analytics || !hasMeasurementId(measurementId)) return null;
+
   return (
     <>
       <Script

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FaSpinner, FaCheck } from "react-icons/fa";
 import { useState } from "react";
 import Image from "next/image";
+import ConsentMap from "@/components/ConsentMap";
 import { trackEvent, trackConversion, analyticsConfig } from "@/lib/analytics";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -267,14 +268,7 @@ export default function ContactPage() {
             transition={{ duration: 0.7, delay: 0.25 }}
             className="contact-map"
           >
-            <iframe
-              title={t.contact.mapTitle}
-              src={mapEmbedSrc}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="contact-map-frame"
-            />
+            <ConsentMap title={t.contact.mapTitle} src={mapEmbedSrc} directionsUrl={mapLinkHref} />
           </motion.div>
 
           <motion.aside

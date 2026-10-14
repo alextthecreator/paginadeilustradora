@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { LanguagesIcon } from './BrandLogo';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Locale, localeFlagEmoji, localeFlags, locales } from '@/i18n';
+import { prepareCartForNavigation } from '@/lib/ecwid-cart-navigation';
 
 interface LanguageSwitcherProps {
   onSelect?: () => void;
@@ -88,6 +89,8 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { locale, setLocale, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const [cartError, setCartError] = useState(false);
+  const selecting = useRef(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -109,10 +112,26 @@ export default function LanguageSwitcher({
     }, HOVER_CLOSE_DELAY);
   };
 
-  const handleSelect = (nextLocale: Locale) => {
-    setLocale(nextLocale);
-    setIsOpen(false);
-    onSelect?.();
+  const handleSelect = async (nextLocale: Locale) => {
+    if (selecting.current) return;
+    if (nextLocale === locale) {
+      setIsOpen(false);
+      onSelect?.();
+      return;
+    }
+    selecting.current = true;
+    setCartError(false);
+    try {
+      // Language changes remount Ecwid too; preserve an in-flight cart update.
+      if (pathname === '/shop') await prepareCartForNavigation();
+      setLocale(nextLocale);
+      setIsOpen(false);
+      onSelect?.();
+    } catch {
+      setCartError(true);
+    } finally {
+      selecting.current = false;
+    }
   };
 
   const toggleMenu = () => {
@@ -219,6 +238,9 @@ export default function LanguageSwitcher({
           </motion.div>
         )}
       </AnimatePresence>
+      {cartError && <p role="alert" className="absolute right-0 top-full z-50 w-64 rounded-lg bg-[#0f2e1f] p-3 text-sm text-[#FBEAD5]">
+        {locale === 'pl' ? 'Nie udało się potwierdzić koszyka. Spróbuj ponownie.' : locale === 'es' ? 'No se pudo confirmar tu carrito. Inténtalo de nuevo.' : 'Your cart could not be confirmed. Please try again.'}
+      </p>}
     </div>
   );
 }

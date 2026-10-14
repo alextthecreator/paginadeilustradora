@@ -1,13 +1,15 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import ShopSafeLink from './ShopSafeLink';
 import { FaInstagram, FaBehance, FaLinkedinIn } from 'react-icons/fa';
 import { trackEvent, analyticsConfig } from '@/lib/analytics';
+import { cookieCopy } from '@/i18n/cookie-consent';
+import { showCookiePreferences } from '@/lib/cookie-consent';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [rightsText, brandText] = t.footer.copyright.split(' © ');
 
   const socialLinks = [
@@ -68,19 +70,22 @@ export default function Footer() {
 
           <nav className="hidden text-right lg:block" aria-label="Footer navigation">
             {navLinks.map(({ href, label }) => (
-              <Link
+              <ShopSafeLink
                 key={href}
                 href={href}
                 className="footer-nav-link type-nav font-mencken-bold text-brand-vibrant-pink transition-colors uppercase tracking-widest"
               >
                 {label}
-              </Link>
+              </ShopSafeLink>
             ))}
           </nav>
 
         </div>
 
         <div className="footer-copyright type-label font-mencken-regular mt-10 py-4 text-center" style={{ color: '#FF8A9D' }}>
+          <button type="button" onClick={showCookiePreferences} className="mb-4 min-h-[44px] underline underline-offset-4 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
+            {cookieCopy[locale].settings}
+          </button>
           <p>{rightsText}</p>
           {brandText && <p className="mt-1">© {brandText}</p>}
         </div>
