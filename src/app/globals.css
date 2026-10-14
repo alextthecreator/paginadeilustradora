@@ -189,12 +189,41 @@
 }
 
 
+.header-cart-shell {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.header-cart-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-vibrant-pink);
+}
+
+.header-cart-fallback:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Switch in the same paint that Ecwid inserts/removes its usable cart.
+   The fallback stays outside the container Ecwid destroys and rebuilds. */
+.header-cart-shell:has(.ec-minicart[role="button"]) .header-cart-fallback {
+  display: none;
+}
+
 .ecwid-header-cart {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 2.75rem;
+  height: 2.75rem;
   min-height: 2.75rem;
   color: var(--brand-vibrant-pink);
 }
@@ -1509,11 +1538,14 @@ html {
     text-align: left;
   }
 
+  .header-cart-shell,
   .ecwid-header-cart {
     width: 2.5rem;
+    height: 2.5rem;
     min-height: 2.5rem;
   }
 
+  .header-cart-fallback svg,
   .ecwid-header-cart .ec-minicart__icon svg {
     width: 28px;
     height: 24px;
@@ -2474,4 +2506,3 @@ section {
     gap: 0.5rem;
   }
 }
-
