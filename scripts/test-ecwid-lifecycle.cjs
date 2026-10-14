@@ -85,6 +85,9 @@ test('store and cart share the same in-flight locale load', async () => {
   assert.equal(f.window.ec.config.tracking.ask_consent, true);
   assert.equal(f.window.ec.config.tracking.user_response, 'DECLINED');
   assert.equal(f.window.ec.config.store_main_page_url, 'https://example.test/shop');
+  assert.equal(f.window.ec.config.baseUrl, '/shop/');
+  assert.equal(f.window.ec.config.storefrontUrls.cleanUrls, true);
+  assert.equal(f.window.ec.config.storefrontUrls.slugsWithoutIds, false);
   assert.equal(f.window.ecwid_ProductBrowserURL, 'https://example.test/shop');
   f.scripts[0].onload();
   await first;
@@ -218,6 +221,7 @@ function titleFixture(pathname, ecwidLoaded = true) {
           about: { title: 'About title' }, work: { title: 'Work title' }, calendar: { title: 'Calendar title' },
         } },
       };
+      if (name === '@/lib/shop-path') return { isShopPath: (path) => path === '/shop' || path.startsWith('/shop/'), pageTransitionKey: (path) => path.startsWith('/shop/') ? '/shop' : path };
       throw new Error(`Unexpected import: ${name}`);
     },
   });
@@ -243,7 +247,7 @@ test('title protection starts before a delayed Ecwid script has loaded', () => {
 });
 
 test('product titles on /shop and artwork detail titles stay under their own metadata handling', () => {
-  for (const pathname of ['/shop', '/work/1']) {
+  for (const pathname of ['/shop', '/shop/Cup-p123', '/shop/cart', '/work/1']) {
     const f = titleFixture(pathname);
     assert.equal(f.document.title, 'Shop product title');
     assert.equal(f.observer, undefined);

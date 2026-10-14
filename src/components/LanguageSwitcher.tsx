@@ -7,6 +7,7 @@ import { LanguagesIcon } from './BrandLogo';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Locale, localeFlagEmoji, localeFlags, locales } from '@/i18n';
 import { prepareCartForNavigation } from '@/lib/ecwid-cart-navigation';
+import { isShopPath } from '@/lib/shop-path';
 
 interface LanguageSwitcherProps {
   onSelect?: () => void;
@@ -123,7 +124,7 @@ export default function LanguageSwitcher({
     setCartError(false);
     try {
       // Language changes remount Ecwid too; preserve an in-flight cart update.
-      if (pathname === '/shop') await prepareCartForNavigation();
+      if (isShopPath(pathname)) await prepareCartForNavigation();
       setLocale(nextLocale);
       setIsOpen(false);
       onSelect?.();

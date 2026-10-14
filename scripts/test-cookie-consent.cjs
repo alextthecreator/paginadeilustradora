@@ -115,21 +115,33 @@ test('GA component renders only with consent and a real configured ID', () => {
 });
 
 test('shop boundaries use document navigation; ordinary pages retain Next links', () => {
-  for (const pathname of ['/shop', '/shop/', '/about', '/contact']) {
+  const paths = moduleFixture('src/lib/shop-path.ts', {});
+  for (const pathname of ['/shop', '/shop/', '/shop/Cup-p123', '/shop/cart', '/shopping', '/about', '/contact']) {
     const api = moduleFixture('src/components/ShopSafeLink.tsx', {
       'react/jsx-runtime': { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
       'react': { useRef: () => ({current:false}), useState: () => ['idle', () => {}] },
       '@/i18n/LanguageContext': { useLanguage: () => ({locale:'en'}) },
       '@/lib/ecwid-cart-navigation': { prepareCartForNavigation: () => Promise.resolve() },
+      '@/lib/shop-path': paths,
       'next/link': { default: 'NextLink' },
       'next/navigation': { usePathname: () => pathname },
     });
-    for (const href of ['/shop', '/shop#!/~/cart', '/shop?category=1', '/about', '/contact', '/']) {
-      const native = pathname.startsWith('/shop') || href.startsWith('/shop');
+    for (const href of ['/shop', '/shop#!/~/cart', '/shop/cart', '/shop/Cup-p123', '/shop?category=1', '/shopping', '/about', '/contact', '/']) {
+      const isShop = (path) => /^\/shop(?:[\/?#]|$)/.test(path);
+      const native = isShop(pathname) || isShop(href);
       const link = api.default({ href, children: 'Go' });
       assert.equal(link.type, native ? 'a' : 'NextLink');
     }
   }
+});
+
+test('Ecwid history changes keep one storefront transition key', () => {
+  const paths = moduleFixture('src/lib/shop-path.ts', {});
+  for (const path of ['/shop', '/shop/Cup-p123', '/shop/cart', '/shop/checkout/shipping']) {
+    assert.equal(paths.pageTransitionKey(path), '/shop');
+  }
+  assert.equal(paths.pageTransitionKey('/about'), '/about');
+  assert.equal(paths.pageTransitionKey('/shopping'), '/shopping');
 });
 
 function cartNavigationFixture(calculateTotal) {

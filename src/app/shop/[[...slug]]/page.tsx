@@ -1,5 +1,10 @@
 import EcwidStore from '@/components/EcwidStore';
 import ShopLanguageNotice from '@/components/ShopLanguageNotice';
+import { getEcwidProductMetadata } from '@/lib/ecwid-product-metadata';
+
+export async function generateMetadata({ params }: { params: { slug?: string[] } }) {
+  return getEcwidProductMetadata(params.slug);
+}
 
 export default function ShopPage() {
   return (

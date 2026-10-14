@@ -5,10 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useRef, useState, type AnchorHTMLAttributes } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { prepareCartForNavigation } from '@/lib/ecwid-cart-navigation';
-
-function isShopPath(path: string) {
-  return path.split(/[?#]/)[0].replace(/\/$/, '') === '/shop';
-}
+import { isShopPath } from '@/lib/shop-path';
 
 export function needsDocumentNavigation(pathname: string, href: string) {
   return isShopPath(pathname) || isShopPath(href);

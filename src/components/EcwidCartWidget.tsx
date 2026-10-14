@@ -43,7 +43,7 @@ export default function EcwidCartWidget() {
       {/* Keep this React-owned link outside Ecwid's imperative host. It is
           available from the first render, including while Ecwid restarts. */}
       <ShopSafeLink
-        href="/shop#!/~/cart"
+        href="/shop/cart"
         className="header-cart-fallback"
         aria-label={cartLabels[locale]}
       >

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 import { seoConfig } from '@/lib/seo-config';
+import { isShopPath, pageTransitionKey } from '@/lib/shop-path';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === '/shop') return;
+    if (isShopPath(pathname)) return;
     // Ecwid changes document.title for product/cart pages. On ordinary routes,
     // preserve the title defined by our existing Next metadata instead.
     const page = pathname.slice(1);
@@ -41,7 +42,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
 
   return (
     <motion.div
-      key={pathname}
+      key={pageTransitionKey(pathname)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
