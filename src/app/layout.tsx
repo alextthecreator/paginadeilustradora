@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     creator: seoConfig.social.twitter,
   },
   verification: {
-    google: "your-google-verification-code", // Will be updated when Google Search Console is set up
+    google: "3Wy53EXVcddsOfEgV8PasQ99TgUznNKp7-0px7Gayfk",
   },
   icons: {
     icon: [
