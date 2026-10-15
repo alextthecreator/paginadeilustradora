@@ -198,7 +198,6 @@ export default function EventsCalendar() {
     : null;
   const selectedEvents = selectedKey ? eventsByDay.get(selectedKey) || [] : [];
   const today = calendarToday();
-  const isCurrentMonth = month.getFullYear() === today.getFullYear() && month.getMonth() === today.getMonth();
 
   const showDetails = () => {
     detailsRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
@@ -206,8 +205,8 @@ export default function EventsCalendar() {
   };
 
   useEffect(() => {
-    if (selectedKey) showDetails();
-  }, [selectedKey]);
+    if (selectedKey && !isLoading) showDetails();
+  }, [selectedKey, isLoading]);
 
   useEffect(() => () => { if (hoverCloseTimer.current) clearTimeout(hoverCloseTimer.current); }, []);
 
@@ -292,8 +291,10 @@ export default function EventsCalendar() {
           </button>
         </div>
         <div className="events-calendar-toolbar">
-          <button type="button" className="events-calendar-today-btn" disabled={isCurrentMonth} onClick={() => {
-            setMonth(startOfMonth(calendarToday())); setSelected(null); setPreview(null);
+          <button type="button" className="events-calendar-today-btn" onClick={() => {
+            const currentDay = calendarToday();
+            setMonth(startOfMonth(currentDay));
+            selectDay(currentDay);
           }}>{t.calendar.today}</button>
           <span>{t.calendar.timezone}</span>
         </div>

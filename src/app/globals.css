@@ -2301,7 +2301,6 @@ section {
   color: #f57692;
 }
 
-.events-calendar-today-btn:disabled { opacity: 0.5; cursor: default; }
 .events-calendar-event-chip.is-past-event { background: #d1cbc2; border: 1px dashed #004e42; }
 .events-calendar-past-label { font-style: italic; }
 .events-calendar-detail:focus-visible { outline: 2px solid #f57692; outline-offset: 4px; }
