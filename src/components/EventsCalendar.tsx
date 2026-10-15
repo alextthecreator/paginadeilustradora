@@ -8,6 +8,8 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import type { CalendarEvent } from '@/lib/calendar-types';
 import { eventDayKeys, toDateKeyFromParts } from '@/lib/calendar-types';
 import LoadingSpinner from './LoadingSpinner';
+import CalendarEventDetails, { EventDescription } from './CalendarEventDetails';
+import { calendarToday, formatEventWhen, isPastEvent } from '@/lib/calendar-event-utils';
 
 type CalendarResponse = {
   configured: boolean;
@@ -51,32 +53,11 @@ function formatMonthName(date: Date, locale: string) {
 }
 
 function weekdayLabels(locale: string) {
-  const formatter = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+  const formatter = new Intl.DateTimeFormat(locale, { weekday: 'long', timeZone: 'UTC' });
   return Array.from({ length: 7 }, (_, index) => {
     const day = new Date(Date.UTC(2024, 0, 1 + index)); // Monday-first
     return formatter.format(day).toUpperCase();
   });
-}
-
-function formatEventWhen(event: CalendarEvent, locale: string, allDayLabel: string) {
-  if (event.allDay) return allDayLabel;
-  const start = new Date(event.start);
-  const end = new Date(event.end);
-  const timeOpts: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
-  const same =
-    start.getFullYear() === end.getFullYear() &&
-    start.getMonth() === end.getMonth() &&
-    start.getDate() === end.getDate();
-  if (same) {
-    return `${start.toLocaleTimeString(locale, timeOpts)} – ${end.toLocaleTimeString(locale, timeOpts)}`;
-  }
-  const dateOpts: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  };
-  return `${start.toLocaleString(locale, dateOpts)} – ${end.toLocaleString(locale, dateOpts)}`;
 }
 
 function previewPosition(el: HTMLElement): Omit<EventPreviewState, 'event'> {
@@ -91,7 +72,7 @@ function previewPosition(el: HTMLElement): Omit<EventPreviewState, 'event'> {
 
 export default function EventsCalendar() {
   const { locale, t } = useLanguage();
-  const [month, setMonth] = useState(() => startOfMonth(new Date()));
+  const [month, setMonth] = useState(() => startOfMonth(calendarToday()));
   const [selected, setSelected] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [configured, setConfigured] = useState(true);
@@ -101,6 +82,7 @@ export default function EventsCalendar() {
   const [preview, setPreview] = useState<EventPreviewState | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const hoverCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setPortalReady(true);
@@ -215,7 +197,25 @@ export default function EventsCalendar() {
     ? toDateKeyFromParts(selected.getFullYear(), selected.getMonth() + 1, selected.getDate())
     : null;
   const selectedEvents = selectedKey ? eventsByDay.get(selectedKey) || [] : [];
-  const today = new Date();
+  const today = calendarToday();
+  const isCurrentMonth = month.getFullYear() === today.getFullYear() && month.getMonth() === today.getMonth();
+
+  const showDetails = () => {
+    detailsRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    detailsRef.current?.focus({ preventScroll: true });
+  };
+
+  useEffect(() => {
+    if (selectedKey) showDetails();
+  }, [selectedKey]);
+
+  useEffect(() => () => { if (hoverCloseTimer.current) clearTimeout(hoverCloseTimer.current); }, []);
+
+  const selectDay = (date: Date) => {
+    setSelected(date);
+    setPreview(null);
+    if (selected && sameDay(date, selected)) showDetails();
+  };
 
   const clearHoverClose = () => {
     if (hoverCloseTimer.current) {
@@ -225,6 +225,7 @@ export default function EventsCalendar() {
   };
 
   const openPreview = (event: CalendarEvent, el: HTMLElement) => {
+    if (!window.matchMedia('(hover: hover)').matches) return;
     clearHoverClose();
     setPreview({ event, ...previewPosition(el) });
   };
@@ -290,6 +291,12 @@ export default function EventsCalendar() {
             <FaChevronRight />
           </button>
         </div>
+        <div className="events-calendar-toolbar">
+          <button type="button" className="events-calendar-today-btn" disabled={isCurrentMonth} onClick={() => {
+            setMonth(startOfMonth(calendarToday())); setSelected(null); setPreview(null);
+          }}>{t.calendar.today}</button>
+          <span>{t.calendar.timezone}</span>
+        </div>
       </motion.header>
 
       {isLoading ? (
@@ -350,18 +357,16 @@ export default function EventsCalendar() {
                         .filter(Boolean)
                         .join(' ')}
                       onClick={() => {
-                        setSelected(cell.date);
-                        setPreview(null);
+                        selectDay(cell.date);
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          setSelected(cell.date);
-                          setPreview(null);
+                          selectDay(cell.date);
                         }
                       }}
                       aria-label={`${cell.date.toLocaleDateString(locale)}${
-                        dayEvents.length ? `, ${dayEvents.length} events` : ''
+                        dayEvents.length ? `, ${t.calendar.eventCount.replace('{count}', String(dayEvents.length))}` : ''
                       }`}
                     >
                       <span className="events-calendar-day-number">{cell.date.getDate()}</span>
@@ -369,32 +374,27 @@ export default function EventsCalendar() {
                         {visibleEvents.map((event) => (
                           <span
                             key={`${cell.key}-${event.id}`}
-                            className="events-calendar-event-chip"
+                            className={`events-calendar-event-chip${isPastEvent(event) ? ' is-past-event' : ''}`}
+                            title={event.title}
+                            aria-label={`${event.title}${isPastEvent(event) ? ` — ${t.calendar.pastEvent}` : ''}`}
                             onMouseEnter={(e) => openPreview(event, e.currentTarget)}
                             onMouseLeave={scheduleClosePreview}
                             onFocus={(e) => openPreview(event, e.currentTarget)}
                             onBlur={scheduleClosePreview}
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelected(cell.date);
-                              if (preview?.event.id === event.id) {
-                                setPreview(null);
-                              } else {
-                                openPreview(event, e.currentTarget);
-                              }
+                              selectDay(cell.date);
                             }}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                openPreview(event, e.currentTarget);
-                                setSelected(cell.date);
+                                selectDay(cell.date);
                               }
                             }}
                             role="button"
                             tabIndex={0}
-                            aria-haspopup="dialog"
-                            aria-expanded={preview?.event.id === event.id}
+                            aria-controls="calendar-event-details"
                           >
                             {event.title}
                           </span>
@@ -415,37 +415,33 @@ export default function EventsCalendar() {
           <AnimatePresence mode="wait">
             {selected ? (
               <motion.div
-                key={selectedKey || 'detail'}
+                key="event-details"
+                id="calendar-event-details"
+                ref={detailsRef}
+                tabIndex={-1}
+                role="region"
+                aria-labelledby="calendar-event-details-heading"
                 className="events-calendar-detail"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.28, ease: 'easeOut' }}
               >
-                <p className="events-calendar-detail-date">
+                <h2 id="calendar-event-details-heading" className="events-calendar-detail-date">
                   {selected.toLocaleDateString(locale, {
                     weekday: 'long',
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
                   })}
-                </p>
+                </h2>
                 {selectedEvents.length === 0 ? (
                   <p className="events-calendar-empty">{t.calendar.noEventsDay}</p>
                 ) : (
                   <ul className="events-calendar-detail-list">
                     {selectedEvents.map((event) => (
                       <li key={event.id} className="events-calendar-detail-item">
-                        <h3>{event.title}</h3>
-                        <p className="events-calendar-detail-meta">
-                          {formatEventWhen(event, locale, t.calendar.allDay)}
-                        </p>
-                        {event.location ? (
-                          <p>
-                            {t.calendar.location}: {event.location}
-                          </p>
-                        ) : null}
-                        {event.description ? <p>{event.description}</p> : null}
+                        <CalendarEventDetails event={event} />
                       </li>
                     ))}
                   </ul>
@@ -464,7 +460,7 @@ export default function EventsCalendar() {
                   <button
                     type="button"
                     className="events-calendar-preview-scrim"
-                    aria-label="Close"
+                    aria-label={t.calendar.close}
                     onClick={() => setPreview(null)}
                   />
                   <motion.div
@@ -507,7 +503,7 @@ export default function EventsCalendar() {
                       </p>
                     ) : null}
                     {preview.event.description ? (
-                      <p className="events-calendar-preview-body">{preview.event.description}</p>
+                      <p className="events-calendar-preview-body"><EventDescription text={preview.event.description} /></p>
                     ) : null}
                   </motion.div>
                 </>

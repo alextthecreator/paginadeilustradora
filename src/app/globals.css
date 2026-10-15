@@ -2268,6 +2268,7 @@ section {
 }
 
 .events-calendar-detail {
+  scroll-margin-top: calc(var(--site-header-height-px, 110px) + 24px);
   margin-top: 1.5rem;
   padding: 1.15rem 1.2rem 1.25rem;
   background: color-mix(in srgb, #ffdcbd 14%, transparent);
@@ -2275,6 +2276,51 @@ section {
   border-radius: 1.25rem;
   overflow: visible;
 }
+
+.events-calendar-toolbar,
+.events-calendar-save,
+.events-calendar-booking {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.events-calendar-toolbar {
+  justify-content: center;
+  margin-top: 1rem;
+  color: #ffdcbd;
+  font-size: 0.9rem;
+}
+
+.events-calendar-today-btn {
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  min-height: 44px;
+  color: #f57692;
+}
+
+.events-calendar-today-btn:disabled { opacity: 0.5; cursor: default; }
+.events-calendar-event-chip.is-past-event { background: #d1cbc2; border: 1px dashed #004e42; }
+.events-calendar-past-label { font-style: italic; }
+.events-calendar-detail:focus-visible { outline: 2px solid #f57692; outline-offset: 4px; }
+.events-calendar-detail-item a { color: #004e42; text-decoration: underline; text-underline-offset: 3px; }
+.events-calendar-save { margin-top: 1rem; color: #004e42; }
+.events-calendar-save > span { flex-basis: 100%; font-weight: 700; }
+.events-calendar-save a,
+.events-calendar-save button,
+.events-calendar-booking a {
+  border: 1px solid #004e42;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  min-height: 44px;
+  color: #004e42;
+  font: inherit;
+  text-decoration: none;
+}
+.events-calendar-save :is(a, button):focus-visible,
+.events-calendar-today-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 .events-calendar-detail-date {
   margin: 0 0 0.9rem;

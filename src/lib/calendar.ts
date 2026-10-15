@@ -1,4 +1,4 @@
-import ical, { type VEvent } from 'node-ical';
+import { parseCalendarFeed } from './calendar-feed';
 import { getCalendarIcsUrl } from '@/lib/site-config';
 import type { CalendarEvent } from '@/lib/calendar-types';
 
@@ -11,44 +11,6 @@ export type CalendarFetchResult = {
   error?: 'fetch_failed' | 'not_public' | 'invalid_feed' | 'unknown';
   status?: number;
 };
-
-function isAllDay(event: VEvent): boolean {
-  const start = event.start as Date & { dateOnly?: boolean };
-  return Boolean(start?.dateOnly) || event.datetype === 'date';
-}
-
-function toIso(value: Date | undefined): string {
-  if (!value) return '';
-  return value.toISOString();
-}
-
-function mapEvents(data: ReturnType<typeof ical.sync.parseICS>): CalendarEvent[] {
-  const events: CalendarEvent[] = [];
-
-  for (const item of Object.values(data)) {
-    if (!item || item.type !== 'VEVENT') continue;
-    const event = item as VEvent;
-    if (!event.start) continue;
-
-    events.push({
-      id: String(event.uid || `${event.start.toISOString()}-${event.summary || 'event'}`),
-      title: String(event.summary || 'Event'),
-      description: String(event.description || '')
-        .replace(/\\n/g, '\n')
-        .replace(/\\,/g, ',')
-        .trim(),
-      location: String(event.location || '')
-        .replace(/\\,/g, ',')
-        .trim(),
-      start: toIso(event.start),
-      end: toIso(event.end || event.start),
-      allDay: isAllDay(event),
-    });
-  }
-
-  events.sort((a, b) => a.start.localeCompare(b.start));
-  return events;
-}
 
 export async function fetchCalendarEvents(): Promise<CalendarFetchResult> {
   const icsUrl = getCalendarIcsUrl();
@@ -103,8 +65,7 @@ export async function fetchCalendarEvents(): Promise<CalendarFetchResult> {
   }
 
   try {
-    const data = ical.sync.parseICS(text);
-    return { configured: true, events: mapEvents(data) };
+    return { configured: true, events: parseCalendarFeed(text) };
   } catch (error) {
     console.error('Calendar ICS parse error:', error);
     return { configured: true, events: [], error: 'invalid_feed' };

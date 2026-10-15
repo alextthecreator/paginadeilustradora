@@ -1,0 +1,30 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Toska Art Project//LOCAL TEST ONLY//EN
+BEGIN:VEVENT
+UID:local-complete-workshop@toska.test
+DTSTAMP:20261015T080000Z
+DTSTART:20261017T140000Z
+DTEND:20261017T173000Z
+SUMMARY:LOCAL TEST — Ceramic painting workshop with a deliberately long title
+DESCRIPTION:<p>Paint a ceramic cup &amp; learn glazing. Test data only.</p><p>Cena: 150 zł</p><p>Zapisy: <a href="https://example.com/book?event=ceramics&amp;lang=pl">Zarezerwuj miejsce</a></p><p>More information: https://example.com/workshop</p>
+LOCATION;LANGUAGE=pl:Lelewela 4\, Wrocław\, Polska
+URL:https://example.com/workshop
+END:VEVENT
+BEGIN:VEVENT
+UID:local-all-day@toska.test
+DTSTAMP:20261015T080000Z
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261020
+SUMMARY:LOCAL TEST — Two-day open studio
+DESCRIPTION:An all-day test event.
+LOCATION:Wrocław
+END:VEVENT
+BEGIN:VEVENT
+UID:local-past@toska.test
+DTSTAMP:20261015T080000Z
+DTSTART:20261010T090000Z
+DTEND:20261010T180000Z
+SUMMARY:LOCAL TEST — Past market
+END:VEVENT
+END:VCALENDAR
