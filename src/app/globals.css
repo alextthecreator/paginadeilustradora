@@ -2294,6 +2294,7 @@ section {
 }
 
 .events-calendar-today-btn {
+  cursor: pointer;
   border: 1px solid currentColor;
   border-radius: 999px;
   padding: 0.45rem 1rem;
@@ -2310,6 +2311,7 @@ section {
 .events-calendar-save a,
 .events-calendar-save button,
 .events-calendar-booking a {
+  cursor: pointer;
   border: 1px solid #004e42;
   border-radius: 999px;
   padding: 0.55rem 0.9rem;
