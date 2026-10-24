@@ -3,12 +3,14 @@ import { generatePageMetadata } from '@/lib/seo-config';
 import { languageAlternates, localizeHref } from '@/i18n/paths';
 import { seoConfig } from '@/lib/seo-config';
 import type { Locale } from '@/i18n';
+import { notFound } from 'next/navigation';
 
 export function generateMetadata({ params }: { params: { locale: Locale; id: string } }) {
   const base = generatePageMetadata('work', params.locale);
   const path = `/work/${params.id}`;
   const url = `${seoConfig.site.url}${localizeHref(path, params.locale)}`;
   const item = artwork.find(item => String(item.id) === params.id);
+  if (!item) notFound();
   return {
     ...base,
     title: item ? { absolute: `${item.title} — ${base.title.absolute}` } : base.title,

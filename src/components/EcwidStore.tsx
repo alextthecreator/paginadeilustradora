@@ -9,6 +9,7 @@ import {
 } from '@/lib/ecwid-loader';
 import { siteConfig } from '@/lib/site-config';
 import LoadingSpinner from './LoadingSpinner';
+import { observeEcwidSort } from '@/lib/ecwid-sort-indicator';
 
 const ECWID_OPTIONS = [
   'categoriesPerRow=3',
@@ -32,6 +33,7 @@ export default function EcwidStore() {
     const host = document.createElement('div');
     host.id = siteConfig.ecwidStoreElementId;
     container.appendChild(host);
+    const stopObservingSort = observeEcwidSort(host);
     let cancelled = false;
     setIsLoading(true);
     setHasError(false);
@@ -51,6 +53,7 @@ export default function EcwidStore() {
 
     return () => {
       cancelled = true;
+      stopObservingSort();
       releaseEcwidStore(host);
       // Removing an already detached host is safe; React never reconciles it.
       host.remove();
