@@ -3,7 +3,6 @@ import { generatePageMetadata } from '@/lib/seo-config';
 import { languageAlternates, localizeHref } from '@/i18n/paths';
 import { seoConfig } from '@/lib/seo-config';
 import type { Locale } from '@/i18n';
-import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale; id: string }> }) {
   const { locale, id } = await params;
@@ -11,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   const path = `/work/${id}`;
   const url = `${seoConfig.site.url}${localizeHref(path, locale)}`;
   const item = artwork.find(item => String(item.id) === id);
-  if (!item) notFound();
+  if (!item) return { robots: { index: false, follow: false } };
   return {
     ...base,
     title: item ? { absolute: `${item.title} — ${base.title.absolute}` } : base.title,

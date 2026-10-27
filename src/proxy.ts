@@ -12,6 +12,9 @@ export default function proxy(request: NextRequest) {
   // notFound() renders the right page, but a streamed App Router response can
   // already have status 200. Set the status before the locale rewrite streams.
   if (match && !artworkIds.has(match[1]) && !response.headers.has('location')) {
+    // Vercel may finalize a streamed 404 before Next emits its robots meta.
+    // The HTTP directive applies even when that metadata never reaches HTML.
+    response.headers.set('X-Robots-Tag', 'noindex');
     return new NextResponse(response.body, { status: 404, headers: response.headers });
   }
   return response;

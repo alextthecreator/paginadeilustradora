@@ -8,11 +8,13 @@ const origin = process.argv[2] || 'http://localhost:3102';
       const html = await response.text();
       assert.equal(response.status, 404, `${prefix}/work/${id}`);
       assert.ok(html.includes(missing), `${lang} missing-page copy`);
-      assert.match(html, /name="robots" content="noindex"/);
+      assert.ok(/name="robots" content="[^"]*\bnoindex\b[^"]*"/.test(html) || /\bnoindex\b/.test(response.headers.get('x-robots-tag') || ''), `${prefix}/work/${id} must explicitly exclude indexing`);
     }
     const response = await fetch(`${origin}${prefix}/work/${artwork[0].id}`);
     const html = await response.text();
     assert.equal(response.status, 200);
+    assert.doesNotMatch(response.headers.get('x-robots-tag') || '', /\bnoindex\b/);
+    assert.doesNotMatch(html, /name="robots" content="[^"]*\bnoindex\b[^"]*"/);
     assert.ok(html.includes(artwork[0].title));
     assert.ok(html.includes(`<html lang="${lang}"`));
   }
