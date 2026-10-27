@@ -2,12 +2,13 @@ import { notFound } from 'next/navigation';
 import { generatePageMetadata } from '@/lib/seo-config';
 import type { Locale } from '@/i18n';
 
-export function generateMetadata({ params }: { params: { locale: Locale } }) {
-  if (!['en', 'pl', 'es'].includes(params.locale)) notFound();
-  return generatePageMetadata('home', params.locale);
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  if (!['en', 'pl', 'es'].includes(locale)) notFound();
+  return generatePageMetadata('home', locale);
 }
 
-export default function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
-  if (!['en', 'pl', 'es'].includes(params.locale)) notFound();
+export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  if (!['en', 'pl', 'es'].includes((await params).locale)) notFound();
   return children;
 }

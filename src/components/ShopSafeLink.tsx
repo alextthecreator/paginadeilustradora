@@ -24,12 +24,12 @@ const copy = {
 export default function ShopSafeLink({ href, onClick, children, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
   const pathname = usePathname();
   const { locale } = useLanguage();
-  href = localizeHref(href, locale);
+  const localizedHref = localizeHref(href, locale);
   const inFlight = useRef(false);
   const [status, setStatus] = useState<'idle' | 'saving' | 'error'>('idle');
-  if (!needsDocumentNavigation(pathname, href)) return <Link href={href} onClick={onClick} {...props}>{children}</Link>;
+  if (!needsDocumentNavigation(pathname, localizedHref)) return <Link href={localizedHref} onClick={onClick} {...props}>{children}</Link>;
   return (
-    <a href={href} {...props} aria-busy={status === 'saving'} onClick={(event) => {
+    <a href={localizedHref} {...props} aria-busy={status === 'saving'} onClick={(event) => {
       if (event.defaultPrevented) return;
       if (!isShopPath(pathname) || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || props.target === '_blank') {
         onClick?.(event);
@@ -41,14 +41,15 @@ export default function ShopSafeLink({ href, onClick, children, ...props }: Anch
       setStatus('saving');
       prepareCartForNavigation().then(() => {
         onClick?.(event);
-        window.location.assign(href);
+        window.location.assign(localizedHref);
       }).catch(() => {
         inFlight.current = false;
         setStatus('error');
       });
     }}>
       {children}
-      {status !== 'idle' && <span role={status === 'error' ? 'alert' : 'status'} className="block text-sm normal-case tracking-normal">{copy[locale][status]}</span>}
+      {status === 'saving' && <span role="status" className="sr-only">{copy[locale].saving}</span>}
+      {status === 'error' && <span role="alert" className="shop-navigation-error">{copy[locale].error}</span>}
     </a>
   );
 }

@@ -1,0 +1,133 @@
+/* Responsive interpretation of the owner's five Illustrator artboards.
+   Absolute export coordinates describe the canvas, not browser layout.
+   Keep this layer focused on presentation; widget lifecycles stay unchanged. */
+.home-page, .work-page, .contact-page {
+  --layout-content-max: 74rem;
+  --layout-wide-max: 90rem;
+  --type-display: clamp(2.25rem, 4.2vw, 4.1875rem);
+  --type-nav: clamp(1.125rem, 1.45vw, 1.4375rem);
+  --type-body: clamp(1rem, 1.2vw, 1.1875rem);
+  --type-skills: clamp(1.5rem, 2.9vw, 3.35rem);
+}
+
+/* The root main alone reserves the fixed header's height. */
+.site-main main { padding-top: 0; }
+.header-main-row { max-width: var(--layout-wide-max); margin-inline: auto; }
+.site-header .type-nav { letter-spacing: 0.015em; font-size: clamp(1.1875rem, 1.45vw, 1.4375rem); }
+.site-header nav { gap: clamp(1rem, 2vw, 2.25rem); }
+.mobile-menu-toggle { color: var(--brand-vibrant-pink); }
+.mobile-navigation-panel nav a {
+  color: var(--brand-vibrant-pink);
+  font-family: 'mencken-std', serif;
+  font-size: clamp(1.2rem, 4.5vw, 1.4rem);
+  letter-spacing: 0.04em;
+}
+.mobile-navigation-panel nav a:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+
+/* Home: full-width image and a distinct carousel band, as in artboard 1. */
+.home-hero-shell { padding-inline: 0; background: #02382e; }
+.home-work-section { padding-inline: 0; }
+.home-work-heading { margin-bottom: clamp(1.5rem, 3vw, 3rem); }
+.home-work-heading h2 { padding-inline: var(--layout-page-x); padding-bottom: 0; letter-spacing: 0.025em; }
+.home-carousel { background: #02382e; padding-block: 0; }
+.home-carousel .carousel-item-size { --carousel-item-size: clamp(12rem, 20vw, 22rem); }
+.home-carousel .carousel-control {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; background: #02382e; border-radius: 50%;
+}
+.home-carousel .carousel-control svg { width: 1.75rem; height: 1.75rem; }
+.home-see-all { min-height: 44px; padding: 0.65rem 2rem; letter-spacing: 0.025em; }
+.home-see-all-container { margin-top: clamp(1.5rem, 3vw, 2.75rem); }
+.skills-section { padding-block: clamp(1rem, 2vw, 1.75rem); }
+.skills-row { gap: 0.5rem 1rem; }
+.skills-text, .work-skills-separator { color: var(--brand-cream); }
+.skills-text { cursor: pointer; text-decoration-thickness: 0.06em; text-underline-offset: 0.16em; }
+.skills-text:hover { text-decoration-line: underline; }
+.skills-text:focus-visible { outline: 2px solid #02382e; outline-offset: 5px; border-radius: 2px; }
+
+/* Portfolio disclosure shares the globe panel's shape, colors and spacing. */
+.work-menu { position: relative; color: var(--brand-vibrant-pink); }
+.work-menu-row { display: flex; align-items: center; }
+.work-menu-main { display: inline-flex; align-items: center; min-height: 44px; text-transform: uppercase; white-space: nowrap; }
+.work-menu-trigger { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 44px; color: inherit; cursor: pointer; background: none; border: 0; }
+.work-menu-trigger svg { width: 0.65rem; height: 0.65rem; transition: transform 0.2s ease; }
+.work-menu-trigger[aria-expanded='true'] svg { transform: rotate(180deg); }
+.work-menu-main:focus-visible, .work-menu-trigger:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
+.work-menu-panel { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); padding-top: 0.75rem; width: max-content; max-width: min(24rem, calc(100vw - 2rem)); z-index: 60; }
+.work-menu-panel ul { list-style: none; padding: 0.75rem; border: 2px solid color-mix(in srgb, #f57692 40%, transparent); border-radius: 1rem; background: #02382e; box-shadow: 0 12px 30px #0004; }
+.site-header .work-menu-panel a { display: flex; align-items: center; min-height: 44px; padding: 0.75rem 1rem; color: var(--brand-vibrant-pink); border-radius: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; font: 700 var(--type-nav)/1.35 'mencken-std', serif; white-space: normal; }
+.work-menu-panel a:hover, .work-menu-panel a:focus-visible { background: #ffdcbd; color: #02382e; outline: none; }
+.mobile-navigation-panel nav > div > a { display: flex; align-items: center; min-height: 44px; margin-inline: 0; padding: 0.75rem 1rem; }
+.work-menu--mobile { min-width: 0; margin-inline: 0; }
+.work-menu--mobile .work-menu-main { flex: 1; min-width: 0; padding: 0.75rem 1rem; }
+.site-header .work-menu--mobile .work-menu-main { font-size: clamp(1.2rem, 4.5vw, 1.4rem); font-weight: 700; letter-spacing: 0.04em; }
+.work-menu--mobile .work-menu-trigger { min-width: 44px; }
+.work-menu--mobile .work-menu-panel { position: static; inset: auto; transform: none; width: auto; max-width: 100%; padding: 0 0 0.5rem 1rem; }
+.work-menu--mobile .work-menu-panel ul { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.site-header .work-menu--mobile .work-menu-panel a { padding: 0.625rem 1rem; border-radius: 0; overflow-wrap: anywhere; font-size: clamp(1.2rem, 4.5vw, 1.4rem); }
+.work-menu--mobile .work-menu-panel a:hover,
+.work-menu--mobile .work-menu-panel a:focus-visible { background: transparent; color: var(--brand-vibrant-pink); text-decoration: underline; text-underline-offset: 0.2em; }
+.work-menu--mobile .work-menu-panel a:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+
+/* Work: same title, banner, section edge and column rhythm as artboard 3. */
+.work-page > .page-shell:first-child { padding-block: clamp(2rem, 4vw, 3.5rem); }
+.work-section-header { padding-inline: 0; padding-top: 0; padding-bottom: clamp(1rem, 2vw, 2rem); gap: 1rem; }
+.work-section-header .section-title { padding: 0; font-size: clamp(1.6rem, 3.6vw, 3.5rem); }
+.work-section-header svg { width: clamp(1.5rem, 3vw, 2.5rem); flex-shrink: 0; }
+.work-section-panel-content { padding-top: 0.5rem; }
+.work-sticky-nav-bar { padding-inline: 0; }
+
+/* About and Calendar keep their previous content typography and page layout. */
+.about-page {
+  --layout-wide-max: 100rem;
+  --type-display: clamp(2.25rem, 4vw + 1rem, 3.75rem);
+  --type-body: clamp(0.9375rem, 0.35vw + 0.875rem, 1rem);
+}
+.calendar-page { background: var(--brand-dark-teal); }
+.site-main .calendar-page { padding-top: var(--site-header-height-px); }
+
+/* Contact: one spacing token drives every field/action/notice gap. */
+.contact-layout { max-width: var(--layout-content-max); }
+.contact-copy h1 { text-transform: uppercase; letter-spacing: 0.01em; }
+.contact-subtitle { font-size: clamp(1rem, 1.2vw, 1.1875rem); font-weight: 400; line-height: 1.45; margin-bottom: 2rem; }
+.contact-form-card { border-radius: clamp(1.25rem, 2.5vw, 2.25rem); padding: clamp(1rem, 2.5vw, 2.25rem); }
+.contact-form-notice, .contact-privacy-note { margin: 0; }
+.contact-field-label { font-size: 0.9375rem; }
+.contact-field-label, .contact-field-error, .contact-privacy-note { color: #02382e; }
+.contact-control { border-radius: 999px; }
+textarea.contact-control { border-radius: 0.75rem; }
+.contact-send { color: var(--brand-cream) !important; }
+.contact-address-line { font-weight: 400; -webkit-text-stroke: 0; line-height: 1.35; }
+.contact-address-link { color: var(--brand-cream); }
+.contact-map-frame { border-radius: clamp(1.25rem, 2.5vw, 2.25rem); }
+
+/* Footer: align social and navigation blocks, then center the legal links. */
+.site-footer { background: #02382e; }
+.footer-shell { max-width: var(--layout-wide-max); margin-inline: auto; }
+.footer-top h3 { padding: 0; margin-bottom: 0.75rem; letter-spacing: 0.025em; }
+.footer-social-links { align-items: center; gap: 1.25rem; }
+.footer-social-links a { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.footer-nav-link { padding: 0.25rem 0; min-height: 32px; letter-spacing: 0.015em; }
+.footer-privacy { margin-top: 2rem; }
+.footer-copyright { margin-top: 0.5rem; padding: 0.75rem 0; font-size: clamp(0.875rem, 1.25vw, 1.1875rem); letter-spacing: 0.015em; white-space: normal; }
+.footer-cookies { margin-top: 0.5rem; padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+@media (min-width: 640px) {
+  .contact-send { width: auto; min-width: 8rem; }
+}
+@media (min-width: 1024px) {
+  .contact-hero, .contact-directions { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 3rem); }
+  .contact-image-panel { aspect-ratio: 0.92; align-self: start; border-radius: 0; }
+  .contact-directions { align-items: center; padding-top: 0; }
+  .contact-map, .contact-address { padding-top: 0; }
+  .footer-top { align-items: flex-start; }
+}
+@media (max-width: 767px) {
+  .home-page, .work-page, .contact-page { --type-display: clamp(1.65rem, 7vw, 2.5rem); }
+  .about-page { --type-display: clamp(1.5rem, 6.5vw, 2.125rem); }
+  .skills-row.work-skills-row { flex-wrap: wrap; justify-content: center; gap: 0.4rem 0.6rem; }
+  .work-skills-row .skills-text, .work-skills-row .work-skills-separator { font-size: clamp(1rem, 4.2vw, 1.35rem); }
+  .contact-form-card { padding: 1rem; }
+  .contact-image-panel { border-radius: 0; }
+  .footer-nav-link { min-height: 44px; }
+}

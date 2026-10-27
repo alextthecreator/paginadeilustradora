@@ -5,11 +5,12 @@ import { seoConfig } from '@/lib/seo-config';
 import type { Locale } from '@/i18n';
 import { notFound } from 'next/navigation';
 
-export function generateMetadata({ params }: { params: { locale: Locale; id: string } }) {
-  const base = generatePageMetadata('work', params.locale);
-  const path = `/work/${params.id}`;
-  const url = `${seoConfig.site.url}${localizeHref(path, params.locale)}`;
-  const item = artwork.find(item => String(item.id) === params.id);
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale; id: string }> }) {
+  const { locale, id } = await params;
+  const base = generatePageMetadata('work', locale);
+  const path = `/work/${id}`;
+  const url = `${seoConfig.site.url}${localizeHref(path, locale)}`;
+  const item = artwork.find(item => String(item.id) === id);
   if (!item) notFound();
   return {
     ...base,

@@ -1,35 +1,35 @@
 #cc-main {
   color-scheme: light;
   --cc-font-family: system-ui, sans-serif;
-  --cc-bg: #fbead5;
-  --cc-primary-color: #0f2e1f;
+  --cc-bg: #ffdcbd;
+  --cc-primary-color: #02382e;
   --cc-secondary-color: #244b3c;
-  --cc-btn-primary-bg: #0f2e1f;
-  --cc-btn-primary-color: #fbead5;
-  --cc-btn-primary-border-color: #0f2e1f;
+  --cc-btn-primary-bg: #02382e;
+  --cc-btn-primary-color: #ffdcbd;
+  --cc-btn-primary-border-color: #02382e;
   --cc-btn-primary-hover-bg: #244b3c;
-  --cc-btn-primary-hover-color: #fbead5;
+  --cc-btn-primary-hover-color: #ffdcbd;
   --cc-btn-primary-hover-border-color: #244b3c;
   --cc-btn-secondary-bg: #ead9c4;
-  --cc-btn-secondary-color: #0f2e1f;
+  --cc-btn-secondary-color: #02382e;
   --cc-btn-secondary-border-color: #ead9c4;
   --cc-btn-secondary-hover-bg: #dfccb5;
-  --cc-btn-secondary-hover-color: #0f2e1f;
+  --cc-btn-secondary-hover-color: #02382e;
   --cc-btn-secondary-hover-border-color: #dfccb5;
   --cc-cookie-category-block-bg: #f2dfc8;
   --cc-cookie-category-block-hover-bg: #ead9c4;
-  --cc-toggle-on-bg: #0f2e1f;
+  --cc-toggle-on-bg: #02382e;
   --cc-toggle-off-bg: #73766f;
   --cc-toggle-readonly-bg: #73766f;
   --cc-separator-border-color: #c7b7a3;
   --cc-modal-border-radius: 16px;
   --cc-btn-border-radius: 8px;
 }
-#cc-main .cm { border: 2px solid #ff8a9d; }
+#cc-main .cm { border: 2px solid #f57692; }
 #cc-main .cm__btn,
 #cc-main .pm__btn,
 #cc-main .pm__close-btn { min-height: 44px; }
-#cc-main :focus-visible { outline: 3px solid #0f2e1f; outline-offset: 3px; }
+#cc-main :focus-visible { outline: 3px solid #02382e; outline-offset: 3px; }
 .consent-map-placeholder {
   display: flex;
   flex-direction: column;
@@ -38,14 +38,14 @@
   gap: 1rem;
   padding: 2rem;
   text-align: center;
-  color: #fbead5;
-  background: #0f2e1f;
+  color: #ffdcbd;
+  background: #02382e;
 }
 .consent-map-placeholder button {
   min-height: 44px;
   padding: .75rem 1rem;
-  border: 1px solid #ff8a9d;
+  border: 1px solid #f57692;
   border-radius: 8px;
-  color: #ff8a9d;
+  color: #f57692;
 }
 .consent-map-placeholder a { text-decoration: underline; text-underline-offset: 4px; }

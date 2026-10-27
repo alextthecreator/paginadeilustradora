@@ -85,6 +85,8 @@ export default function EventsCalendar() {
   const detailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Portals need a mounted document; keep the server and hydration render equal.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPortalReady(true);
   }, []);
 

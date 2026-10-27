@@ -34,7 +34,7 @@ export default function PotteryCollections() {
               type="button"
               onClick={() => setViewMode(collection.id)}
               className={`type-label font-brand-bold uppercase tracking-widest transition-colors duration-300 ${
-                isActive ? 'text-brand-vibrant-pink opacity-100' : 'text-[#FBEAD5] opacity-75'
+                isActive ? 'text-brand-vibrant-pink opacity-100' : 'text-[#ffdcbd] opacity-75'
               }`}
               aria-pressed={isActive}
             >

@@ -6,7 +6,7 @@ import artwork from './data/artwork.json';
 const localize = createMiddleware(routing);
 const artworkIds = new Set(artwork.map(item => String(item.id)));
 
-export default function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const response = localize(request);
   const match = request.nextUrl.pathname.match(/^\/(?:en\/|pl\/|es\/)?work\/([^/]+)\/?$/);
   // notFound() renders the right page, but a streamed App Router response can

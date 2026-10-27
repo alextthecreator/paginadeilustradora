@@ -11,7 +11,8 @@ const labels = {
   es: { all: 'Volver a todos los trabajos' },
 };
 
-export default function ArtworkDetailPage({ params: { locale, id } }: { params: { locale: Locale; id: string } }) {
+export default async function ArtworkDetailPage({ params }: { params: Promise<{ locale: Locale; id: string }> }) {
+  const { locale, id } = await params;
 
   const item = artwork.find((a) => a.id.toString() === id);
 

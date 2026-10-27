@@ -7,6 +7,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import BrandLogo from './BrandLogo';
 import LanguageSwitcher from './LanguageSwitcher';
 import EcwidCartWidget from './EcwidCartWidget';
+import WorkMenu from './WorkMenu';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 type NavItem = {
@@ -73,9 +74,10 @@ export default function Header() {
         <div className="header-nav-actions desktop-navigation">
           <nav className="flex min-w-0 items-center gap-8 2xl:gap-16">
             {navigationItems.map((item) => {
+              if (item.href === '/work') return <WorkMenu key={item.href} />;
               const linkClassName =
                 'type-nav whitespace-nowrap font-brand-bold transition-colors uppercase tracking-widest py-4';
-              const linkStyle = { color: '#FF8A9D' };
+              const linkStyle = { color: '#f57692' };
 
               if (item.external) {
                 return (
@@ -135,7 +137,7 @@ export default function Header() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                     >
-                      {item.external ? (
+                      {item.href === '/work' ? <WorkMenu mobile onNavigate={closeMobileMenu} /> : item.external ? (
                         <a
                           href={item.href}
                           target="_blank"

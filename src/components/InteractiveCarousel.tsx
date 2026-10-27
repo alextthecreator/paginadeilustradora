@@ -37,7 +37,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
   const loopedArtwork = buildLoopedItems(artwork);
 
   return (
-    <div className="relative w-full group">
+    <div className="home-carousel relative w-full group">
       <button
         type="button"
         onClick={(e) => {
@@ -46,7 +46,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
           scroll('left');
         }}
         className="carousel-control absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
-        style={{ color: '#FF8A9D' }}
+        style={{ color: '#f57692' }}
         aria-label="Scroll left"
       >
         <FaArrowLeft size={48} />
@@ -89,7 +89,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
           scroll('right');
         }}
         className="carousel-control absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
-        style={{ color: '#FF8A9D' }}
+        style={{ color: '#f57692' }}
         aria-label="Scroll right"
       >
         <FaArrowRight size={48} />

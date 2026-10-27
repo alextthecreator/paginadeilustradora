@@ -123,13 +123,12 @@ function AboutPhotoSlideshow({
   );
 }
 
-/* eslint-disable react/no-unescaped-entities */
 
 export default function AboutPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="bg-brand-dark-teal w-full text-brand-light-text min-h-[70vh]">
+    <div className="about-page bg-brand-dark-teal w-full text-brand-light-text min-h-[70vh]">
       <div className="about-page-content about-layout page-y">
         <section className="about-row about-row-top">
           <motion.div
@@ -150,13 +149,13 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="about-copy about-copy-left"
           >
-            <h1 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5 pt-2 md:pt-4">
+            <h1 className="type-display font-temeraire-display uppercase text-[#f57692] mb-5 pt-2 md:pt-4">
               {t.about.aboutMeTitle}
             </h1>
-            <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
+            <p className="about-lead type-lead readable-text font-mencken-bold text-[#ffdcbd] mb-5">
               {t.about.aboutMeIntro}
             </p>
-            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8">
+            <p className="about-body type-body readable-text font-mencken-regular text-[#ffdcbd] mt-8">
               <MultilineText text={t.about.aboutMeBody} />
             </p>
           </motion.div>
@@ -169,13 +168,13 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="about-copy about-copy-right order-2 md:order-1"
           >
-            <h2 className="type-display font-temeraire-display uppercase text-[#FF8A9D] mb-5">
+            <h2 className="type-display font-temeraire-display uppercase text-[#f57692] mb-5">
               {t.about.toskaTitle}
             </h2>
-            <p className="about-lead type-lead readable-text font-mencken-bold text-[#FBEAD5] mb-5">
+            <p className="about-lead type-lead readable-text font-mencken-bold text-[#ffdcbd] mb-5">
               {t.about.toskaIntro}
             </p>
-            <p className="about-body type-body readable-text font-mencken-regular text-[#FBEAD5] mt-8 mb-12">
+            <p className="about-body type-body readable-text font-mencken-regular text-[#ffdcbd] mt-8 mb-12">
               <MultilineText text={t.about.toskaBody} />
             </p>
           </motion.div>

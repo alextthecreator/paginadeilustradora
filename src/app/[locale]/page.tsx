@@ -6,6 +6,8 @@ import Image, { type ImageLoaderProps } from 'next/image';
 import InteractiveCarousel from '@/components/InteractiveCarousel';
 import artwork from '@/data/artwork.json';
 import { useLanguage } from '@/i18n/LanguageContext';
+import WorkSectionLink from '@/components/WorkSectionLink';
+import { skillSections } from '@/lib/work-sections';
 
 const HOME_HERO_TRANSFORM = 'f_auto,q_auto,dpr_auto';
 const HOME_HERO_PUBLIC_ID = 'v1783344408/Home_Picture_Toska_Website_onnmow.png';
@@ -18,13 +20,12 @@ const HOME_HERO_SOURCE = `${HOME_HERO_BASE}/${HOME_HERO_PUBLIC_ID}`;
 
 const homeHeroLoader = ({ width }: ImageLoaderProps) => getHomeHeroUrl(width);
 
-/* eslint-disable react/no-unescaped-entities */
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-brand-dark-teal w-full min-w-0 text-brand-light-text">
+    <div className="home-page min-h-screen bg-brand-dark-teal w-full min-w-0 text-brand-light-text">
       <main className="w-full min-w-0">
         <div className="home-hero-shell">
           <div className="home-hero">
@@ -41,9 +42,9 @@ export default function Home() {
         </div>
 
 
-        <section className="page-shell bg-brand-dark-teal w-full">
-          <div className="text-center mb-[var(--layout-gap-xl)]">
-            <h2 className="type-display font-brand-heading uppercase tracking-widest text-[#FF8A9D]">
+        <section className="home-work-section page-shell bg-brand-dark-teal w-full">
+          <div className="home-work-heading text-center mb-[var(--layout-gap-xl)]">
+            <h2 className="type-display font-brand-heading uppercase tracking-widest text-[#f57692]">
               {t.home.myWork}
             </h2>
           </div>
@@ -56,8 +57,8 @@ export default function Home() {
                 className="home-see-all inline-block rounded-full text-base font-brand-bold uppercase tracking-widest transition-colors hover:bg-white sm:text-xl"
                 style={{
                   borderRadius: '50px',
-                  backgroundColor: '#FBEAD5',
-                  color: '#1a4d3a',
+                  backgroundColor: '#ffdcbd',
+                  color: '#004e42',
                   fontWeight: 900,
                 }}
               >
@@ -70,14 +71,14 @@ export default function Home() {
           <div className="skills-row work-skills-row">
             {t.home.skills.map((tag, index, arr) => (
               <React.Fragment key={tag}>
-                <span
-                  className="skills-text type-skills lowercase text-[#FBEAD5]"
+                <WorkSectionLink section={skillSections[index]}
+                  className="skills-text type-skills lowercase text-[#ffdcbd]"
                 >
                   {tag}
-                </span>
+                </WorkSectionLink>
                 {index < arr.length - 1 && (
                   <span
-                  className="work-skills-separator text-[#FBEAD5]/50"
+                  className="work-skills-separator text-[#ffdcbd]/50"
                   >
                     •
                   </span>

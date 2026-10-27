@@ -57,7 +57,7 @@ export default function HorizontalImageCarousel({
         type="button"
         onClick={() => scroll('left')}
         className="carousel-control absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
-        style={{ color: '#FF8A9D' }}
+        style={{ color: '#f57692' }}
         aria-label={`Scroll ${collectionName} left`}
       >
         <FaArrowLeft size={48} />
@@ -96,7 +96,7 @@ export default function HorizontalImageCarousel({
         type="button"
         onClick={() => scroll('right')}
         className="carousel-control absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer transition-opacity hover:opacity-80"
-        style={{ color: '#FF8A9D' }}
+        style={{ color: '#f57692' }}
         aria-label={`Scroll ${collectionName} right`}
       >
         <FaArrowRight size={48} />

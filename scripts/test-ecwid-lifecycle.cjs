@@ -230,6 +230,7 @@ function titleFixture(pathname, ecwidLoaded = true) {
       if (name === 'framer-motion') return { motion: { div: 'div' } };
       if (name === 'next/navigation') return { usePathname: () => pathname };
       if (name === '@/lib/seo-config') return { getPageSeo: (page) => ({ title: page === 'about' ? 'About title' : 'Home title' }) };
+      if (name === '@/i18n/privacy') return load('src/i18n/privacy.ts');
       if (name === '@/i18n/paths') return localePaths;
       if (name === '@/i18n/LanguageContext') return { useLanguage: () => ({ locale: localePaths.localeFromPath(pathname) }) };
       if (name === '@/lib/shop-path') return shopPaths;
@@ -255,6 +256,19 @@ test('title protection starts before a delayed Ecwid script has loaded', () => {
   f.document.title = 'Late shop title';
   f.observer.callback();
   assert.equal(f.document.title, 'About title');
+});
+
+test('privacy placeholder restores its localized title after cart-only Ecwid initialization', () => {
+  const { privacyCopy } = load('src/i18n/privacy.ts');
+  for (const pathname of ['/privacy', '/pl/privacy', '/es/privacy']) {
+    const f = titleFixture(pathname);
+    const copy = privacyCopy[localePaths.localeFromPath(pathname)];
+    const title = `${copy.title} — ${copy.status} | Toska Art Project`;
+    assert.equal(f.document.title, title);
+    f.document.title = 'Late shop title';
+    f.observer.callback();
+    assert.equal(f.document.title, title);
+  }
 });
 
 test('product titles on /shop and artwork detail titles stay under their own metadata handling', () => {

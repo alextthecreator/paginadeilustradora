@@ -7,6 +7,7 @@ import { getPageSeo } from '@/lib/seo-config';
 import { isShopPath, pageTransitionKey } from '@/lib/shop-path';
 import { stripLocale } from '@/i18n/paths';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { privacyCopy } from '@/i18n/privacy';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -31,6 +32,9 @@ export default function PageTransition({ children }: PageTransitionProps) {
       title = getPageSeo('home', locale).title;
     } else if (page === 'about' || page === 'work' || page === 'calendar' || page === 'contact') {
       title = getPageSeo(page, locale).title;
+    } else if (page === 'privacy') {
+      const copy = privacyCopy[locale];
+      title = `${copy.title} — ${copy.status} | Toska Art Project`;
     } else {
       // Artwork detail and unknown routes retain Next's own metadata handling.
       return;

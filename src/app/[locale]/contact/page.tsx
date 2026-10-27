@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { FaSpinner, FaCheck } from "react-icons/fa";
 import { useRef, useState } from "react";
-import { contactFields, validateContact, sendContact, type ContactErrors, type ContactField } from "@/lib/contact-form";
+import { contactFields, contactLimits, validateContact, sendContact, type ContactErrors, type ContactField } from "@/lib/contact-form";
 import Image from "next/image";
+import ShopSafeLink from "@/components/ShopSafeLink";
 import ConsentMap from "@/components/ConsentMap";
 import { trackEvent, trackConversion, analyticsConfig } from "@/lib/analytics";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -61,7 +62,8 @@ export default function ContactPage() {
     });
 
     try {
-      const result = await sendContact(formData);
+      const honeypot = String(new FormData(e.currentTarget as HTMLFormElement).get('_gotcha') || '');
+      const result = await sendContact(formData, fetch, honeypot);
       if (result.status === 'success') {
         setSubmitStatus('success');
         setFormData({ firstName: '', surname: '', email: '', subject: '', message: '' });
@@ -109,7 +111,7 @@ export default function ContactPage() {
   });
   const fieldError = (field: ContactField) => fieldErrors[field] ? (
     <p id={`contact-${field}-error`} className="contact-field-error">
-      {fieldErrors[field] === 'email' ? t.contact.invalidEmail : fieldErrors[field] === 'server' ? t.contact.serverFieldError : t.contact.requiredField}
+      {fieldErrors[field] === 'email' ? t.contact.invalidEmail : fieldErrors[field] === 'length' ? t.contact.tooLong : fieldErrors[field] === 'server' ? t.contact.serverFieldError : t.contact.requiredField}
     </p>
   ) : null;
 
@@ -137,22 +139,26 @@ export default function ContactPage() {
             transition={{ duration: 0.8 }}
             className="contact-copy w-full min-w-0"
           >
-            <h1 className="type-display font-temeraire-display mb-2 text-left text-[#FF8A9D]">
+            <h1 className="type-display font-temeraire-display mb-2 text-left text-[#f57692]">
               {t.contact.title}
             </h1>
-            <p className="contact-subtitle type-lead font-mencken-regular whitespace-pre-line text-[#FBEAD5]">
+            <p className="contact-subtitle type-lead font-mencken-regular whitespace-pre-line text-[#ffdcbd]">
               {t.contact.subtitle}
             </p>
 
             <div className="contact-form-card rounded-2xl bg-brand-vibrant-pink">
-              <form ref={formRef} noValidate onSubmit={handleSubmit} aria-busy={isSubmitting} className="space-y-3 sm:space-y-4">
+              <form ref={formRef} noValidate onSubmit={handleSubmit} aria-busy={isSubmitting} className="contact-form">
                 {contactFields.some(field => fieldErrors[field]) && <p role="alert" className="contact-form-notice">{t.contact.checkFields}</p>}
+                <div className="contact-honeypot" aria-hidden="true">
+                  <label htmlFor="contact-website">Leave this field empty</label>
+                  <input id="contact-website" name="_gotcha" type="text" autoComplete="off" tabIndex={-1} />
+                </div>
                 <div className="contact-field-grid">
                   {contactFields.map(field => {
                     const common = {
                       ...fieldProps(field), name: field, value: formData[field],
                       onChange: handleInputChange, required: field !== 'surname',
-                      placeholder: fields[field].placeholder, className: 'contact-control',
+                      placeholder: fields[field].placeholder, className: 'contact-control', maxLength: contactLimits[field],
                     };
                     return <div key={field} className={`contact-field${field === 'firstName' || field === 'surname' ? '' : ' contact-field--full'}`}>
                       <label htmlFor={`contact-${field}`} className="contact-field-label">{fields[field].label}</label>
@@ -162,13 +168,13 @@ export default function ContactPage() {
                   })}
                 </div>
 
-                <div className="mt-4 flex justify-stretch sm:justify-end">
+                <div className="contact-form-actions">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="type-btn cursor-pointer disabled:cursor-wait flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl px-8 py-3 font-mencken-bold transition-all duration-300 sm:w-auto"
+                    className="contact-send type-btn cursor-pointer disabled:cursor-wait font-mencken-bold transition-all duration-300"
                     style={{ paddingLeft: '30px', paddingRight: '30px', 
-                      backgroundColor: isSubmitting ? '#1a4d3a80' : '#1a4d3a',
+                      backgroundColor: isSubmitting ? '#004e4280' : '#004e42',
                       color: 'white'
                     }}
                   >
@@ -183,6 +189,10 @@ export default function ContactPage() {
                   </button>
                 </div>
 
+                <p className="contact-privacy-note">
+                  {t.contact.privacyNote}{' '}<ShopSafeLink href="/privacy">{t.contact.privacyLink}</ShopSafeLink>
+                </p>
+
                 {/* Status Messages */}
                 {submitStatus === 'success' && (
                   <motion.div
@@ -190,7 +200,7 @@ export default function ContactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-4 p-4 rounded-lg flex items-center gap-2"
                     role="status"
-                    style={{ backgroundColor: '#FBEAD5', color: '#1a4d3a' }}
+                    style={{ backgroundColor: '#ffdcbd', color: '#004e42' }}
                   >
                     <FaCheck />
                     {t.contact.success}
@@ -203,7 +213,7 @@ export default function ContactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-4 p-4 rounded-lg"
                     role="alert"
-                    style={{ backgroundColor: '#FBEAD5', color: '#1a4d3a' }}
+                    style={{ backgroundColor: '#ffdcbd', color: '#004e42' }}
                   >
                     {rateLimited ? t.contact.rateLimit : t.contact.error}
                   </motion.div>

@@ -70,7 +70,7 @@ export default function EcwidStore() {
         />
       )}
       {hasError && (
-        <div role="alert" className="py-8 text-[#FBEAD5]">
+        <div role="alert" className="py-8 text-[#ffdcbd]">
           <p>{locale === 'pl' ? 'Nie udało się załadować sklepu.' : locale === 'es' ? 'No se pudo cargar la tienda.' : 'The shop could not be loaded.'}</p>
           <button type="button" className="mt-4 rounded-lg border px-4 py-3" onClick={() => window.location.reload()}>
             {locale === 'pl' ? 'Załaduj ponownie' : locale === 'es' ? 'Volver a cargar' : 'Reload page'}

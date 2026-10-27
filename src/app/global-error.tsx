@@ -13,6 +13,8 @@ export default function GlobalError() {
             <button type="button" onClick={() => window.location.reload()} style={{ minHeight: '44px', padding: '12px 24px', background: '#FF8A9D', color: '#0f2e1f', border: 0, borderRadius: '8px', font: 'inherit', cursor: 'pointer' }}>
               Reload page
             </button>
+            {/* A document navigation recovers even when the client router is broken. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <p><a href="/" style={{ color: '#FF8A9D' }}>Go to the homepage</a></p>
           </div>
         </main>

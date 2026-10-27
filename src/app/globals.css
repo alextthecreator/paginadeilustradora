@@ -48,13 +48,13 @@
 
 :root {
   /* New Brand Colors from PDF Reference */
-  --brand-dark-teal: #1a4d3a;
-  --brand-primary-pink: #d193a1; /* Main accent pink for text/logos */
-  --brand-secondary-pink: #e3a8b1; /* Lighter pink for banners/backgrounds */
-  --brand-vibrant-pink: #FF8A9D; /* Vibrant pink for CTAs and highlights */
+  --brand-dark-teal: #004e42;
+  --brand-primary-pink: #f57692;
+  --brand-secondary-pink: #f57692;
+  --brand-vibrant-pink: #f57692; /* Vibrant pink for CTAs and highlights */
   --brand-light-pink: #f8d7da; /* Light pink for backgrounds and subtle elements */
-  --brand-cream: #f5efe1; /* Cream for buttons and highlights */
-  --brand-light-text: #fdfbf7; /* A slightly off-white for text on dark backgrounds */
+  --brand-cream: #ffdcbd;
+  --brand-light-text: #ffdcbd;
 
   /* Layout rhythm — proportional spacing across pages */
   --layout-page-x: clamp(1rem, 5vw, 5rem);
@@ -153,7 +153,7 @@
 
 .header-nav-actions {
   display: flex;
-  align-items: right;
+  align-items: center;
   gap: var(--header-nav-globe-gap);
   min-width: 0;
 }
@@ -195,6 +195,38 @@
   width: 2.75rem;
   height: 2.75rem;
 }
+
+.shop-navigation-error {
+  position: fixed;
+  z-index: 100;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(32rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border: 1px solid var(--brand-vibrant-pink);
+  border-radius: 0.75rem;
+  background: #02382e;
+  color: #ffdcbd;
+  font-size: 1rem;
+  line-height: 1.4;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.header-shopping-bag {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  z-index: 2;
+  width: 32px;
+  height: 36px;
+  color: var(--brand-vibrant-pink);
+  pointer-events: none;
+}
+
+/* Preserve Ecwid's button geometry and live count behind the stable artwork. */
+.ecwid-header-cart .ec-minicart__icon svg { opacity: 0; }
 
 .header-cart-fallback {
   position: absolute;
@@ -281,7 +313,7 @@
   min-width: 1.125rem;
   height: 1.125rem;
   padding: 0 0.25rem;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
@@ -291,6 +323,41 @@
   color: var(--brand-dark-teal) !important;
   background-color: #fff !important;
   box-sizing: border-box;
+}
+
+/* Vendor animation classes otherwise rescale/reposition the header cart when
+   its DOM is initialized or its quantity changes. Keep the hit target fixed. */
+.header-cart-shell,
+.header-shopping-bag,
+.ecwid-header-cart,
+.ecwid-header-cart * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+.ecwid-header-cart .ec-minicart,
+.ecwid-header-cart .ec-minicart__body {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  box-sizing: border-box !important;
+}
+.ecwid-header-cart .ec-minicart__wrap {
+  inset: 0 !important;
+  width: 44px !important;
+  height: 44px !important;
+}
+.ecwid-header-cart .ec-minicart__counter {
+  top: auto !important;
+  right: -2px !important;
+  bottom: 0 !important;
+  z-index: 3;
+  color: #02382e !important;
+  background: var(--brand-vibrant-pink) !important;
 }
 
 .mobile-menu-toggle {
@@ -586,19 +653,19 @@
   border: 0;
   border-radius: 999px;
   cursor: pointer;
-  background: color-mix(in srgb, #fbead5 45%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, #0f2e1f 35%, transparent);
+  background: color-mix(in srgb, #ffdcbd 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, #02382e 35%, transparent);
   transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .about-media-dot:hover,
 .about-media-dot:focus-visible {
-  background: color-mix(in srgb, #ff8a9d 70%, #fbead5);
+  background: color-mix(in srgb, #f57692 70%, #ffdcbd);
   outline: none;
 }
 
 .about-media-dot.is-active {
-  background: #ff8a9d;
+  background: #f57692;
   transform: scale(1.2);
 }
 
@@ -727,7 +794,7 @@
   z-index: 50;
 }
 
-main {
+.site-main {
   padding-top: var(--site-header-height-px, var(--header-sticky-offset));
 }
 
@@ -775,7 +842,7 @@ main {
   font-size: clamp(1rem, 0.75vw + 0.875rem, 1.375rem);
   font-weight: 800;
   line-height: 1.15;
-  color: #fbead5;
+  color: #ffdcbd;
 }
 
 .work-floating-nav {
@@ -790,7 +857,7 @@ main {
 }
 
 .work-floating-nav-item {
-  background-color: #1a4d3a;
+  background-color: #004e42;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -934,6 +1001,7 @@ main {
 }
 
 .contact-form-card {
+  --contact-gap: 1rem;
   box-sizing: border-box;
   width: 100%;
   padding: clamp(1rem, 2vw, 1.5rem);
@@ -944,15 +1012,29 @@ main {
   padding: 0.75rem 1rem !important;
 }
 
-.contact-field-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.contact-form { display: grid; gap: var(--contact-gap); }
+.contact-form-actions { display: flex; justify-content: flex-end; }
+.contact-send { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 44px; padding-block: 0.75rem; border: 0; border-radius: 999px; width: 100%; }
+.contact-field-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--contact-gap); }
 .contact-field { min-width: 0; }
-.contact-field-label { display: block; margin: 0 0 0.45rem; color: #1a4d3a; font-family: 'mencken-std', serif; font-weight: 700; line-height: 1.35; }
-.contact-control { scroll-margin-top: calc(var(--site-header-height-px, 110px) + 24px); display: block; width: 100%; min-height: 44px; border: 2px solid transparent; border-radius: 0.5rem; background: #fbead5; color: #1a4d3a; font: inherit; }
+.contact-field-label { display: block; margin: 0 0 0.45rem; color: #004e42; font-family: 'mencken-std', serif; font-weight: 700; line-height: 1.35; }
+.contact-control { scroll-margin-top: calc(var(--site-header-height-px, 110px) + 24px); display: block; width: 100%; min-height: 44px; border: 2px solid transparent; border-radius: 0.5rem; background: #ffdcbd; color: #004e42; font: inherit; }
 textarea.contact-control { min-height: 8rem; resize: vertical; }
-.contact-control[aria-invalid='true'] { border-color: #1a4d3a; }
-.contact-control:focus-visible { outline: 2px solid #1a4d3a; outline-offset: 3px; }
-.contact-field-error { margin: 0.4rem 0 0; color: #1a4d3a; font-size: 0.9rem; line-height: 1.4; }
-.contact-form-notice { margin: 0 0 1rem; border-radius: 0.5rem; padding: 0.8rem 1rem; background: #fbead5; color: #1a4d3a; line-height: 1.4; }
+.contact-control[aria-invalid='true'] { border-color: #004e42; }
+.contact-control:focus-visible { outline: 2px solid #004e42; outline-offset: 3px; }
+.contact-field-error { margin: 0.4rem 0 0; color: #004e42; font-size: 0.9rem; line-height: 1.4; }
+.contact-form-notice { margin: 0 0 1rem; border-radius: 0.5rem; padding: 0.8rem 1rem; background: #ffdcbd; color: #004e42; line-height: 1.4; }
+.contact-honeypot { display: none; }
+.privacy-page { padding-block: clamp(2rem, 6vw, 5rem); }
+.privacy-copy { max-width: 44rem; margin-inline: auto; color: #ffdcbd; line-height: 1.6; }
+.privacy-copy h1 { color: #f57692; overflow-wrap: anywhere; }
+.privacy-copy p { margin-block: 1.25rem; }
+.privacy-copy .privacy-status { color: #f57692; font-weight: 700; }
+.privacy-copy a { display: inline-flex; align-items: center; min-height: 44px; color: #f57692; text-decoration: underline; text-underline-offset: 4px; }
+.privacy-copy a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.contact-privacy-note { margin: 1rem 0 0; color: #004e42; font-size: 0.9rem; line-height: 1.5; overflow-wrap: anywhere; }
+.contact-privacy-note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.contact-privacy-note a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 @media (min-width: 640px) {
   .contact-field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact-field--full { grid-column: 1 / -1; }
@@ -969,7 +1051,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
 
 .contact-address-heading {
   margin: 0 0 0.45rem;
-  color: #ff8a9d;
+  color: #f57692;
   font-family: 'mencken-std', serif;
   font-size: clamp(1.05rem, 2.2vw, 1.25rem);
   font-weight: 700;
@@ -1001,7 +1083,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
 
 .contact-address-link {
   margin-top: 0.55rem;
-  color: #ff8a9d;
+  color: #f57692;
   font-family: 'mencken-std', serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -1199,7 +1281,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
   font-size: var(--type-display);
   font-weight: 800;
   line-height: 1.1;
-  color: #fbead5;
+  color: #ffdcbd;
   text-align: left;
   padding-bottom: var(--layout-gap-sm);
 }
@@ -1208,7 +1290,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
   font-size: var(--type-display);
   font-weight: 800;
   line-height: 1.1;
-  color: #ff8a9d;
+  color: #f57692;
 }
 
 .skills-row {
@@ -1284,7 +1366,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
   width: 100%;
   padding-left: 24px;
   padding-right: 24px;
-  background-color: #fedcbd;
+  background-color: #ffdcbd;
 }
 
 .home-hero {
@@ -1295,7 +1377,7 @@ textarea.contact-control { min-height: 8rem; resize: vertical; }
   min-width: 0;
   overflow: hidden;
   line-height: 0;
-  background-color: #0f2e1f;
+  background-color: #02382e;
 }
 
 .home-hero img {
@@ -1554,9 +1636,9 @@ html {
 
   .header-cart-shell,
   .ecwid-header-cart {
-    width: 2.5rem;
-    height: 2.5rem;
-    min-height: 2.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
   }
 
   .header-cart-fallback svg,
@@ -1858,7 +1940,7 @@ button, a, input, textarea, select {
 footer h3,
 footer a,
 footer div {
-  color: #FF8A9D !important;
+  color: #f57692 !important;
 }
 
 footer a:hover {
@@ -2046,7 +2128,7 @@ section {
 .events-calendar-board {
   width: 100%;
   --calendar-gap: 5px;
-  --calendar-teal: #1a4d3a;
+  --calendar-teal: #004e42;
   --calendar-vanilla: #ffdcbd;
 }
 

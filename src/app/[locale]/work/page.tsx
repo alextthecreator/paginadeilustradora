@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -9,6 +9,8 @@ import PotteryCollections from "@/components/PotteryCollections";
 import { cloudinaryImages } from "@/data/cloudinary-images";
 import { potteryCollections } from "@/data/pottery-collections";
 import { useLanguage } from "@/i18n/LanguageContext";
+import WorkSectionLink from '@/components/WorkSectionLink';
+import { skillSections, workSectionFromHash } from '@/lib/work-sections';
 
 const MACRAME_IMAGES = Object.values(cloudinaryImages.macrame);
 
@@ -283,7 +285,7 @@ function WorkStickyBar({ title, isOpen, onNavigate }: WorkStickyBarProps) {
         animate={{ rotate: isOpen ? 180 : 0 }}
         transition={WORK_ARROW_TRANSITION}
         className="shrink-0"
-        style={{ color: '#FF8A9D' }}
+        style={{ color: '#f57692' }}
       >
         <FaArrowDown size={28} />
       </motion.div>
@@ -299,9 +301,7 @@ type WorkSectionPanelProps = {
 function WorkSectionPanel({ isOpen, children }: WorkSectionPanelProps) {
   const [hasOpened, setHasOpened] = useState(isOpen);
 
-  useEffect(() => {
-    if (isOpen) setHasOpened(true);
-  }, [isOpen]);
+  if (isOpen && !hasOpened) setHasOpened(true);
 
   return (
     <div className="work-section-panel" data-open={isOpen} aria-hidden={!isOpen}>
@@ -433,6 +433,8 @@ export default function WorkPage() {
 
   useLayoutEffect(() => {
     if (!showBottomNav) {
+      // Reset measured DOM geometry before paint when the floating nav disappears.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setBottomNavPadding(0);
       return;
     }
@@ -528,6 +530,19 @@ export default function WorkPage() {
     openOrScrollToSection(section);
   };
 
+  const applySectionHash = useEffectEvent(() => {
+    const section = workSectionFromHash(window.location.hash);
+    if (!section) return;
+    openOrScrollToSection(section, 'top');
+    requestAnimationFrame(() => sectionHeaderRefs[section].current?.focus({ preventScroll: true }));
+  });
+
+  useEffect(() => {
+    const apply = () => applySectionHash();
+    const frame = requestAnimationFrame(apply);
+    window.addEventListener('hashchange', apply);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener('hashchange', apply); };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -565,7 +580,7 @@ export default function WorkPage() {
 
   return (
     <div
-      className="min-h-screen bg-brand-dark-teal w-full"
+      className="work-page min-h-screen bg-brand-dark-teal w-full"
       style={{
         paddingBottom: bottomNavPadding
           ? `calc(${bottomNavPadding}px + env(safe-area-inset-bottom, 0px))`
@@ -584,13 +599,13 @@ export default function WorkPage() {
         <div className="skills-row work-skills-row">
           {t.work.skills.map((tag, index, arr) => (
             <React.Fragment key={tag}>
-              <span
-                className="skills-text type-skills lowercase text-[#FBEAD5]"
+              <WorkSectionLink section={skillSections[index]}
+                className="skills-text type-skills lowercase text-[#ffdcbd]"
               >
                 {tag}
-              </span>
+              </WorkSectionLink>
               {index < arr.length - 1 && (
-                <span className="work-skills-separator text-[#FBEAD5]">•</span>
+                <span className="work-skills-separator text-[#ffdcbd]">•</span>
               )}
             </React.Fragment>
           ))}
@@ -620,6 +635,8 @@ export default function WorkPage() {
         <section className="page-shell bg-brand-dark-teal w-full">
           <button
             ref={graphicHeaderRef}
+            id="graphic"
+            aria-expanded={isGraphicDesignOpen}
             type="button"
             onClick={() => toggleSection('graphic')}
             className={sectionHeaderButtonClass}
@@ -631,7 +648,7 @@ export default function WorkPage() {
               animate={{ rotate: isGraphicDesignOpen ? 180 : 0 }}
               transition={WORK_ARROW_TRANSITION}
               className="transition-all opacity-100 hover:opacity-80"
-              style={{ color: '#FF8A9D' }}
+              style={{ color: '#f57692' }}
             >
               <FaArrowDown size={48} />
             </motion.div>
@@ -717,6 +734,8 @@ export default function WorkPage() {
         <section className="page-shell relative z-0 bg-brand-dark-teal w-full">
           <button
             ref={potteryHeaderRef}
+            id="pottery"
+            aria-expanded={isPotteryOpen}
             type="button"
             onClick={() => toggleSection('pottery')}
             className={sectionHeaderButtonClass}
@@ -725,7 +744,7 @@ export default function WorkPage() {
             <motion.div
               animate={{ rotate: isPotteryOpen ? 180 : 0 }}
               transition={WORK_ARROW_TRANSITION}
-              style={{ color: '#FF8A9D' }}
+              style={{ color: '#f57692' }}
             >
               <FaArrowDown size={48} />
             </motion.div>
@@ -738,6 +757,8 @@ export default function WorkPage() {
         <section className="page-shell bg-brand-dark-teal w-full">
           <button
             ref={macrameHeaderRef}
+            id="macrame"
+            aria-expanded={isMacrameOpen}
             type="button"
             onClick={() => toggleSection('macrame')}
             className={sectionHeaderButtonClass}
@@ -746,7 +767,7 @@ export default function WorkPage() {
             <motion.div
               animate={{ rotate: isMacrameOpen ? 180 : 0 }}
               transition={WORK_ARROW_TRANSITION}
-              style={{ color: '#FF8A9D' }}
+              style={{ color: '#f57692' }}
             >
               <FaArrowDown size={48} />
             </motion.div>

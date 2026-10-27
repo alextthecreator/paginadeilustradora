@@ -3,13 +3,14 @@ import ShopLanguageNotice from '@/components/ShopLanguageNotice';
 import { getEcwidProductMetadata } from '@/lib/ecwid-product-metadata';
 import type { Locale } from '@/i18n';
 
-export async function generateMetadata({ params }: { params: { slug?: string[]; locale: Locale } }) {
-  return getEcwidProductMetadata(params.slug, params.locale);
+export async function generateMetadata({ params }: { params: Promise<{ slug?: string[]; locale: Locale }> }) {
+  const { slug, locale } = await params;
+  return getEcwidProductMetadata(slug, locale);
 }
 
 export default function ShopPage() {
   return (
-    <main className="min-h-screen bg-[#1a4d3a]">
+    <main className="min-h-screen bg-[#004e42]">
       <div className="page-shell w-full">
         <ShopLanguageNotice />
         <EcwidStore />

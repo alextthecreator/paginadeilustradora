@@ -7,6 +7,7 @@ import { trackEvent, analyticsConfig } from '@/lib/analytics';
 import { cookieCopy } from '@/i18n/cookie-consent';
 import { showCookiePreferences } from '@/lib/cookie-consent';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { privacyCopy } from '@/i18n/privacy';
 
 export default function Footer() {
   const { t, locale } = useLanguage();
@@ -27,17 +28,17 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="site-footer bg-[#0f2e1f] w-full">
+    <footer className="site-footer bg-[#02382e] w-full">
       <div className="footer-shell w-full">
-        <div className="flex min-h-[132px] items-center justify-center lg:items-start lg:justify-between">
+        <div className="footer-top flex min-h-[132px] items-center justify-center lg:items-start lg:justify-between">
           <div className="text-center lg:text-left">
             <h3
               className="type-label font-mencken-bold mb-5 uppercase tracking-widest"
-              style={{ color: '#FF8A9D' }}
+              style={{ color: '#f57692' }}
             >
               {t.footer.socials}
             </h3>
-            <div className="flex justify-center gap-5 sm:gap-6">
+            <div className="footer-social-links flex justify-center gap-5 sm:gap-6">
               {socialLinks.map(({ href, icon: Icon }) => {
                 const platform = href.includes('instagram') ? 'Instagram' : href.includes('behance') ? 'Behance' : 'LinkedIn';
                 const eventName = href.includes('instagram') ? analyticsConfig.events.INSTAGRAM_CLICK :
@@ -51,7 +52,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="transition-colors hover:opacity-80"
-                    style={{ color: '#FF8A9D' }}
+                    style={{ color: '#f57692' }}
                     aria-label={`Follow Toska CR on ${platform}`}
                     onClick={() => {
                       trackEvent(eventName, {
@@ -82,11 +83,14 @@ export default function Footer() {
 
         </div>
 
-        <div className="footer-copyright type-label font-mencken-regular mt-10 py-4 text-center" style={{ color: '#FF8A9D' }}>
+        <div className="footer-privacy mt-6 text-center" style={{ color: '#f57692' }}>
+          <ShopSafeLink href="/privacy" className="inline-flex min-h-11 items-center px-3 text-sm underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">{privacyCopy[locale].link}</ShopSafeLink>
+        </div>
+        <div className="footer-copyright type-label font-mencken-regular mt-10 py-4 text-center" style={{ color: '#f57692' }}>
           <p>{rightsText}</p>
           {brandText && <p className="mt-1">© {brandText}</p>}
         </div>
-        <div className="mt-4 flex justify-center pb-4 text-center" style={{ color: '#FF8A9D' }}>
+        <div className="footer-cookies mt-4 flex justify-center pb-4 text-center" style={{ color: '#f57692' }}>
           <button type="button" onClick={showCookiePreferences} className="min-h-[44px] px-3 text-sm lowercase underline underline-offset-4 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
             {cookieCopy[locale].settings.toLocaleLowerCase(locale)}
           </button>

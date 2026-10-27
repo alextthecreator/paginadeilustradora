@@ -71,8 +71,8 @@ function LanguageOption({
         size === 'list' ? 'language-switcher-option--list rounded-xl' : 'rounded-2xl'
       } ${
         isSelected
-          ? 'bg-[#FBEAD5] text-[#1a4d3a] shadow-md'
-          : 'bg-transparent text-[#FBEAD5] hover:bg-[#FF8A9D]/20 hover:text-[#FF8A9D]'
+          ? 'bg-[#ffdcbd] text-[#004e42] shadow-md'
+          : 'bg-transparent text-[#ffdcbd] hover:bg-[#f57692]/20 hover:text-[#f57692]'
       }`}
       style={{ fontWeight: 800 }}
     >
@@ -95,6 +95,8 @@ export default function LanguageSwitcher({
   const pathname = usePathname();
 
   useEffect(() => {
+    // Navigation is an external change: close any menu left open on the old URL.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -146,7 +148,7 @@ export default function LanguageSwitcher({
 
   if (variant === 'list') {
     return (
-      <div className="language-switcher-panel mx-3 mt-3 rounded-2xl border border-[#FF8A9D]/30 bg-[#0f2e1f]/80">
+      <div className="language-switcher-panel mx-3 mt-3 rounded-2xl border border-[#f57692]/30 bg-[#02382e]/80">
         <div className="language-switcher-list">
           {locales.map((code, index) => (
             <LanguageOption
@@ -218,7 +220,7 @@ export default function LanguageSwitcher({
             style={{ top: `calc(100% + ${MENU_GAP_PX}px)` }}
           >
             <div
-              className="language-switcher-panel min-w-[320px] rounded-2xl border-2 border-[#FF8A9D]/40 bg-[#0f2e1f] shadow-2xl"
+              className="language-switcher-panel min-w-[320px] rounded-2xl border-2 border-[#f57692]/40 bg-[#02382e] shadow-2xl"
               role="listbox"
               aria-label="Language selector"
             >
@@ -239,7 +241,7 @@ export default function LanguageSwitcher({
           </motion.div>
         )}
       </AnimatePresence>
-      {cartError && <p role="alert" className="absolute right-0 top-full z-50 w-64 rounded-lg bg-[#0f2e1f] p-3 text-sm text-[#FBEAD5]">
+      {cartError && <p role="alert" className="absolute right-0 top-full z-50 w-64 rounded-lg bg-[#02382e] p-3 text-sm text-[#ffdcbd]">
         {locale === 'pl' ? 'Nie udało się potwierdzić koszyka. Spróbuj ponownie.' : locale === 'es' ? 'No se pudo confirmar tu carrito. Inténtalo de nuevo.' : 'Your cart could not be confirmed. Please try again.'}
       </p>}
     </div>
