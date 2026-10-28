@@ -37,7 +37,7 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
   const loopedArtwork = buildLoopedItems(artwork);
 
   return (
-    <div className="home-carousel relative w-full group">
+    <div className="home-carousel relative w-full">
       <button
         type="button"
         onClick={(e) => {
@@ -63,18 +63,17 @@ export default function InteractiveCarousel({ artwork }: InteractiveCarouselProp
             key={`${item.id}-${index}`}
             className="carousel-item-size flex items-center justify-center"
           >
-            <Link href={`/work/${item.id}`} className="group block h-full w-full">
-              <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
+            <Link href={`/work/${item.id}`} className="block h-full w-full">
+              <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg shadow-lg">
                 <Image
                   src={item.image}
                   alt={item.alt}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority={index < 3}
                   draggable={false}
                 />
-                <div className="absolute inset-0 rounded-lg bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
               </div>
             </Link>
           </div>
