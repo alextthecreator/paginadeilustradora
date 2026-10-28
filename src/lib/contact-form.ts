@@ -12,9 +12,9 @@ export function validateContact(data: ContactData): ContactErrors {
   return errors;
 }
 
-export async function sendContact(data: ContactData, request: typeof fetch = fetch, honeypot = ''): Promise<{ status: 'success' | 'rateLimit' | 'error'; fieldErrors: ContactErrors }> {
+export async function sendContact(data: ContactData, request: typeof fetch = fetch, honeypot = '', privacyAccepted = false): Promise<{ status: 'success' | 'rateLimit' | 'error'; fieldErrors: ContactErrors }> {
   const response = await request('/api/contact', {
-    method: 'POST', body: JSON.stringify({ ...data, _gotcha: honeypot }), headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    method: 'POST', body: JSON.stringify({ ...data, _gotcha: honeypot, privacyAccepted }), headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
   });
   // An opaque/redirect response (status 0) never confirms message delivery.
   const fieldErrors: ContactErrors = {};

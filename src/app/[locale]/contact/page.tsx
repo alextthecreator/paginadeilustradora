@@ -23,6 +23,7 @@ export default function ContactPage() {
   const [fieldErrors, setFieldErrors] = useState<ContactErrors>({});
   const [rateLimited, setRateLimited] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,6 +45,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
+    if (!privacyAccepted) { document.getElementById('contact-privacy')?.focus(); return; }
     const errors = validateContact(formData);
     setFieldErrors(errors);
     if (Object.keys(errors).length) {
@@ -63,9 +65,10 @@ export default function ContactPage() {
 
     try {
       const honeypot = String(new FormData(e.currentTarget as HTMLFormElement).get('_gotcha') || '');
-      const result = await sendContact(formData, fetch, honeypot);
+      const result = await sendContact(formData, fetch, honeypot, privacyAccepted);
       if (result.status === 'success') {
         setSubmitStatus('success');
+        setPrivacyAccepted(false);
         setFormData({ firstName: '', surname: '', email: '', subject: '', message: '' });
         
         // Track successful form submission
@@ -168,10 +171,17 @@ export default function ContactPage() {
                   })}
                 </div>
 
+                <div className="contact-privacy-agreement">
+                  <input id="contact-privacy" name="privacyAccepted" type="checkbox" required checked={privacyAccepted} onChange={event => setPrivacyAccepted(event.target.checked)} aria-describedby={!privacyAccepted ? 'contact-privacy-required' : undefined} />
+                  <label htmlFor="contact-privacy">{t.contact.privacyAgreement}{' '}<ShopSafeLink href="/privacy" target="_blank" rel="noopener noreferrer">{t.contact.privacyLink}</ShopSafeLink></label>
+                </div>
+                {!privacyAccepted && <p id="contact-privacy-required" className="contact-privacy-note">{t.contact.privacyRequired}</p>}
                 <div className="contact-form-actions">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !privacyAccepted}
+                    aria-busy={isSubmitting}
+                    aria-describedby={!privacyAccepted ? 'contact-privacy-required' : undefined}
                     className="contact-send type-btn cursor-pointer disabled:cursor-wait font-mencken-bold transition-all duration-300"
                     style={{ paddingLeft: '30px', paddingRight: '30px', 
                       backgroundColor: isSubmitting ? '#004e4280' : '#004e42',
@@ -188,10 +198,6 @@ export default function ContactPage() {
                     )}
                   </button>
                 </div>
-
-                <p className="contact-privacy-note">
-                  {t.contact.privacyNote}{' '}<ShopSafeLink href="/privacy">{t.contact.privacyLink}</ShopSafeLink>
-                </p>
 
                 {/* Status Messages */}
                 {submitStatus === 'success' && (

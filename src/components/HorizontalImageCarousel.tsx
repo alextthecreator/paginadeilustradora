@@ -81,9 +81,7 @@ export default function HorizontalImageCarousel({
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 50vw, 20rem"
-                loading={index < displayImages.length ? 'eager' : 'lazy'}
-                priority={index < 2}
-                fetchPriority={index === 0 ? 'high' : 'auto'}
+                loading="lazy"
                 unoptimized={image.src.includes('res.cloudinary.com')}
                 draggable={false}
               />

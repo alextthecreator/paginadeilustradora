@@ -27,6 +27,7 @@ let loadingLocale: Locale | null = null;
 let requestedLocale: Locale | null = null;
 let activeStoreHost: HTMLElement | null = null;
 
+
 function setProductBrowserUrl(locale: Locale) {
   window.ecwid_ProductBrowserURL = `${window.location.origin}${localizeHref(siteConfig.shopPath, locale)}`;
 }
@@ -62,6 +63,12 @@ export function ensureEcwidScript(locale: Locale): Promise<void> {
   // Set this before script loading so the shop's own banner is never mounted.
   window.ec = window.ec || {};
   window.ec.config = window.ec.config || {};
+  // Use the site's reading font through Ecwid's supported configuration,
+  // preserving its control sizes, icons and checkout layout.
+  window.ec.config.chameleon = {
+    ...(window.ec.config.chameleon as Record<string, unknown> | undefined),
+    font: { 'font-family': 'mencken-std, serif' },
+  };
   window.ec.config.store_main_page_url = window.ecwid_ProductBrowserURL;
   // Configure before script loading. Keep IDs for stable server-side lookup
   // of the public product metadata used by search engines and link previews.

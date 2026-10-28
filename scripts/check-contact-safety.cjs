@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const origin = process.argv[2] || 'http://localhost:3102';
 
-// These requests cannot send a message: invalid fields or a filled honeypot.
+// These requests cannot send a message: invalid fields, missing agreement or a filled honeypot.
 (async () => {
   for (const [prefix, lang, title] of [['', 'en', 'In preparation'], ['/pl', 'pl', 'W przygotowaniu'], ['/es', 'es', 'En preparación']]) {
     const response = await fetch(`${origin}${prefix}/privacy`);
@@ -16,6 +16,7 @@ const origin = process.argv[2] || 'http://localhost:3102';
     [{}, 422],
     [{ email: 'invalid' }, 422],
     [{ firstName: {}, message: 'x'.repeat(5001) }, 422],
+    [{ firstName: 'QA', surname: '', email: 'qa@example.invalid', subject: 'Safety check', message: 'Must never be forwarded', privacyAccepted: false }, 422],
     [{ _gotcha: 'automated spam check' }, 200],
   ]) {
     const response = await fetch(`${origin}/api/contact`, {
@@ -32,5 +33,5 @@ const origin = process.argv[2] || 'http://localhost:3102';
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'x'.repeat(33000) }),
   });
   assert.equal(oversized.status, 413);
-  console.log('PASS: 3 localized noindex privacy placeholders and 6 safe API checks. No valid message submitted.');
+  console.log('PASS: 3 localized noindex privacy placeholders and 7 safe API checks. No valid message submitted.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

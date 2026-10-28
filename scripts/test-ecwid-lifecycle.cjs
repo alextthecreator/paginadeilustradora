@@ -86,6 +86,7 @@ test('store and cart share the same in-flight locale load', async () => {
   assert.equal(f.scripts.length, 1);
   assert.equal(f.window.ecwid_script_defer, true);
   assert.equal(f.window.ecwid_dynamic_widgets, true);
+  assert.equal(f.window.ec.config.chameleon.font['font-family'], 'mencken-std, serif');
   assert.equal(f.window.ec.config.tracking.ask_consent, true);
   assert.equal(f.window.ec.config.tracking.user_response, 'DECLINED');
   assert.equal(f.window.ec.config.store_main_page_url, 'https://example.test/shop');

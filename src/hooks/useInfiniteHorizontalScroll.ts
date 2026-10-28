@@ -41,6 +41,7 @@ export function useInfiniteHorizontalScroll({
   const isJumpingRef = useRef(false);
   const isInitializedRef = useRef(false);
   const scrollFrameRef = useRef<number | null>(null);
+  const animationRef = useRef<number | null>(null);
 
   const canInfiniteScroll = itemCount > 1;
 
@@ -53,14 +54,14 @@ export function useInfiniteHorizontalScroll({
       | undefined;
     if (!middleSegmentStart) return 0;
 
-    return middleSegmentStart.offsetLeft;
+    return middleSegmentStart.offsetLeft - (container.children[0] as HTMLElement).offsetLeft;
   }, [canInfiniteScroll, itemCount]);
 
   const normalizeScrollPosition = useCallback(() => {
     const container = scrollRef.current;
     const segmentWidth = segmentWidthRef.current;
 
-    if (!container || !canInfiniteScroll || !segmentWidth || isJumpingRef.current) {
+    if (!container || !canInfiniteScroll || !segmentWidth || isJumpingRef.current || animationRef.current !== null) {
       return;
     }
 
@@ -117,9 +118,20 @@ export function useInfiniteHorizontalScroll({
 
     const observer = new ResizeObserver(initialize);
     observer.observe(container);
+    const interrupt = () => {
+      if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    };
+    container.addEventListener('pointerdown', interrupt, { passive: true });
+    container.addEventListener('wheel', interrupt, { passive: true });
+    container.addEventListener('touchstart', interrupt, { passive: true });
 
     return () => {
       observer.disconnect();
+      interrupt();
+      container.removeEventListener('pointerdown', interrupt);
+      container.removeEventListener('wheel', interrupt);
+      container.removeEventListener('touchstart', interrupt);
       if (scrollFrameRef.current !== null) {
         window.cancelAnimationFrame(scrollFrameRef.current);
         scrollFrameRef.current = null;
@@ -130,14 +142,31 @@ export function useInfiniteHorizontalScroll({
   const scroll = useCallback((direction: 'left' | 'right') => {
     const container = scrollRef.current;
     if (!container) return;
-
+    if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
+    animationRef.current = null;
+    // Recenter on an equivalent tile before starting, so crossing a loop seam
+    // cannot interrupt the animation or hit the physical scroll boundary.
+    const segment = segmentWidthRef.current;
+    if (segment) container.scrollLeft = ((container.scrollLeft % segment) + segment) % segment + segment;
     const stepPx = getScrollStep(container);
-
-    container.scrollBy({
-      left: direction === 'left' ? -stepPx : stepPx,
-      behavior: 'auto',
-    });
-  }, []);
+    const start = container.scrollLeft;
+    const distance = direction === 'left' ? -stepPx : stepPx;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      container.scrollLeft = start + distance;
+      normalizeScrollPosition();
+      return;
+    }
+    let started: number | undefined;
+    const animate = (now: number) => {
+      started ??= now;
+      const progress = Math.min(1, (now - started) / 420);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      container.scrollLeft = start + distance * eased;
+      if (progress < 1) animationRef.current = requestAnimationFrame(animate);
+      else { animationRef.current = null; normalizeScrollPosition(); }
+    };
+    animationRef.current = requestAnimationFrame(animate);
+  }, [normalizeScrollPosition]);
 
   const scrollContainerClassName =
     'scrollbar-hide carousel-track overflow-x-auto overflow-y-hidden py-4';
@@ -148,6 +177,8 @@ export function useInfiniteHorizontalScroll({
     WebkitOverflowScrolling: 'touch' as const,
     overscrollBehaviorX: 'contain' as const,
     scrollBehavior: 'auto' as const,
+    // Mandatory snapping cancels intermediate animation frames on mobile.
+    scrollSnapType: 'none' as const,
   };
 
   return {

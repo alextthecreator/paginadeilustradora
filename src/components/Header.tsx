@@ -16,7 +16,7 @@ type NavItem = {
   external?: boolean;
 };
 
-export default function Header() {
+export default function Header({ initialCartQuantity = null }: { initialCartQuantity?: number | null }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const { t } = useLanguage();
@@ -104,7 +104,7 @@ export default function Header() {
         </div>
 
         <div className="header-utility-actions">
-          <EcwidCartWidget />
+          <EcwidCartWidget initialQuantity={initialCartQuantity} />
           <LanguageSwitcher />
           <button
             onClick={toggleMobileMenu}

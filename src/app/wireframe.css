@@ -39,7 +39,7 @@
 .home-see-all { min-height: 44px; padding: 0.65rem 2rem; letter-spacing: 0.025em; }
 .home-see-all-container { margin-top: clamp(1.5rem, 3vw, 2.75rem); }
 .skills-section { padding-block: clamp(1rem, 2vw, 1.75rem); }
-.skills-row { gap: 0.5rem 1rem; }
+.skills-row { justify-content: space-between; gap: 0.5rem 1rem; }
 .skills-text, .work-skills-separator { color: var(--brand-cream); }
 .skills-text { cursor: pointer; text-decoration-thickness: 0.06em; text-underline-offset: 0.16em; }
 .skills-text:hover { text-decoration-line: underline; }
@@ -71,11 +71,25 @@
 
 /* Work: same title, banner, section edge and column rhythm as artboard 3. */
 .work-page > .page-shell:first-child { padding-block: clamp(2rem, 4vw, 3.5rem); }
-.work-section-header { padding-inline: 0; padding-top: 0; padding-bottom: clamp(1rem, 2vw, 2rem); gap: 1rem; }
-.work-section-header .section-title { padding: 0; font-size: clamp(1.6rem, 3.6vw, 3.5rem); }
-.work-section-header svg { width: clamp(1.5rem, 3vw, 2.5rem); flex-shrink: 0; }
-.work-section-panel-content { padding-top: 0.5rem; }
-.work-sticky-nav-bar { padding-inline: 0; }
+.work-category-nav { position: sticky; top: var(--site-header-height-px); z-index: 30; }
+.site-back-to-top { position: fixed; z-index: 40; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid #02382e; border-radius: 50%; color: #02382e; background: #f57692; box-shadow: 0 3px 12px #0003; cursor: pointer; }
+.site-back-to-top svg { width: 20px; height: 20px; }
+.site-back-to-top:focus-visible { outline: 2px solid #ffdcbd; outline-offset: 3px; }
+.work-content-section { min-width: 0; }
+.work-section-title { padding: 0; margin-bottom: clamp(1rem, 2vw, 2rem); font-size: clamp(1.6rem, 3.6vw, 3.5rem); scroll-margin-top: calc(var(--site-header-height-px) + var(--work-navigation-height, 80px) + 16px); }
+/* These non-interactive headings receive focus only as navigation destinations.
+   The category bar supplies the visible current-location indicator. */
+.work-section-title:focus, .work-page #work-top:focus { outline: none; }
+.work-mobile-toggle { display: none; }
+.work-section-content { display: block; }
+@media (max-width: 1023px) {
+  .work-desktop-title { display: none; }
+  .work-mobile-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px; gap: 1rem; text-align: left; color: inherit; font: inherit; background: none; border: 0; cursor: pointer; }
+  .work-mobile-toggle svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; color: var(--brand-vibrant-pink); }
+  .work-mobile-toggle[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .work-mobile-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  .work-content-section[data-open='false'] .work-section-content { display: none; }
+}
 
 /* About and Calendar keep their previous content typography and page layout. */
 .about-page {
@@ -84,7 +98,7 @@
   --type-body: clamp(0.9375rem, 0.35vw + 0.875rem, 1rem);
 }
 .calendar-page { background: var(--brand-dark-teal); }
-.site-main .calendar-page { padding-top: var(--site-header-height-px); }
+.site-main .calendar-page { padding-top: 0; }
 
 /* Contact: one spacing token drives every field/action/notice gap. */
 .contact-layout { max-width: var(--layout-content-max); }
@@ -131,3 +145,71 @@ textarea.contact-control { border-radius: 0.75rem; }
   .contact-image-panel { border-radius: 0; }
   .footer-nav-link { min-height: 44px; }
 }
+
+/* Real font face and consistent interaction states for collection filters. */
+.pottery-collection-nav button { font-family: 'mencken-std', serif; font-weight: 700; cursor: pointer; min-height: 44px; }
+.pottery-collection-nav button:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+.pottery-collection-nav button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Compact disclosures, with full-size touch targets. */
+.work-menu-main { gap: 0.5rem; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.work-menu-main svg { width: 0.65rem; height: 0.65rem; transition: transform 0.2s ease; }
+.work-menu-main[aria-expanded='true'] svg { transform: rotate(180deg); }
+.site-header .work-menu-panel a { font-size: 1rem; line-height: 1.4; padding: 0.5rem 0.75rem; min-height: 44px; letter-spacing: 0.025em; }
+.site-header .work-menu--mobile .work-menu-panel a { font-size: 1rem; padding: 0.5rem 1rem; }
+.work-menu--mobile .work-menu-main { width: 100%; justify-content: space-between; text-align: left; }
+.language-switcher-panel { padding: 0.5rem; }
+.language-switcher-dropdown { width: min(13rem, calc(100vw - 2rem)); }
+.language-switcher-root::after { content: none; pointer-events: none; }
+.language-switcher-list { gap: 0.125rem; }
+.language-switcher-option, .language-switcher-option--list { min-height: 44px; padding: 0.5rem 0.625rem; gap: 0.625rem; border-radius: 0.625rem; }
+.language-switcher-option > span.language-switcher-label { font-size: 1rem !important; line-height: 1.35; letter-spacing: 0.025em; }
+.language-switcher-flag { width: 24px; height: 20px; flex: 0 0 24px; padding: 0; }
+.language-switcher-flag img { width: 24px !important; height: 18px !important; max-width: 24px !important; max-height: 18px !important; }
+.contact-privacy-agreement { display: flex; align-items: flex-start; gap: 0.75rem; color: #02382e; font: 400 1rem/1.45 'mencken-std', serif; }
+.contact-privacy-agreement input { flex: 0 0 20px; width: 20px; height: 20px; margin-top: 0.125rem; accent-color: #004e42; cursor: pointer; }
+.contact-privacy-agreement label { cursor: pointer; }
+.contact-privacy-agreement a { text-decoration: underline; text-underline-offset: 0.15em; }
+.contact-send:disabled { cursor: not-allowed; opacity: 0.55; }
+.contact-send[aria-busy='true'] { cursor: wait; }
+
+.language-switcher-trigger { border: 0; padding: 0; background: transparent; color: inherit; }
+
+/* Keep the full portrait; size each desktop photo against its own copy block. */
+.about-page { overflow-x: clip; }
+.about-page .about-media-img { object-fit: contain; }
+.about-page .about-media-slideshow { max-width: 28rem; }
+.about-page .about-media-card-secondary { max-width: 28rem; }
+.about-page .about-row-bottom .about-body { margin-bottom: 0; }
+/* At tablet widths the full portrait cannot match long text within half a
+   screen without cropping. Use the existing stacked layout instead. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .about-page .about-row { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 1280px) {
+  .about-page .about-row { align-items: start; }
+  .about-page .about-media-wrap { align-self: start; }
+  .about-page .about-media-card {
+    width: min(100%, calc(var(--about-photo-height, 672px) * 875 / 1313));
+    max-width: 100%;
+    height: var(--about-photo-height, 672px);
+    aspect-ratio: auto;
+    align-self: start;
+    box-shadow: none;
+    background: transparent;
+  }
+  .about-page .about-media-card-secondary { justify-self: center; }
+}
+
+/* Calendar reset stays with its view, above the month title. */
+.calendar-page-shell { padding-top: clamp(2rem, 4vw, 3.5rem); }
+.events-calendar { scroll-margin-top: calc(var(--site-header-height-px) + 16px); }
+.events-calendar:focus { outline: none; }
+.events-calendar-reset-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.375rem; margin-bottom: 0.5rem; }
+.events-calendar-reset-help { width: 44px; margin: 0; text-align: center; color: var(--brand-cream); font: 400 0.875rem/1.4 'mencken-std', serif; }
+.events-calendar-today-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; background: transparent; border: 1px solid #f57692; color: #f57692; }
+.events-calendar-today-btn svg { width: 18px; height: 18px; }
+.events-calendar-today-btn:hover { background: #f5769226; }
+.calendar-reset-loading { animation: calendar-reset-spin 1s linear infinite; }
+@keyframes calendar-reset-spin { to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) { .calendar-reset-loading { animation: none; } }

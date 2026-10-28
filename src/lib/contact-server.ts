@@ -27,6 +27,7 @@ export async function handleContactRequest(request: Request, forward: typeof fet
   }
   const fieldErrors = { ...validateContact(data), ...typeErrors };
   if (Object.keys(fieldErrors).length) return json({ ok: false, fieldErrors }, 422);
+  if (payload.privacyAccepted !== true) return json({ ok: false, privacyRequired: true }, 422);
 
   const body = new FormData();
   body.set('name', `${data.firstName.trim()} ${data.surname.trim()}`.trim());

@@ -1,0 +1,26 @@
+// Dimensions verified against the rendered Cloudinary variants. Keep each
+// image and its ratio together to reserve gallery space before it downloads.
+export const graphicPortfolio = [
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345111/Ilustracio%CC%81n_sin_ti%CC%81tulo_2_sh2jzm.png", width: 2560, height: 476 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345565/Ilustracio%CC%81n_sin_ti%CC%81tulo_3_u6zqj7.png", width: 1800, height: 1800 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345564/Ilustracio%CC%81n_sin_ti%CC%81tulo_18_copy_3_mi1cdd.png", width: 1546, height: 3116 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345563/Ilustracio%CC%81n_sin_ti%CC%81tulo_17_copy_3_oqt6ea.png", width: 1546, height: 3109 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345562/Ilustracio%CC%81n_sin_ti%CC%81tulo_16_copy_3_x5bfnc.png", width: 1546, height: 3116 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_15_copy_2_u5dcd4.png", width: 1800, height: 893 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_12_copy_xtv28e.png", width: 1800, height: 1309 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345559/Ilustracio%CC%81n_sin_ti%CC%81tulo_1_copy_2_nyi0aj.png", width: 1800, height: 1309 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/ilunnamed-1_copy_2_cq1poq.png", width: 1800, height: 2474 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/Copia_de_unnamed_acidpc.png", width: 1800, height: 1200 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345557/Casitas_Jpg_copy_3_dvdhri.png", width: 1800, height: 895 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345117/unnamed_qrim6m.png", width: 1800, height: 2880 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Jaguar_patern_cs7kox.png", width: 1800, height: 3738 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_artclz.jpg", width: 1800, height: 2401 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_9_ellbub.png", width: 1800, height: 1800 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345114/Ilustracio%CC%81n_sin_ti%CC%81tulo_6_djd8nn.png", width: 1800, height: 1800 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345113/Ilustracio%CC%81n_sin_ti%CC%81tulo_5_cxh25h.png", width: 1800, height: 1238 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345566/Ilustracio%CC%81n_sin_ti%CC%81tulo_4_copy_k2atci.png", width: 1800, height: 1800 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345083/Ilustracio%CC%81n_sin_ti%CC%81tulo_14_uxzdrz.png", width: 1800, height: 1962 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345082/Ilustracio%CC%81n_sin_ti%CC%81tulo_13_odgybk.png", width: 1800, height: 2455 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_11_p9tojh.png", width: 1080, height: 1350 },
+  { src: "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_10_cgoyzs.png", width: 1800, height: 1800 },
+] as const;

@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from "react";
-import { flushSync } from "react-dom";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { FaArrowDown } from "react-icons/fa";
-import PotteryCollections from "@/components/PotteryCollections";
-import { cloudinaryImages } from "@/data/cloudinary-images";
-import { potteryCollections } from "@/data/pottery-collections";
-import { useLanguage } from "@/i18n/LanguageContext";
-import WorkSectionLink from '@/components/WorkSectionLink';
-import { skillSections, workSectionFromHash } from '@/lib/work-sections';
+import React, { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
+import Image from 'next/image';
+import { FaChevronDown } from 'react-icons/fa';
+import PotteryCollections from '@/components/PotteryCollections';
+import { cloudinaryImages } from '@/data/cloudinary-images';
+import { graphicPortfolio } from '@/data/graphic-portfolio';
+import { useLanguage } from '@/i18n/LanguageContext';
+import SkillBannerLinks from '@/components/SkillBannerLinks';
+import { workSections, workSectionFromHash, type WorkSection } from '@/lib/work-sections';
 
 const MACRAME_IMAGES = Object.values(cloudinaryImages.macrame);
 
@@ -30,640 +29,147 @@ const GRAPHIC_MASONRY_SIZES =
 
 const GRAPHIC_GALLERY_GAP_PX = 10;
 
-const WORK_SECTION_CONTENT_EASE = [0.16, 1, 0.3, 1] as const;
-
-const WORK_ARROW_TRANSITION = {
-  duration: 0.45,
-  ease: WORK_SECTION_CONTENT_EASE,
-};
-
-const SECTION_LAYOUT_MS = 550;
-
 const GRAPHIC_ORDER_AFTER_HERO: readonly number[] = [
   1, 2, 3, 5, 4, 6, 7, 13, 14, 15, 16, 17, 18, 19, 20, 21, 8, 10, 9, 11, 12,
 ];
 
-type WorkSection = 'graphic' | 'pottery' | 'macrame';
-type HeaderScrollPosition = 'in-view' | 'above' | 'below';
-type SectionNavSource = 'top' | 'bottom' | 'header';
 
-const WORK_SECTION_ORDER: WorkSection[] = ['graphic', 'pottery', 'macrame'];
-
-function getCompactStickyBarHeightPx(): number {
-  const topNav = document.querySelector('.work-sticky-nav-top');
-  if (topNav) {
-    const bar = topNav.querySelector('.work-sticky-nav-bar');
-    if (bar) {
-      return Math.round(bar.getBoundingClientRect().height);
-    }
-  }
-
-  const bar = document.querySelector('.work-sticky-nav-bar');
-  if (bar) {
-    return Math.round(bar.getBoundingClientRect().height);
-  }
-
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue('--work-sticky-nav-bar-height')
-    .trim();
-  const parsed = parseFloat(raw);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 48;
-}
-
-function getTopStickyNavHeightPx(): number {
-  const topNav = document.querySelector('.work-sticky-nav-top');
-  return topNav ? Math.round(topNav.getBoundingClientRect().height) : 0;
-}
-
-function getBottomStickyNavHeightPx(): number {
-  const bottomNav = document.querySelector('.work-floating-nav');
-  return bottomNav ? Math.round(bottomNav.getBoundingClientRect().height) : 0;
-}
-
-const SECTION_HEADER_CLEARANCE_PX = 26;
-
-function getFixedTopBoundaryPx(): number {
-  const siteHeaderEl = document.querySelector('.site-header');
-  const topNavEl = document.querySelector('.work-sticky-nav-top');
-
-  const headerBottom = siteHeaderEl
-    ? Math.round(siteHeaderEl.getBoundingClientRect().bottom)
-    : getSiteHeaderHeightPx();
-  const stickyBottom = topNavEl
-    ? Math.round(topNavEl.getBoundingClientRect().bottom)
-    : headerBottom;
-
-  return Math.max(headerBottom, stickyBottom);
-}
-
-function getScrollOffsetPxForSection(
-  section: WorkSection,
-  _topStickySections: WorkSection[]
-): number {
-  const sectionIndex = WORK_SECTION_ORDER.indexOf(section);
-  const expectedStickyBoundary =
-    getSiteHeaderHeightPx() + Math.max(0, sectionIndex) * getCompactStickyBarHeightPx();
-
-  return Math.max(getFixedTopBoundaryPx(), expectedStickyBoundary) + SECTION_HEADER_CLEARANCE_PX;
-}
-
-function getSiteHeaderHeightPx(): number {
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue('--site-header-height-px')
-    .trim();
-  const parsed = parseInt(raw, 10);
-  if (Number.isFinite(parsed) && parsed > 0) return parsed;
-
-  const fallback = getComputedStyle(document.documentElement)
-    .getPropertyValue('--header-sticky-offset-px')
-    .trim();
-  const fallbackParsed = parseInt(fallback, 10);
-  return Number.isFinite(fallbackParsed) ? fallbackParsed : 144;
-}
-
-function isSectionHeaderAligned(
-  section: WorkSection,
-  refs: Record<WorkSection, React.RefObject<HTMLButtonElement | null>>,
-  topStickySections: WorkSection[]
-): boolean {
-  const element = refs[section].current;
-  if (!element) return false;
-
-  const targetTop = getScrollOffsetPxForSection(section, topStickySections);
-  const rect = element.getBoundingClientRect();
-
-  return Math.abs(rect.top - targetTop) <= 4;
-}
-
-function needsScrollToSectionHeader(
-  section: WorkSection,
-  refs: Record<WorkSection, React.RefObject<HTMLButtonElement | null>>,
-  topStickySections: WorkSection[]
-): boolean {
-  const element = refs[section].current;
-  if (!element) return true;
-  if (isSectionHeaderAligned(section, refs, topStickySections)) return false;
-
-  const rect = element.getBoundingClientRect();
-  const siteHeader = getSiteHeaderHeightPx();
-
-  return rect.top >= window.innerHeight - 48 || rect.bottom <= siteHeader;
-}
-
-function scrollToSectionHeader(
-  ref: React.RefObject<HTMLElement | null>,
-  section: WorkSection,
-  topStickySections: WorkSection[],
-  targetTop?: number,
-  behavior: ScrollBehavior = 'smooth'
-) {
-  const element = ref.current;
-  if (!element) return;
-
-  const top = targetTop ?? Math.max(
-    0,
-    element.getBoundingClientRect().top +
-      window.scrollY -
-      getScrollOffsetPxForSection(section, topStickySections)
-  );
-  window.scrollTo({ top, behavior });
-}
-
-function getAnchorLinePx(
-  section: WorkSection,
-  positions: Record<WorkSection, HeaderScrollPosition>
-): number {
-  const siteTop = getSiteHeaderHeightPx();
-  const barHeight = getCompactStickyBarHeightPx();
-  const sectionIndex = WORK_SECTION_ORDER.indexOf(section);
-  const barsAbove = WORK_SECTION_ORDER.slice(0, sectionIndex).filter(
-    (s) => positions[s] === 'above'
-  ).length;
-
-  return siteTop + barsAbove * barHeight;
-}
-
-function readAnchorZone(
-  ref: React.RefObject<HTMLElement | null>,
-  section: WorkSection,
-  positions: Record<WorkSection, HeaderScrollPosition>,
-  previous: boolean
-): boolean {
-  const element = ref.current;
-  if (!element) return previous;
-
-  const anchorLine = getAnchorLinePx(section, positions);
-  const rect = element.getBoundingClientRect();
-  const enterThreshold = 6;
-  const exitThreshold = 18;
-
-  if (previous) {
-    return rect.top <= anchorLine + exitThreshold && rect.bottom > anchorLine - 14;
-  }
-
-  return rect.top <= anchorLine + enterThreshold && rect.bottom > anchorLine - 4;
-}
-
-function resolveTopStickySections(
-  positions: Record<WorkSection, HeaderScrollPosition>,
-  anchorZones: Record<WorkSection, boolean>
-): WorkSection[] {
-  return WORK_SECTION_ORDER.filter((section) => {
-    if (anchorZones[section]) return false;
-    return positions[section] === 'above';
-  });
-}
-
-function useHeaderScrollPosition(
-  ref: React.RefObject<HTMLElement | null>,
-  refreshKey: number
-) {
-  const [position, setPosition] = useState<HeaderScrollPosition>('in-view');
-
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    let frame = 0;
-    let latest: HeaderScrollPosition = 'in-view';
-
-    const readPosition = (): HeaderScrollPosition => {
-      const stickyTop = getSiteHeaderHeightPx();
-      const rect = element.getBoundingClientRect();
-
-      if (rect.bottom <= stickyTop) return 'above';
-      if (rect.top >= window.innerHeight) return 'below';
-      return 'in-view';
-    };
-
-    const commit = () => {
-      frame = 0;
-      const next = readPosition();
-      if (next !== latest) {
-        latest = next;
-        setPosition(next);
-      }
-    };
-
-    const schedule = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(commit);
-    };
-
-    latest = readPosition();
-    setPosition(latest);
-
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-
-    return () => {
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, [ref, refreshKey]);
-
-  return position;
-}
-
-type WorkStickyBarProps = {
-  title: string;
-  isOpen: boolean;
-  onNavigate: () => void;
-};
-
-function WorkStickyBar({ title, isOpen, onNavigate }: WorkStickyBarProps) {
-  return (
-    <button
-      type="button"
-      onClick={onNavigate}
-      className="work-sticky-nav-bar"
-      aria-expanded={isOpen}
-    >
-      <h2 className="work-sticky-nav-title font-temeraire-display">{title}</h2>
-      <motion.div
-        animate={{ rotate: isOpen ? 180 : 0 }}
-        transition={WORK_ARROW_TRANSITION}
-        className="shrink-0"
-        style={{ color: '#f57692' }}
-      >
-        <FaArrowDown size={28} />
-      </motion.div>
-    </button>
-  );
-}
-
-type WorkSectionPanelProps = {
-  isOpen: boolean;
-  children: React.ReactNode;
-};
-
-function WorkSectionPanel({ isOpen, children }: WorkSectionPanelProps) {
-  const [hasOpened, setHasOpened] = useState(isOpen);
-
-  if (isOpen && !hasOpened) setHasOpened(true);
-
-  return (
-    <div className="work-section-panel" data-open={isOpen} aria-hidden={!isOpen}>
-      <div className="work-section-panel-inner">
-        {hasOpened ? (
-          <div className="work-section-panel-content">{children}</div>
-        ) : null}
-      </div>
-    </div>
-  );
+function PortfolioSection({ section, title, open, onToggle, headingRef, children }: {
+  section: WorkSection; title: string; open: boolean; onToggle: () => void;
+  headingRef: React.RefObject<HTMLHeadingElement | null>; children: React.ReactNode;
+}) {
+  return <section className="work-content-section page-shell" data-open={open} aria-labelledby={section}>
+    <h2 id={section} ref={headingRef} tabIndex={-1} className="work-section-title section-title font-temeraire-display">
+      <span className="work-desktop-title">{title}</span>
+      <button type="button" className="work-mobile-toggle" aria-expanded={open} aria-controls={`${section}-content`} onClick={onToggle}>
+        <span>{title}</span><FaChevronDown aria-hidden="true" />
+      </button>
+    </h2>
+    <div id={`${section}-content`} className="work-section-content">{children}</div>
+  </section>;
 }
 
 export default function WorkPage() {
   const { t } = useLanguage();
-  const [openSection, setOpenSection] = useState<WorkSection | null>('graphic');
-  const [layoutRevision, setLayoutRevision] = useState(0);
-
-  const bumpLayoutRevision = () => {
-    setLayoutRevision((value) => value + 1);
-  };
+  // Mobile accordions are independent: opening one never removes content above
+  // another. Desktop displays all sections through CSS, without resize remounts.
+  const [openSections, setOpenSections] = useState<Record<WorkSection, boolean>>({ graphic: true, pottery: false, macrame: false });
+  const [active, setActive] = useState<WorkSection>('graphic');
+  const pageRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const graphicRef = useRef<HTMLHeadingElement>(null);
+  const potteryRef = useRef<HTMLHeadingElement>(null);
+  const macrameRef = useRef<HTMLHeadingElement>(null);
+  const pendingScroll = useRef<number | null>(null);
+  const navigationTarget = useRef<WorkSection | 'top' | null>(null);
+  const navigationDeadline = useRef(0);
 
   useLayoutEffect(() => {
-    const frame = requestAnimationFrame(bumpLayoutRevision);
-    const afterAnimation = window.setTimeout(bumpLayoutRevision, SECTION_LAYOUT_MS);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.clearTimeout(afterAnimation);
-    };
-  }, [openSection]);
-
-  useEffect(() => {
-    const prefetchUrls = [
-      potteryCollections[0]?.images[0]?.src,
-      MACRAME_IMAGES[0],
-    ].filter(Boolean) as string[];
-
-    prefetchUrls.forEach((url) => {
-      const img = new window.Image();
-      img.src = url;
-    });
+    const nav = navRef.current;
+    const page = pageRef.current;
+    if (!nav || !page) return;
+    const measure = () => page.style.setProperty('--work-navigation-height', `${nav.getBoundingClientRect().height}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    return () => observer.disconnect();
   }, []);
 
-  const graphicHeaderRef = useRef<HTMLButtonElement>(null);
-  const potteryHeaderRef = useRef<HTMLButtonElement>(null);
-  const macrameHeaderRef = useRef<HTMLButtonElement>(null);
-
-  const sectionHeaderRefs: Record<WorkSection, React.RefObject<HTMLButtonElement | null>> = {
-    graphic: graphicHeaderRef,
-    pottery: potteryHeaderRef,
-    macrame: macrameHeaderRef,
-  };
-
-  const isGraphicDesignOpen = openSection === 'graphic';
-  const isPotteryOpen = openSection === 'pottery';
-  const isMacrameOpen = openSection === 'macrame';
-
-  const graphicPosition = useHeaderScrollPosition(graphicHeaderRef, layoutRevision);
-  const potteryPosition = useHeaderScrollPosition(potteryHeaderRef, layoutRevision);
-  const macramePosition = useHeaderScrollPosition(macrameHeaderRef, layoutRevision);
-
-  const sectionPositions: Record<WorkSection, HeaderScrollPosition> = {
-    graphic: graphicPosition,
-    pottery: potteryPosition,
-    macrame: macramePosition,
-  };
-
-  const anchorZoneRef = useRef<Record<WorkSection, boolean>>({
-    graphic: false,
-    pottery: false,
-    macrame: false,
-  });
-
-  const anchorZones: Record<WorkSection, boolean> = {
-    graphic: readAnchorZone(
-      graphicHeaderRef,
-      'graphic',
-      sectionPositions,
-      anchorZoneRef.current.graphic
-    ),
-    pottery: readAnchorZone(
-      potteryHeaderRef,
-      'pottery',
-      sectionPositions,
-      anchorZoneRef.current.pottery
-    ),
-    macrame: readAnchorZone(
-      macrameHeaderRef,
-      'macrame',
-      sectionPositions,
-      anchorZoneRef.current.macrame
-    ),
-  };
-
-  anchorZoneRef.current = anchorZones;
-
-  const topStickySections = resolveTopStickySections(sectionPositions, anchorZones);
-
-  const visibleTopStickySections = topStickySections;
-
-  const [topStickyNavHeight, setTopStickyNavHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    const measure = () => setTopStickyNavHeight(getTopStickyNavHeightPx());
-    measure();
-
-    const topNav = document.querySelector('.work-sticky-nav-top');
-    const observer = topNav ? new ResizeObserver(measure) : null;
-    if (topNav && observer) observer.observe(topNav);
-    window.addEventListener('resize', measure);
-
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [visibleTopStickySections.length, layoutRevision]);
-
-  const topStickyTitles: Record<WorkSection, string> = {
-    graphic: t.work.sections.graphic,
-    pottery: t.work.sections.pottery,
-    macrame: t.work.sections.macrame,
-  };
-
-  const showBottomPottery = potteryPosition === 'below' && !isPotteryOpen && !isMacrameOpen;
-  const showBottomMacrame = macramePosition === 'below' && !isMacrameOpen;
-  const showBottomNav = showBottomPottery || showBottomMacrame;
-
-  const [bottomNavPadding, setBottomNavPadding] = useState(0);
-
-  useLayoutEffect(() => {
-    if (!showBottomNav) {
-      // Reset measured DOM geometry before paint when the floating nav disappears.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setBottomNavPadding(0);
+  const navigateToHash = useEffectEvent(() => {
+    if (window.location.hash === '#all' || window.location.hash === '#work-top') {
+      if (window.location.hash === '#all') flushSync(() => setOpenSections({ graphic: true, pottery: true, macrame: true }));
+      navigationTarget.current = 'top';
+      navigationDeadline.current = Date.now() + 1800;
+      if (pendingScroll.current !== null) cancelAnimationFrame(pendingScroll.current);
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      document.getElementById('work-top')?.focus({ preventScroll: true });
+      setActive('graphic');
       return;
     }
-
-    const measure = () => setBottomNavPadding(getBottomStickyNavHeightPx());
-    measure();
-
-    const bottomNav = document.querySelector('.work-floating-nav');
-    const observer = bottomNav ? new ResizeObserver(measure) : null;
-    observer?.observe(bottomNav as Element);
-    window.addEventListener('resize', measure);
-
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', measure);
-    };
-  }, [showBottomNav, showBottomPottery, showBottomMacrame]);
-
-  const scrollRafRef = useRef<number | null>(null);
-
-  const cancelPendingScroll = () => {
-    if (scrollRafRef.current) {
-      cancelAnimationFrame(scrollRafRef.current);
-      scrollRafRef.current = null;
-    }
-  };
-
-  const getSectionScrollTarget = (section: WorkSection): number | undefined => {
-    const header = sectionHeaderRefs[section].current;
-    if (!header) return undefined;
-
-    const offset = getScrollOffsetPxForSection(section, visibleTopStickySections);
-    const currentSectionIndex = openSection ? WORK_SECTION_ORDER.indexOf(openSection) : -1;
-    const targetSectionIndex = WORK_SECTION_ORDER.indexOf(section);
-    const currentPanel = openSection
-      ? sectionHeaderRefs[openSection].current?.closest('section')?.querySelector('.work-section-panel')
-      : null;
-    const collapsingHeight =
-      currentSectionIndex >= 0 && currentSectionIndex < targetSectionIndex
-        ? currentPanel?.getBoundingClientRect().height ?? 0
-        : 0;
-
-    return Math.max(
-      0,
-      header.getBoundingClientRect().top + window.scrollY - offset - collapsingHeight
-    );
-  };
-
-  const scrollToOpenedSection = (section: WorkSection, targetTop?: number) => {
-    cancelPendingScroll();
-    scrollRafRef.current = requestAnimationFrame(() => {
-      scrollRafRef.current = null;
-      scrollToSectionHeader(
-        sectionHeaderRefs[section],
-        section,
-        visibleTopStickySections,
-        targetTop
-      );
-    });
-  };
-
-  const openOrScrollToSection = (
-    section: WorkSection,
-    source: SectionNavSource = 'header'
-  ) => {
-    const isSectionChange = openSection !== section;
-    const fromNav = source === 'top' || source === 'bottom';
-
-    if (!isSectionChange) {
-      if (fromNav) scrollToOpenedSection(section);
-      return;
-    }
-
-    const scrollTarget = fromNav ? getSectionScrollTarget(section) : undefined;
-    const shouldScroll =
-      fromNav ||
-      needsScrollToSectionHeader(section, sectionHeaderRefs, visibleTopStickySections);
-
-    flushSync(() => {
-      setOpenSection(section);
-    });
-
-    if (shouldScroll) scrollToOpenedSection(section, scrollTarget);
-  };
-
-  const toggleSection = (section: WorkSection) => {
-    if (openSection === section) {
-      cancelPendingScroll();
-      setOpenSection(null);
-      return;
-    }
-
-    openOrScrollToSection(section);
-  };
-
-  const applySectionHash = useEffectEvent(() => {
     const section = workSectionFromHash(window.location.hash);
     if (!section) return;
-    openOrScrollToSection(section, 'top');
-    requestAnimationFrame(() => sectionHeaderRefs[section].current?.focus({ preventScroll: true }));
+    navigationTarget.current = section;
+    navigationDeadline.current = Date.now() + 1800;
+    flushSync(() => {
+      setOpenSections(previous => ({ ...previous, [section]: true }));
+      setActive(section);
+    });
+    if (pendingScroll.current !== null) cancelAnimationFrame(pendingScroll.current);
+    pendingScroll.current = requestAnimationFrame(() => {
+      pendingScroll.current = null;
+      const heading = { graphic: graphicRef, pottery: potteryRef, macrame: macrameRef }[section].current;
+      if (!heading) return;
+      const header = document.querySelector('.site-header')?.getBoundingClientRect().height || 0;
+      const nav = navRef.current?.getBoundingClientRect().height || 0;
+      const top = Math.max(0, heading.getBoundingClientRect().top + window.scrollY - header - nav - 16);
+      window.scrollTo({ top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      heading.focus({ preventScroll: true });
+    });
   });
 
   useEffect(() => {
-    const apply = () => applySectionHash();
+    const apply = () => navigateToHash();
     const frame = requestAnimationFrame(apply);
     window.addEventListener('hashchange', apply);
-    return () => { cancelAnimationFrame(frame); window.removeEventListener('hashchange', apply); };
-  }, []);
-
-  useEffect(() => {
     return () => {
-      cancelPendingScroll();
+      cancelAnimationFrame(frame);
+      if (pendingScroll.current !== null) cancelAnimationFrame(pendingScroll.current);
+      window.removeEventListener('hashchange', apply);
     };
   }, []);
 
-  const graphicDesignImages = [
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345111/Ilustracio%CC%81n_sin_ti%CC%81tulo_2_sh2jzm.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345565/Ilustracio%CC%81n_sin_ti%CC%81tulo_3_u6zqj7.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345564/Ilustracio%CC%81n_sin_ti%CC%81tulo_18_copy_3_mi1cdd.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345563/Ilustracio%CC%81n_sin_ti%CC%81tulo_17_copy_3_oqt6ea.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345562/Ilustracio%CC%81n_sin_ti%CC%81tulo_16_copy_3_x5bfnc.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_15_copy_2_u5dcd4.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345560/Ilustracio%CC%81n_sin_ti%CC%81tulo_12_copy_xtv28e.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345559/Ilustracio%CC%81n_sin_ti%CC%81tulo_1_copy_2_nyi0aj.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/ilunnamed-1_copy_2_cq1poq.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345558/Copia_de_unnamed_acidpc.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345557/Casitas_Jpg_copy_3_dvdhri.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345117/unnamed_qrim6m.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Jaguar_patern_cs7kox.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_artclz.jpg",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345115/Ilustracio%CC%81n_sin_ti%CC%81tulo_9_ellbub.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345114/Ilustracio%CC%81n_sin_ti%CC%81tulo_6_djd8nn.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345113/Ilustracio%CC%81n_sin_ti%CC%81tulo_5_cxh25h.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345566/Ilustracio%CC%81n_sin_ti%CC%81tulo_4_copy_k2atci.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345083/Ilustracio%CC%81n_sin_ti%CC%81tulo_14_uxzdrz.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345082/Ilustracio%CC%81n_sin_ti%CC%81tulo_13_odgybk.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_11_p9tojh.png",
-    "https://res.cloudinary.com/dxpdn6xgr/image/upload/v1774345081/Ilustracio%CC%81n_sin_ti%CC%81tulo_10_cgoyzs.png",
-  ];
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const boundary = (document.querySelector('.site-header')?.getBoundingClientRect().height || 0) + (navRef.current?.getBoundingClientRect().height || 0) + 32;
+      const target = navigationTarget.current;
+      if (target) {
+        const distance = target === 'top' ? window.scrollY : Math.abs((document.getElementById(target)?.getBoundingClientRect().top ?? Infinity) - (boundary - 16));
+        if (distance > 3 && Date.now() < navigationDeadline.current) return;
+        navigationTarget.current = null;
+      }
+      let current: WorkSection = 'graphic';
+      for (const section of workSections) {
+        if ((document.getElementById(section)?.getBoundingClientRect().top ?? Infinity) <= boundary) current = section;
+      }
+      setActive(previous => previous === current ? previous : current);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const interrupt = () => { navigationTarget.current = null; schedule(); };
+    const interruptKey = (event: KeyboardEvent) => { if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) interrupt(); };
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('wheel', interrupt, { passive: true });
+    window.addEventListener('touchstart', interrupt, { passive: true });
+    window.addEventListener('keydown', interruptKey);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule);
+      window.removeEventListener('wheel', interrupt); window.removeEventListener('touchstart', interrupt); window.removeEventListener('keydown', interruptKey);
+    };
+  }, []);
 
-  const sectionHeaderButtonClass =
-    'work-section-header flex items-center justify-between mb-8 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent text-left';
+  const toggle = (section: WorkSection) => setOpenSections(previous => ({ ...previous, [section]: !previous[section] }));
 
-  return (
-    <div
-      className="work-page min-h-screen bg-brand-dark-teal w-full"
-      style={{
-        paddingBottom: bottomNavPadding
-          ? `calc(${bottomNavPadding}px + env(safe-area-inset-bottom, 0px))`
-          : undefined,
-        ['--work-sticky-nav-stack-height-px' as string]: `${topStickyNavHeight}px`,
-        ['--work-bottom-nav-height-px' as string]: `${bottomNavPadding}px`,
-      }}
-    >
-      <section className="page-shell bg-brand-dark-teal w-full">
-        <h1 className="section-title-pink font-temeraire-display text-center uppercase">
-          {t.work.title}
-        </h1>
-      </section>
 
-      <section className="skills-section skills-section--compact page-shell">
-        <div className="skills-row work-skills-row">
-          {t.work.skills.map((tag, index, arr) => (
-            <React.Fragment key={tag}>
-              <WorkSectionLink section={skillSections[index]}
-                className="skills-text type-skills lowercase text-[#ffdcbd]"
-              >
-                {tag}
-              </WorkSectionLink>
-              {index < arr.length - 1 && (
-                <span className="work-skills-separator text-[#ffdcbd]">•</span>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </section>
-
-      <div
-        className="relative"
-        style={{
-          ['--work-sticky-nav-stack-count' as string]: String(visibleTopStickySections.length),
-        }}
-      >
-        {visibleTopStickySections.length > 0 && (
-          <div className="work-sticky-nav-top" aria-label="Section navigation top">
-            {visibleTopStickySections.map((section) => (
-              <div key={section} className="work-floating-nav-item page-x">
-                <WorkStickyBar
-                  title={topStickyTitles[section]}
-                  isOpen={openSection === section}
-                  onNavigate={() => openOrScrollToSection(section, 'top')}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <section className="page-shell bg-brand-dark-teal w-full">
-          <button
-            ref={graphicHeaderRef}
-            id="graphic"
-            aria-expanded={isGraphicDesignOpen}
-            type="button"
-            onClick={() => toggleSection('graphic')}
-            className={sectionHeaderButtonClass}
-          >
-            <h2 className="section-title font-temeraire-display">
-              {t.work.sections.graphic}
-            </h2>
-            <motion.div
-              animate={{ rotate: isGraphicDesignOpen ? 180 : 0 }}
-              transition={WORK_ARROW_TRANSITION}
-              className="transition-all opacity-100 hover:opacity-80"
-              style={{ color: '#f57692' }}
-            >
-              <FaArrowDown size={48} />
-            </motion.div>
-          </button>
-          <WorkSectionPanel isOpen={isGraphicDesignOpen}>
+  return <div ref={pageRef} className="work-page min-h-screen bg-brand-dark-teal w-full">
+    <section className="page-shell"><h1 id="work-top" tabIndex={-1} className="section-title-pink font-temeraire-display text-center uppercase">{t.work.title}</h1></section>
+    <nav ref={navRef} className="work-category-nav skills-section skills-section--compact page-shell" aria-label={t.nav.work}>
+      <SkillBannerLinks active={active} />
+    </nav>
+    <PortfolioSection section="graphic" title={t.work.sections.graphic} open={openSections.graphic} onToggle={() => toggle('graphic')} headingRef={graphicRef}>
             <div className="flex flex-col">
               <div
                 className="box-border block w-full leading-none"
                 style={{ marginBottom: GRAPHIC_GALLERY_GAP_PX }}
               >
                 <Image
-                  src={getGraphicMasonryUrl(graphicDesignImages[0], 2560)}
+                  src={getGraphicMasonryUrl(graphicPortfolio[0].src, 2560)}
                   alt="Graphic design piece 1 — Ilustración sin título 2"
-                  width={2400}
-                  height={1200}
+                  width={graphicPortfolio[0].width}
+                  height={graphicPortfolio[0].height}
                   className="block h-auto w-full max-w-full align-top"
                   sizes="100vw"
                   quality={85}
@@ -679,7 +185,7 @@ export default function WorkPage() {
                 style={{ columnGap: GRAPHIC_GALLERY_GAP_PX }}
               >
                 {GRAPHIC_ORDER_AFTER_HERO.map((originalIndex, index) => {
-                  const imageSrc = graphicDesignImages[originalIndex];
+                  const image = graphicPortfolio[originalIndex];
                   const isAboveFold = index < 4;
                   return (
                     <div
@@ -688,10 +194,10 @@ export default function WorkPage() {
                       style={{ marginBottom: GRAPHIC_GALLERY_GAP_PX }}
                     >
                       <Image
-                        src={getGraphicMasonryUrl(imageSrc)}
+                        src={getGraphicMasonryUrl(image.src)}
                         alt={`Graphic design piece ${originalIndex + 1}`}
-                        width={1200}
-                        height={1200}
+                        width={image.width}
+                        height={image.height}
                         className="block h-auto w-full max-w-full align-top"
                         sizes={GRAPHIC_MASONRY_SIZES}
                         quality={85}
@@ -705,74 +211,11 @@ export default function WorkPage() {
                 })}
               </div>
             </div>
-          </WorkSectionPanel>
-        </section>
-
-        {showBottomNav && (
-          <div className="work-floating-nav" aria-label="Section navigation bottom">
-            {showBottomPottery && (
-              <div className="work-floating-nav-item page-x">
-                <WorkStickyBar
-                  title={t.work.sections.pottery}
-                  isOpen={isPotteryOpen}
-                  onNavigate={() => openOrScrollToSection('pottery', 'bottom')}
-                />
-              </div>
-            )}
-            {showBottomMacrame && (
-              <div className="work-floating-nav-item page-x">
-                <WorkStickyBar
-                  title={t.work.sections.macrame}
-                  isOpen={isMacrameOpen}
-                  onNavigate={() => openOrScrollToSection('macrame', 'bottom')}
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        <section className="page-shell relative z-0 bg-brand-dark-teal w-full">
-          <button
-            ref={potteryHeaderRef}
-            id="pottery"
-            aria-expanded={isPotteryOpen}
-            type="button"
-            onClick={() => toggleSection('pottery')}
-            className={sectionHeaderButtonClass}
-          >
-            <h2 className="section-title font-temeraire-display">{t.work.sections.pottery}</h2>
-            <motion.div
-              animate={{ rotate: isPotteryOpen ? 180 : 0 }}
-              transition={WORK_ARROW_TRANSITION}
-              style={{ color: '#f57692' }}
-            >
-              <FaArrowDown size={48} />
-            </motion.div>
-          </button>
-          <WorkSectionPanel isOpen={isPotteryOpen}>
-            <PotteryCollections />
-          </WorkSectionPanel>
-        </section>
-
-        <section className="page-shell bg-brand-dark-teal w-full">
-          <button
-            ref={macrameHeaderRef}
-            id="macrame"
-            aria-expanded={isMacrameOpen}
-            type="button"
-            onClick={() => toggleSection('macrame')}
-            className={sectionHeaderButtonClass}
-          >
-            <h2 className="section-title font-temeraire-display">{t.work.sections.macrame}</h2>
-            <motion.div
-              animate={{ rotate: isMacrameOpen ? 180 : 0 }}
-              transition={WORK_ARROW_TRANSITION}
-              style={{ color: '#f57692' }}
-            >
-              <FaArrowDown size={48} />
-            </motion.div>
-          </button>
-          <WorkSectionPanel isOpen={isMacrameOpen}>
+    </PortfolioSection>
+    <PortfolioSection section="pottery" title={t.work.sections.pottery} open={openSections.pottery} onToggle={() => toggle('pottery')} headingRef={potteryRef}>
+      <PotteryCollections />
+    </PortfolioSection>
+    <PortfolioSection section="macrame" title={t.work.sections.macrame} open={openSections.macrame} onToggle={() => toggle('macrame')} headingRef={macrameRef}>
             <div className="gallery-grid">
               {MACRAME_IMAGES.map((imagePath, index) => (
                 <div
@@ -785,16 +228,14 @@ export default function WorkPage() {
                     width={400}
                     height={400}
                     className="h-full w-full object-cover"
-                    priority={index === 0}
+                    loading="lazy"
                     sizes="(max-width: 767px) 50vw, 33vw"
                     unoptimized
                   />
                 </div>
               ))}
             </div>
-          </WorkSectionPanel>
-        </section>
-      </div>
-    </div>
-  );
+    </PortfolioSection>
+
+  </div>;
 }

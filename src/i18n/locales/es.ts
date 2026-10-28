@@ -16,6 +16,8 @@ const es: typeof en = {
     heroAlt: 'Toska CR - cerámica artesanal y trabajo artístico',
   },
   work: {
+    showAll: 'Mostrar todo',
+    backToTop: 'Volver arriba',
     title: 'Mi trabajo',
     skills: ['diseño gráfico', 'ilustración', 'cerámica', 'macramé'],
     sections: {
@@ -29,6 +31,8 @@ const es: typeof en = {
     },
   },
   contact: {
+    privacyAgreement: 'Acepto que se utilicen mis datos para responder a mi mensaje.',
+    privacyRequired: 'Marca la casilla antes de enviar tu mensaje.',
     title: 'Ponte en contacto',
     subtitle: '¿Tienes una pregunta o una idea en mente?\n\n¡Nos encantaría saber de ti! Ya sea una consulta, una pregunta sobre nuestras piezas o un pedido personalizado, escríbenos. Estaremos encantadas de ayudarte a dar vida a tus ideas.',
     nameLabel: 'Nombre y apellido*',
@@ -79,6 +83,7 @@ const es: typeof en = {
     prevMonth: 'Mes anterior',
     nextMonth: 'Mes siguiente',
     today: 'Hoy',
+    resetHelp: 'Hoy',
     noEvents: 'No hay eventos este mes.',
     noEventsDay: 'No hay eventos este día.',
     allDay: 'Todo el día',

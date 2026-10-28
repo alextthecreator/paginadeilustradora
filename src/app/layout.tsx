@@ -4,6 +4,8 @@ import "vanilla-cookieconsent/dist/cookieconsent.css";
 import "./cookie-consent.css";
 import "./wireframe.css";
 import Header from "@/components/Header";
+import BackToTop from "@/components/BackToTop";
+import RouteScrollReset from "@/components/RouteScrollReset";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageTransition from "@/components/PageTransition";
@@ -14,6 +16,8 @@ import { seoConfig } from "@/lib/seo-config";
 import { analyticsConfig } from "@/lib/analytics";
 import { getLocale } from 'next-intl/server';
 import type { Locale } from '@/i18n';
+import { cookies } from 'next/headers';
+import { CART_QUANTITY_COOKIE, readCachedCartQuantity } from '@/lib/cart-quantity';
 
 export const metadata: Metadata = {
   metadataBase: new URL(seoConfig.site.url),
@@ -83,6 +87,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialCartQuantity = readCachedCartQuantity((await cookies()).get(CART_QUANTITY_COOKIE)?.value);
   return (
     <html lang={await getLocale()} className="scroll-smooth">
       <head>
@@ -101,13 +106,16 @@ export default async function RootLayout({
       >
         <ErrorBoundary>
           <Providers locale={await getLocale() as Locale}>
-            <Header />
+            <RouteScrollReset />
+            <span id="page-top" tabIndex={-1} className="sr-only" />
+            <Header initialCartQuantity={initialCartQuantity} />
             <main className="site-main w-full min-w-0">
               <PageTransition>
                 {children}
               </PageTransition>
             </main>
             <Footer />
+            <BackToTop />
           </Providers>
         </ErrorBoundary>
       </body>

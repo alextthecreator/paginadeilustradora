@@ -192,7 +192,7 @@
 .header-cart-shell {
   position: relative;
   flex-shrink: 0;
-  width: 2.75rem;
+  width: 44px;
   height: 2.75rem;
 }
 
@@ -221,11 +221,36 @@
   z-index: 2;
   width: 32px;
   height: 36px;
+  left: 4px;
+  right: auto;
+  margin-inline: 0;
   color: var(--brand-vibrant-pink);
   pointer-events: none;
 }
 
+.site-header .header-cart-quantity {
+  position: absolute;
+  z-index: 3;
+  left: 34px;
+  right: auto;
+  top: 26px;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 1px solid #004e42;
+  background-color: #f57692;
+  color: #02382e;
+  font: 700 12px/1 system-ui, sans-serif;
+  pointer-events: none;
+}
+
 /* Preserve Ecwid's button geometry and live count behind the stable artwork. */
+.site-header .header-cart-quantity--compact { width: 22px; padding-inline: 0; font-size: 10px; }
 .ecwid-header-cart .ec-minicart__icon svg { opacity: 0; }
 
 .header-cart-fallback {
@@ -254,7 +279,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 2.75rem;
+  width: 44px;
   height: 2.75rem;
   min-height: 2.75rem;
   color: var(--brand-vibrant-pink);
@@ -305,25 +330,7 @@
   pointer-events: none;
 }
 
-.ecwid-header-cart .ec-minicart__counter {
-  position: absolute !important;
-  top: -4px !important;
-  right: -8px !important;
-  left: auto !important;
-  min-width: 1.125rem;
-  height: 1.125rem;
-  padding: 0 0.25rem;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--brand-dark-teal) !important;
-  background-color: #fff !important;
-  box-sizing: border-box;
-}
+.ecwid-header-cart .ec-minicart__counter { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
 
 /* Vendor animation classes otherwise rescale/reposition the header cart when
    its DOM is initialized or its quantity changes. Keep the hit target fixed. */
@@ -350,14 +357,6 @@
   inset: 0 !important;
   width: 44px !important;
   height: 44px !important;
-}
-.ecwid-header-cart .ec-minicart__counter {
-  top: auto !important;
-  right: -2px !important;
-  bottom: 0 !important;
-  z-index: 3;
-  color: #02382e !important;
-  background: var(--brand-vibrant-pink) !important;
 }
 
 .mobile-menu-toggle {
@@ -743,49 +742,6 @@
   margin-top: var(--layout-text-gap);
 }
 
-.work-section-header {
-  scroll-margin-top: calc(
-    var(--site-header-height-px, var(--header-sticky-offset)) +
-      var(--work-sticky-nav-stack-height-px, 0px) +
-      18px
-  );
-  scroll-margin-bottom: calc(var(--work-bottom-nav-height-px, 0px) + 6px);
-  box-sizing: border-box;
-  width: 100%;
-  padding-inline: clamp(1rem, 3vw, 2rem);
-  padding-block: clamp(0.75rem, 2vw, 1.25rem);
-}
-
-.work-section-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  overflow: hidden;
-  transform-origin: top center;
-  overflow-anchor: none;
-  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.work-section-panel[data-open='true'] {
-  grid-template-rows: 1fr;
-}
-
-.work-section-panel-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-
-.work-section-panel-content {
-  transform-origin: top center;
-  overflow-anchor: none;
-  padding-bottom: calc(var(--work-bottom-nav-height-px, 0px) + env(safe-area-inset-bottom, 0px));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .work-section-panel {
-    transition: none;
-  }
-}
-
 .site-header {
   position: fixed;
   top: 0;
@@ -796,70 +752,6 @@
 
 .site-main {
   padding-top: var(--site-header-height-px, var(--header-sticky-offset));
-}
-
-.work-sticky-nav-top {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: var(--site-header-height-px, var(--header-sticky-offset));
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  padding: 0;
-}
-
-.work-sticky-nav-top .work-floating-nav-item {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  border-top: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.work-sticky-nav-bar {
-  box-sizing: border-box;
-  display: flex;
-  width: 100%;
-  min-height: var(--work-sticky-nav-bar-height);
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin: 0;
-  padding: 0.5rem clamp(1rem, 3vw, 2rem);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  transition: opacity 0.2s ease;
-}
-
-.work-sticky-nav-bar:hover {
-  opacity: 0.85;
-}
-
-.work-sticky-nav-title {
-  margin: 0;
-  font-size: clamp(1rem, 0.75vw + 0.875rem, 1.375rem);
-  font-weight: 800;
-  line-height: 1.15;
-  color: #ffdcbd;
-}
-
-.work-floating-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-.work-floating-nav-item {
-  background-color: #004e42;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .footer-shell {
@@ -1636,7 +1528,7 @@ html {
 
   .header-cart-shell,
   .ecwid-header-cart {
-    width: 2.75rem;
+    width: 44px;
     height: 2.75rem;
     min-height: 2.75rem;
   }

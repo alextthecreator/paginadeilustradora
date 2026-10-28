@@ -22,9 +22,13 @@ export default function PotteryCollections() {
   return (
     <div className="flex flex-col gap-[var(--layout-gap-xl)]">
       <nav
-        className="flex flex-wrap gap-x-8 gap-y-4 pt-5"
+        className="pottery-collection-nav flex flex-wrap gap-x-8 gap-y-4 pt-5"
         aria-label={t.work.pottery.collectionsNavLabel}
       >
+        <button type="button" onClick={() => setViewMode('all')} aria-pressed={viewMode === 'all'}
+          className={`type-label font-brand-bold uppercase tracking-widest transition-colors duration-300 ${viewMode === 'all' ? 'text-brand-vibrant-pink opacity-100' : 'text-[#ffdcbd] opacity-75'}`}>
+          {t.work.pottery.showAll}
+        </button>
         {potteryCollections.map((collection) => {
           const isActive = viewMode === collection.id;
 
@@ -42,15 +46,6 @@ export default function PotteryCollections() {
             </button>
           );
         })}
-        {viewMode !== 'all' && (
-          <button
-            type="button"
-            onClick={() => setViewMode('all')}
-            className="type-body font-brand-bold uppercase tracking-widest text-brand-vibrant-pink opacity-90 transition-colors duration-300"
-          >
-            {t.work.pottery.showAll}
-          </button>
-        )}
       </nav>
 
       <div className="flex flex-col gap-[var(--layout-gap-xl)]">

@@ -4,7 +4,7 @@ const load = require('./ts-fixture.cjs');
 const contact = load('src/lib/contact-form.ts');
 const { validateContact, sendContact, contactLimits } = contact;
 const { handleContactRequest } = load('src/lib/contact-server.ts', { './contact-form': contact }, { FormData, Response, TextEncoder, URL, AbortSignal });
-const valid = { firstName: ' Ada ', surname: ' Nowak ', email: ' ada@example.com ', subject: ' Workshop ', message: ' My question ' };
+const valid = { firstName: ' Ada ', surname: ' Nowak ', email: ' ada@example.com ', subject: ' Workshop ', message: ' My question ', privacyAccepted: true };
 const request = (payload, headers = {}) => new Request('https://example.test/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(payload) });
 const mustNotSend = () => { throw new Error('Unexpected external submission'); };
 
@@ -24,8 +24,9 @@ test('browser submits JSON and honeypot only to the same-origin endpoint', async
     assert.equal(url, '/api/contact');
     assert.equal(options.headers['Content-Type'], 'application/json');
     assert.equal(JSON.parse(options.body)._gotcha, 'bot value');
+    assert.equal(JSON.parse(options.body).privacyAccepted, true);
     return { ok: true, status: 200 };
-  }, 'bot value');
+  }, 'bot value', true);
   assert.equal(result.status, 'success');
 });
 test('browser cannot treat opaque redirects or failed HTTP responses as success', async () => {
@@ -83,4 +84,12 @@ test('provider validation errors map to form fields without exposing arbitrary p
 test('rate limits and unavailable provider preserve an error outcome', async () => {
   assert.equal((await handleContactRequest(request(valid), async () => ({ ok: false, status: 429 }))).status, 429);
   assert.equal((await handleContactRequest(request(valid), async () => { throw new Error('offline'); })).status, 503);
+});
+
+test('server requires explicit agreement before forwarding valid contact details', async () => {
+  for (const privacyAccepted of [undefined, false, 'true', 1]) {
+    const response = await handleContactRequest(request({ ...valid, privacyAccepted }), mustNotSend);
+    assert.equal(response.status, 422);
+    assert.equal((await response.json()).privacyRequired, true);
+  }
 });

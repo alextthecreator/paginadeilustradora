@@ -12,7 +12,7 @@ export type CalendarFetchResult = {
   status?: number;
 };
 
-export async function fetchCalendarEvents(): Promise<CalendarFetchResult> {
+export async function fetchCalendarEvents({ fresh = false }: { fresh?: boolean } = {}): Promise<CalendarFetchResult> {
   const icsUrl = getCalendarIcsUrl();
   if (!icsUrl) {
     return { configured: false, events: [] };
@@ -26,7 +26,7 @@ export async function fetchCalendarEvents(): Promise<CalendarFetchResult> {
         Accept: 'text/calendar, text/plain, */*',
       },
       redirect: 'follow',
-      next: { revalidate: 300 },
+      ...(fresh ? { cache: 'no-store' as const } : { next: { revalidate: 300 } }),
     });
   } catch (error) {
     console.error('Calendar ICS network error:', error);

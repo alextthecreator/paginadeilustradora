@@ -16,6 +16,8 @@ const pl: typeof en = {
     heroAlt: 'Toska CR - ręcznie robiona ceramika i prace artystyczne',
   },
   work: {
+    showAll: 'Pokaż wszystko',
+    backToTop: 'Wróć na górę',
     title: 'Moje prace',
     skills: ['grafika', 'ilustracja', 'ceramika', 'makrama'],
     sections: {
@@ -29,6 +31,8 @@ const pl: typeof en = {
     },
   },
   contact: {
+    privacyAgreement: 'Zgadzam się na wykorzystanie danych do odpowiedzi na moją wiadomość.',
+    privacyRequired: 'Zaznacz zgodę przed wysłaniem wiadomości.',
     title: 'Skontaktuj się',
     subtitle: 'Masz pytanie lub pomysł?\n\nChętnie Cię wysłuchamy! Niezależnie od tego, czy masz pytanie, zapytanie o nasze prace, czy myślisz o zamówieniu indywidualnym — napisz do nas. Z przyjemnością pomożemy wcielić Twoje pomysły w życie!',
     nameLabel: 'Imię i nazwisko*',
@@ -79,6 +83,7 @@ const pl: typeof en = {
     prevMonth: 'Poprzedni miesiąc',
     nextMonth: 'Następny miesiąc',
     today: 'Dziś',
+    resetHelp: 'Dzisiaj',
     noEvents: 'Brak wydarzeń w tym miesiącu.',
     noEventsDay: 'Brak wydarzeń tego dnia.',
     allDay: 'Cały dzień',

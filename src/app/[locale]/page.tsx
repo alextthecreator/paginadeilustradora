@@ -6,8 +6,7 @@ import Image, { type ImageLoaderProps } from 'next/image';
 import InteractiveCarousel from '@/components/InteractiveCarousel';
 import artwork from '@/data/artwork.json';
 import { useLanguage } from '@/i18n/LanguageContext';
-import WorkSectionLink from '@/components/WorkSectionLink';
-import { skillSections } from '@/lib/work-sections';
+import SkillBannerLinks from '@/components/SkillBannerLinks';
 
 const HOME_HERO_TRANSFORM = 'f_auto,q_auto,dpr_auto';
 const HOME_HERO_PUBLIC_ID = 'v1783344408/Home_Picture_Toska_Website_onnmow.png';
@@ -68,24 +67,7 @@ export default function Home() {
         </section>
 
         <section className="skills-section skills-section--compact page-shell">
-          <div className="skills-row work-skills-row">
-            {t.home.skills.map((tag, index, arr) => (
-              <React.Fragment key={tag}>
-                <WorkSectionLink section={skillSections[index]}
-                  className="skills-text type-skills lowercase text-[#ffdcbd]"
-                >
-                  {tag}
-                </WorkSectionLink>
-                {index < arr.length - 1 && (
-                  <span
-                  className="work-skills-separator text-[#ffdcbd]/50"
-                  >
-                    •
-                  </span>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+          <SkillBannerLinks />
         </section>
       </main>
     </div>

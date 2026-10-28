@@ -79,7 +79,7 @@ function LanguageOption({
       <span className="language-switcher-flag">
         <FlagImage locale={code} />
       </span>
-      <span className="text-base sm:text-lg md:text-2xl">{label}</span>
+      <span className="language-switcher-label">{label}</span>
     </motion.button>
   );
 }
@@ -92,7 +92,13 @@ export default function LanguageSwitcher({
   const [isOpen, setIsOpen] = useState(false);
   const [cartError, setCartError] = useState(false);
   const selecting = useRef(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  useEffect(() => {
+    const outside = (event: PointerEvent) => { if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false); };
+    document.addEventListener('pointerdown', outside);
+    return () => document.removeEventListener('pointerdown', outside);
+  }, []);
 
   useEffect(() => {
     // Navigation is an external change: close any menu left open on the old URL.
@@ -137,15 +143,6 @@ export default function LanguageSwitcher({
     }
   };
 
-  const toggleMenu = () => {
-    if (isOpen) {
-      setIsOpen(false);
-      return;
-    }
-
-    openMenu();
-  };
-
   if (variant === 'list') {
     return (
       <div className="language-switcher-panel mx-3 mt-3 rounded-2xl border border-[#f57692]/30 bg-[#02382e]/80">
@@ -168,37 +165,32 @@ export default function LanguageSwitcher({
 
   return (
     <div
+      ref={rootRef}
       className="language-switcher-root relative"
       style={{ ['--language-switcher-menu-gap' as string]: `${MENU_GAP_PX}px` }}
-      onPointerEnter={(event) => {
-        if (event.pointerType === 'mouse') {
-          openMenu();
-        }
-      }}
       onPointerLeave={(event) => {
         if (event.pointerType === 'mouse') {
           closeMenu();
         }
       }}
-      onFocus={openMenu}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node)) {
           closeMenu();
         }
       }}
     >
-      <div
+      <button
+        type="button"
         className="language-switcher-trigger cursor-pointer rounded-full transition-opacity duration-300 ease-out hover:opacity-90"
         aria-label="Language selector"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        role="button"
-        tabIndex={0}
-        onClick={toggleMenu}
+        onPointerEnter={event => { if (event.pointerType === 'mouse') openMenu(); }}
+        onClick={openMenu}
         onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
+          if (event.key === 'ArrowDown') {
             event.preventDefault();
-            toggleMenu();
+            openMenu();
           }
 
           if (event.key === 'Escape') {
@@ -207,7 +199,7 @@ export default function LanguageSwitcher({
         }}
       >
         <LanguagesIcon />
-      </div>
+      </button>
 
       <AnimatePresence>
         {isOpen && (
@@ -217,10 +209,11 @@ export default function LanguageSwitcher({
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
             className="language-switcher-dropdown"
+            onPointerEnter={event => { if (event.pointerType === 'mouse') openMenu(); }}
             style={{ top: `calc(100% + ${MENU_GAP_PX}px)` }}
           >
             <div
-              className="language-switcher-panel min-w-[320px] rounded-2xl border-2 border-[#f57692]/40 bg-[#02382e] shadow-2xl"
+              className="language-switcher-panel rounded-2xl border-2 border-[#f57692]/40 bg-[#02382e] shadow-2xl"
               role="listbox"
               aria-label="Language selector"
             >

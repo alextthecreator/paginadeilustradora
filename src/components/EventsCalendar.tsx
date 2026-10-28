@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaUndo } from 'react-icons/fa';
 import { useLanguage } from '@/i18n/LanguageContext';
 import type { CalendarEvent } from '@/lib/calendar-types';
 import { eventDayKeys, toDateKeyFromParts } from '@/lib/calendar-types';
@@ -81,6 +81,8 @@ export default function EventsCalendar() {
   const [errorKind, setErrorKind] = useState<string | null>(null);
   const [preview, setPreview] = useState<EventPreviewState | null>(null);
   const [portalReady, setPortalReady] = useState(false);
+  const [refreshVersion, setRefreshVersion] = useState(0);
+  const calendarRef = useRef<HTMLElement>(null);
   const hoverCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
 
@@ -92,13 +94,14 @@ export default function EventsCalendar() {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
 
     async function load() {
       setIsLoading(true);
       setHasError(false);
       setErrorKind(null);
       try {
-        const response = await fetch('/api/calendar');
+        const response = await fetch(refreshVersion ? '/api/calendar?refresh=1' : '/api/calendar', { signal: controller.signal, cache: 'no-store' });
         const data = (await response.json()) as CalendarResponse;
         if (cancelled) return;
         setConfigured(Boolean(data.configured));
@@ -120,8 +123,9 @@ export default function EventsCalendar() {
     load();
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, []);
+  }, [refreshVersion]);
 
   useEffect(() => {
     if (!preview) return;
@@ -218,6 +222,15 @@ export default function EventsCalendar() {
     if (selected && sameDay(date, selected)) showDetails();
   };
 
+  const resetCalendar = () => {
+    setMonth(startOfMonth(calendarToday()));
+    setSelected(null);
+    setPreview(null);
+    setRefreshVersion(version => version + 1);
+    calendarRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    calendarRef.current?.focus({ preventScroll: true });
+  };
+
   const clearHoverClose = () => {
     if (hoverCloseTimer.current) {
       clearTimeout(hoverCloseTimer.current);
@@ -237,13 +250,19 @@ export default function EventsCalendar() {
   };
 
   return (
-    <section className="events-calendar">
+    <section ref={calendarRef} id="calendar-view" tabIndex={-1} className="events-calendar" aria-label={t.calendar.title}>
       <motion.header
         className="events-calendar-hero"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
       >
+        <div className="events-calendar-reset-row">
+          <button type="button" className="events-calendar-today-btn" aria-label={t.calendar.today} aria-describedby="calendar-reset-help" title={t.calendar.resetHelp} aria-busy={isLoading} onClick={resetCalendar}>
+            <FaUndo aria-hidden="true" className={isLoading ? 'calendar-reset-loading' : undefined} />
+          </button>
+          <p id="calendar-reset-help" className="events-calendar-reset-help">{t.calendar.resetHelp}</p>
+        </div>
         <div className="events-calendar-hero-row">
           <button
             type="button"
@@ -274,7 +293,6 @@ export default function EventsCalendar() {
                   <span className="events-calendar-month-name">{monthName}</span>
                   <span className="events-calendar-month-year">{month.getFullYear()}</span>
                 </h1>
-                <p className="events-calendar-kicker">{t.calendar.title}</p>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -291,14 +309,6 @@ export default function EventsCalendar() {
           >
             <FaChevronRight />
           </button>
-        </div>
-        <div className="events-calendar-toolbar">
-          <button type="button" className="events-calendar-today-btn" onClick={() => {
-            const currentDay = calendarToday();
-            setMonth(startOfMonth(currentDay));
-            selectDay(currentDay);
-          }}>{t.calendar.today}</button>
-          <span>{t.calendar.timezone}</span>
         </div>
       </motion.header>
 

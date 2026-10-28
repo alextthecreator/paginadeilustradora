@@ -13,6 +13,8 @@ const en = {
     heroAlt: 'Toska CR - handcrafted ceramics and artisan work',
   },
   work: {
+    showAll: 'Show all',
+    backToTop: 'Back to the top',
     title: 'My Work',
     skills: ['graphic design', 'illustration', 'pottery', 'macramé'],
     sections: {
@@ -26,6 +28,8 @@ const en = {
     },
   },
   contact: {
+    privacyAgreement: 'I agree to my details being used to respond to my message.',
+    privacyRequired: 'Please tick the agreement before sending your message.',
     title: 'Get in Touch',
     subtitle: 'Have a question or an idea in mind?\n\nWe\'d love to hear from you! Whether you have a question, an inquiry about our pieces, or a custom order in mind, feel free to get in touch. We\'re happy to help bring your ideas to life!',
     nameLabel: 'Name*',
@@ -80,6 +84,7 @@ const en = {
     prevMonth: 'Previous month',
     nextMonth: 'Next month',
     today: 'Today',
+    resetHelp: 'Today',
     noEvents: 'No events this month.',
     noEventsDay: 'No events on this day.',
     allDay: 'All day',

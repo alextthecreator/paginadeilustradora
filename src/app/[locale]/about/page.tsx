@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import CloudinaryImage from "@/components/CloudinaryImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -102,7 +102,7 @@ function AboutPhotoSlideshow({
             height={slide.height}
             className="about-media-img"
             priority
-            transformations={{ crop: "fill", fetch_format: "jpg", pg: 1 }}
+            transformations={{ crop: "fit", fetch_format: "jpg", pg: 1 }}
           />
         </div>
       ))}
@@ -126,10 +126,23 @@ function AboutPhotoSlideshow({
 
 export default function AboutPage() {
   const { t } = useLanguage();
+  const layoutRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const rows = Array.from(layoutRef.current?.querySelectorAll<HTMLElement>('.about-row') || []);
+    const measure = () => rows.forEach(row => {
+      const copy = row.querySelector<HTMLElement>('.about-copy');
+      if (copy) row.style.setProperty('--about-photo-height', `${copy.getBoundingClientRect().height}px`);
+    });
+    const observer = new ResizeObserver(measure);
+    rows.forEach(row => { const copy = row.querySelector('.about-copy'); if (copy) observer.observe(copy); });
+    measure();
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="about-page bg-brand-dark-teal w-full text-brand-light-text min-h-[70vh]">
-      <div className="about-page-content about-layout page-y">
+      <div ref={layoutRef} className="about-page-content about-layout page-y">
         <section className="about-row about-row-top">
           <motion.div
             className="about-media-wrap"
@@ -191,7 +204,7 @@ export default function AboutPage() {
               width={875}
               height={1313}
               className="about-media-img"
-              transformations={{ crop: "fill", fetch_format: "jpg", pg: 1 }}
+              transformations={{ crop: "fit", fetch_format: "jpg", pg: 1 }}
             />
           </motion.div>
         </section>
